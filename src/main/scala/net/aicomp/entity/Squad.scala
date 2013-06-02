@@ -1,4 +1,3 @@
 package net.aicomp.entity
 
-class Squad {
-}
+case class Squad()

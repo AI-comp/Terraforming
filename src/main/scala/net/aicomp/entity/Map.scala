@@ -30,8 +30,9 @@ class Map(radius: Int) {
   require(radius > 0, "radius should be positive integer")
 
   val tiles: Array[Array[Tile]] = Array.tabulate(radius*2+1, radius*2+1) {
-    (y: Int, x: Int) => new Tile(Tile.Kind.Vacant)
+    (y, x) => Land(null)
   }
+  this(0, 0) = Land(Squad())
 
   def apply(x: Int, y: Int): Tile = tiles(y+radius)(x+radius)
   def apply(p: Point): Tile = this(p.x, p.y)
@@ -47,9 +48,13 @@ class Map(radius: Int) {
   ) yield Point(x, y)
 
   def moveSquad(p: Point, d: Direction) = {
-    val t = this(p)
-    this(p) = new Tile(Tile.Kind.Vacant)
-    this(p+d.p) = new Tile(Tile.Kind.Occupied, t.squadOpt.get)
+    val src = this(p)
+    src match {
+      case Land(squad) => {
+        this(p) = Land(null)
+        this(p+d.p) = Land(squad)
+      }
+    }
   }
 
   override def toString: String = {
@@ -79,7 +84,9 @@ class Map(radius: Int) {
       ss(y)(x-3) = '|'
       ss(y)(x+3) = '|'
 
-      if (t.squadOpt.nonEmpty) ss(y)(x) = 'R'
+      t match {
+        case Land(squad) => if (squad != null) ss(y)(x) = 'R'
+      }
     }
     val c = Point((width-1)/2, (height-1)/2)
     val dx = Point(6, 0)
