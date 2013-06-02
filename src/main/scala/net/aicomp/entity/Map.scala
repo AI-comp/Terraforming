@@ -1,4 +1,4 @@
-package net.terraforming.model
+package net.aicomp.entity
 
 /*
 ＿人人人人人人人人

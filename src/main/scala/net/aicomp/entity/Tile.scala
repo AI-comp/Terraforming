@@ -1,4 +1,4 @@
-package net.terraforming.model
+package net.aicomp.entity
 
 case class Tile(val kind: Tile.Kind) {
   def isOccupied = kind == Tile.Kind.Occupied

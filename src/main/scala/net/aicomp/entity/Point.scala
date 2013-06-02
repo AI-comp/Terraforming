@@ -1,4 +1,4 @@
-package net.terraforming.model
+package net.aicomp.entity
 
 case class Point(val x: Int, val y: Int) {
   def +(r: Point) = new Point(x+r.x, y+r.y)
