@@ -7,13 +7,11 @@ import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-
 import org.apache.commons.cli.BasicParser
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
-
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.JScrollPane
@@ -30,6 +28,7 @@ import net.aicomp.scene.console.ConsoleScene
 import net.aicomp.scene.graphic.TextBoxScene
 import net.aicomp.scene.graphic.TitleScene
 import net.aicomp.util.misc.ImageLoader
+import net.aicomp.scene.graphic.WhiteScene
 
 object Main {
 
@@ -84,7 +83,7 @@ object Main {
       val (window, env) = initializeComponents(cl.hasOption(LARGE_MODE))
       val setting = GameSetting()
 
-      val mainScene = new MainScene(null) with TitleScene with TextBoxScene
+      val mainScene = new MainScene(null) with WhiteScene with TextBoxScene
       val playerScene = new PlayerScene(mainScene, setting) with TitleScene with TextBoxScene
 
       val f: Function1[String, Unit] = mainScene.displayCore(_)
