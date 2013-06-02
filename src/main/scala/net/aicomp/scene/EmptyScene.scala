@@ -4,12 +4,16 @@ import jp.ac.waseda.cs.washi.gameaiarena.gui.Scene
 import net.aicomp.entity.Game
 import net.aicomp.entity.GameEnvironment
 
-abstract class EmptyScene(val nextScene: Scene[GameEnvironment]) extends CommandBaseScene {
-  override def execute() = {
-    (game, nextScene)
+/**
+ * 何もしないシーンクラスです．
+ * タイトル画面を表示する際などに利用してください．
+ */
+abstract class EmptyScene(val nextScene: Scene[GameEnvironment]) extends AbstractScene {
+  final override def run() = {
+    nextScene
   }
 
-  override def nextCommand: Option[List[String]] = throw new Exception()
+  final override def nextCommand: Option[List[String]] = throw new Exception()
 
-  override def execute(words: List[String]): (Game, Scene[GameEnvironment]) = throw new Exception()
+  final override def runWithArgs(words: List[String]): Scene[GameEnvironment] = throw new Exception()
 }

@@ -1,9 +1,9 @@
 package net.aicomp.scene.graphic
 
 import scala.collection.mutable.Queue
-import net.aicomp.scene.CommandBaseScene
+import net.aicomp.scene.AbstractScene
 
-trait TextBoxScene extends CommandBaseScene {
+trait TextBoxScene extends AbstractScene {
   override def nextCommand = TextBoxScene.nextCommand
 
   override def displayCore(text: String) = TextBoxScene.display(text)

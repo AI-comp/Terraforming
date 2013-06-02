@@ -8,19 +8,19 @@ import net.aicomp.util.settings.Defaults
 import net.aicomp.entity.GameSetting
 
 abstract class PlayerScene(nextScene: Scene[GameEnvironment], setting: GameSetting = GameSetting())
-  extends CommandBaseScene {
+  extends AbstractScene {
   override def initialize() {
     describe("Enter player names")
     displayLine("Please enter player names with space delimiters.")
   }
 
-  override def execute(names: List[String]) = {
+  override def runWithArgs(names: List[String]) = {
     if (names.size <= 1) {
       displayLine("Please enter two or more names.")
-      (game, this)
+      this
     } else {
       displayLine(names.size + " players have joined the game. (" + names.mkString(", ") + ")")
-      (new Game(), nextScene)
+      nextScene
     }
   }
 }
