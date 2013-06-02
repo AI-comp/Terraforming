@@ -1,6 +1,9 @@
 package net.aicomp.entity
 
-case class Tile(val kind: Tile.Kind) {
+case class Tile(val kind: Tile.Kind, squad: Squad = null) {
+
+  val squadOpt: Option[Squad] = Option[Squad](squad)
+
   def isOccupied = kind == Tile.Kind.Occupied
   def isVacant = kind == Tile.Kind.Vacant
   def isHole = kind == Tile.Kind.Hole
