@@ -1,0 +1,3 @@
+[submodule "JavaChallenge2012"]
+	path = JavaChallenge2012
+	url = git@github.com:JavaChallenge2012/JavaChallenge2012.git

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<application>
+    <translator fallback="ja" default-locale="ja">
+        <resources>
+            <folder>src/test/resources/translations</folder>
+        </resources>
+    </translator>
+</application>
