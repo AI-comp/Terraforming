@@ -23,6 +23,18 @@ class PointSpecTest extends Specification with JUnit {
       new Point(3, -2).within(2) must_== false
       new Point(3, -2).within(3) must_== true
     }
+    "return shortest path to" in {
+      // TODO: map with obstacles
+      val map = new Map(7)
+      new Point(0, 1).shortestPathTo(new Point(0, 1), map) must be equalTo(
+          Some(List.empty[Direction]))
+      new Point(0, 1).shortestPathTo(new Point(0, 3), map) must be equalTo(
+          Some(List(Direction.dr, Direction.dr)))
+      new Point(2, -1).shortestPathTo(new Point(0, 2), map).get.length must_==
+          new Point(2, -1).distance(new Point(0, 2))
+      new Point(0, -1).shortestPathTo(new Point(8, 0), map) must_== None
+      new Point(90, -1).shortestPathTo(new Point(0, 0), map) must_== None
+    }
     "return points within distance" in {
       Point.pointsWithin(1) must be equalTo(List(
           new Point(-1, 0),

@@ -12,6 +12,8 @@ object Direction {
   val dl = new Direction(new Point(-1, 1))
   val l  = new Direction(new Point(-1, 0))
 
+  val all = List[Direction](ur, ul, r, dr, dl, l)
+
   private val strMap: scala.collection.Map[String, Direction] = scala.collection.Map(
     "ur" -> ur,
     "ul" -> ul,
@@ -35,6 +37,35 @@ case class Point(val x: Int, val y: Int) {
     max(max(abs(dx), abs(dy)), abs(dx+dy))
   }
   def within(radius: Int) : Boolean = distance(Point.origin) <= radius
+  def shortestPathTo(goal: Point, map: Map) : Option[List[Direction]] = {
+    def canEnter(p: Point) = p.within(map.radius) && !map(p).hasObstacle
+    if (canEnter(this) == false) {
+      // invalid starting point
+      return None
+    }
+
+    val rad = map.radius
+    val paths = Array.ofDim[List[Direction]](rad*2+1, rad*2+1)
+    val q = new scala.collection.mutable.Queue[Point]
+    q += this
+    paths(this.x+rad)(this.y+rad) = List.empty
+    while (!q.isEmpty) {
+      val curr = q.dequeue
+      if (curr == goal) {
+        // found
+        return Some(paths(curr.x+rad)(curr.y+rad).reverse)
+      }
+      for (dir <- Direction.all) {
+        val next = curr + dir.p
+        if (canEnter(next) && paths(next.x+rad)(next.y+rad) == null) {
+          q += next
+          paths(next.x+rad)(next.y+rad) = dir :: paths(curr.x+rad)(curr.y+rad)
+        }
+      }
+    }
+    // not found
+    return None
+  }
 
   override def toString() = "(" + x + "," + y + ")"
 }
