@@ -1,5 +1,6 @@
 package net.aicomp.entity
-import math.{abs, max}
+
+import math.{abs, max, min}
 
 case class Direction private(val p: Point)
 
@@ -27,20 +28,23 @@ case class Point(val x: Int, val y: Int) {
   def +(r: Point) = Point(x+r.x, y+r.y)
   def -(r: Point) = Point(x-r.x, y-r.y)
   def *(r: Int) = Point(x*r, y*r)
-  def distance(p: Point) = {
+
+  def distance(p: Point) : Int = {
     val dx = x - p.x
     val dy = y - p.y
     max(max(abs(dx), abs(dy)), abs(dx+dy))
   }
-  def within(width: Int) =
-    abs(x) <= width && abs(y) <= width && abs(x+y) <= width
+  def within(radius: Int) : Boolean = distance(Point.origin) <= radius
+
   override def toString() = "(" + x + "," + y + ")"
 }
 
 object Point {
-  def pointsWithin(width: Int) : Set[Point] =
-    (for (x <- -width to width;
-         y <- -width to width;
-         val p = new Point(x, y);
-         if p.within(width)) yield p).toSet
+  val origin = Point(0, 0)
+
+  /** returns sorted list of points within radius */
+  def pointsWithin(radius: Int) : List[Point] = for (
+    x <- List.range(-radius, radius+1);
+    y <- List.range(max(-radius, -x-radius), min(radius, radius-x)+1)
+  ) yield Point(x, y)
 }

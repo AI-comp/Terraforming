@@ -24,10 +24,16 @@ class PointSpecTest extends Specification with JUnit {
       new Point(3, -2).within(3) must_== true
     }
     "return points within distance" in {
-      Point.pointsWithin(1) must be equalTo(Set(
-          new Point(0, -1), new Point(1, -1),
-          new Point(-1, 0), new Point(0, 0), new Point(1, 0),
-          new Point(-1, 1), new Point(0, 1)))
+      Point.pointsWithin(1) must be equalTo(List(
+          new Point(-1, 0),
+          new Point(-1, 1),
+          new Point(0, -1),
+          new Point(0, 0),
+          new Point(0, 1),
+          new Point(1, -1),
+          new Point(1, 0)
+      ))
+      Point.pointsWithin(-1) must be equalTo(List())
     }
   }
 }
