@@ -1,7 +1,5 @@
 package net.aicomp.entity
 
-import math.{max, min}
-
 /***********************************
  *                                 *
  *           radius = 2            *
@@ -26,7 +24,7 @@ import math.{max, min}
  *                                 *
  ***********************************/
 
-class Map(radius: Int) {
+class Map(val radius: Int) {
   require(radius > 0, "radius should be positive integer")
 
   val tiles: Array[Array[Tile]] = Array.tabulate(radius*2+1, radius*2+1) {
@@ -42,10 +40,7 @@ class Map(radius: Int) {
 
   def foreach[T](f: Tile=>T): Unit = for (p <- indices) f(this(p))
 
-  def indices: List[Point] = for (
-    y <- List.range(-radius, radius+1);
-    x <- List.range(max(-radius, -y-radius), min(radius, radius-y)+1)
-  ) yield Point(x, y)
+  def indices: List[Point] = Point.pointsWithin(radius)
 
   def moveSquad(p: Point, d: Direction) = {
     val src = this(p)
