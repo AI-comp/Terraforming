@@ -1,3 +1,9 @@
+# Project Status
+[![Build Status](https://api.travis-ci.org/AI-comp/Terraforming.png?branch=master)]
+(https://travis-ci.org/AI-comp/Terraforming)
+[![Coverage Status](https://coveralls.io/repos/AI-comp/Terraforming/badge.png?branch=master)]
+(https://coveralls.io/r/AI-comp/Terraforming)
+
 # Prepare Eclipse environment
 1. Install Eclipse
   * Eclipse IDE for Java Developers Juno (4.2)  
@@ -25,6 +31,4 @@ You can import maven projects with the following steps:
 1. mvn clean package
 
 # Dcouments
-* https://github.com/JavaChallenge2012/JavaChllaenge2012
-* http://www.slideshare.net/exKAZUu/javachallenge-2012-result
-* http://www.slideshare.net/exKAZUu/javachallenge-2012-special-league
+* https://docs.google.com/document/d/1bcgHpgDxDQbm94-BdOw0gEG08Wfums8nlGv-kNHlxmE/edit?usp=sharing
