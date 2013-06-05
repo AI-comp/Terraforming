@@ -11,7 +11,6 @@ trait WhiteScene extends AbstractScene {
   override def draw() = {
     val renderer = getRenderer()
 
-    // ダミータイル情報
     val tiles = Array.tabulate(10, 10) {
       (y: Int, x: Int) => (x, y)
     }
