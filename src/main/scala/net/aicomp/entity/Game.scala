@@ -19,22 +19,6 @@ class Game extends CommandValidation {
 
   //TODO
   def buildCommand(args: List[String]) {
-    val x = args(0).toInt
-    val y = args(1).toInt
-    val t = args(2)
-    map.build(new Point(x, y), t)
-  }
-
-  //TODO
-  def buildCommand(args: List[String]) {
-    val x = args(0).toInt
-    val y = args(1).toInt
-    val t = args(2)
-    map.build(new Point(x, y), t)
-  }
-
-  //TODO
-  def buildCommand(args: List[String]) {
     describe("build") {
       args.shouldHaveLength(3)
       args(0).shouldBeInt

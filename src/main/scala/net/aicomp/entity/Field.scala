@@ -1,7 +1,7 @@
 package net.aicomp.entity
 
-/**
- * *********************************
+/*
+ ***********************************
  *                                 *
  *           radius = 2            *
  *                                 *
@@ -23,9 +23,8 @@ package net.aicomp.entity
  *       *,   .*,   .*,   .*       *
  *         '*'   '*'   '*'         *
  *                                 *
- * *********************************
+ ***********************************
  */
-
 class Field(val radius: Int) {
   require(radius > 0, "radius should be positive integer")
 
@@ -53,7 +52,7 @@ class Field(val radius: Int) {
       }
     }
   }
-  
+
   def build(p: Point, t: String) = {
     val src = this(p)
     src.building match {
@@ -90,7 +89,7 @@ class Field(val radius: Int) {
       ss(y)(x - 3) = '|'
       ss(y)(x + 3) = '|'
 
-      if(t.building != null) ss(y)(x-2) = 'B'
+      if (t.building != null) ss(y)(x - 2) = 'B'
       t match {
         case Land(squad) => if (squad != null) ss(y)(x) = 'R'
       }
