@@ -14,10 +14,9 @@ abstract class MainScene(val nextScene: Scene[GameEnvironment]) extends Abstract
       println("Commands:")
       println("  move x y (r|ur|dr|l|ul|dl)")
     }
-
-    val command = commands.get(commandAndArgs.head)
-    val args = commandAndArgs.tail
-    command match {
+    
+    val cmd :: args = commandAndArgs
+    commands.get(cmd) match {
       case Some(c) => c(args)
       case None    => help
     }
