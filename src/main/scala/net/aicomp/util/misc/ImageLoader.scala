@@ -18,7 +18,7 @@ object ImageLoader {
    */
   def prefetch(render: Renderer) = {
     val fetchedImages = mutable.ListBuffer[Image]()
-    for (val method <- ImageLoader.getClass().getMethods()) {
+    for (method <- ImageLoader.getClass().getMethods()) {
       if (method.getName().startsWith("load")) {
         fetchedImages ++= dig(method.invoke(this, render))
       }
