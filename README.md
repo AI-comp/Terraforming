@@ -22,7 +22,7 @@ You can import maven projects with the following steps:
 5. Right click the imported project > Maven > Update Project Configuration > OK
 
 # Build with Maven 3
-1. run 'build.bat'
+1. mvn clean package
 
 # Dcouments
 * https://github.com/JavaChallenge2012/JavaChllaenge2012
