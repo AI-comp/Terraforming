@@ -1,6 +1,6 @@
 # Prepare Eclipse environment
 1. Install Eclipse
-  * For Juno (4.2)  
+  * Eclipse IDE for Java Developers Juno (4.2)  
 http://www.eclipse.org/downloads/
 2. Run Eclipse
 3. Menu > Help > Install new software
