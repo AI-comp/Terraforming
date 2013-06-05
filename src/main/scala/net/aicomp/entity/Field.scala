@@ -62,15 +62,6 @@ class Field(val radius: Int) {
       }
     }
   }
-  
-  def build(p: Point, t: String) = {
-    val src = this(p)
-    src.building match {
-      case null => {
-        src.building = t
-      }
-    }
-  }
 
   override def toString: String = {
     val height = radius * 6 + 5

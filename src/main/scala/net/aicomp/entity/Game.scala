@@ -1,6 +1,5 @@
 package net.aicomp.entity
 
-
 class Game extends CommandValidation {
   val field = new Field(7)
 
@@ -17,7 +16,7 @@ class Game extends CommandValidation {
     val d = args(2)
     field.moveSquad(new Point(x, y), Direction.fromString(d))
   }
-  
+
   //TODO
   def buildCommand(args: List[String]) {
     val x = args(0).toInt
@@ -25,7 +24,7 @@ class Game extends CommandValidation {
     val t = args(2)
     map.build(new Point(x, y), t)
   }
-  
+
   //TODO
   def buildCommand(args: List[String]) {
     val x = args(0).toInt
@@ -48,9 +47,7 @@ class Game extends CommandValidation {
     val t = args(2)
     field.build(new Point(x, y), t)
   }
-
 }
-
 
 sealed trait CommandValidation {
   case class LengthException(msg: String) extends Exception(msg)
@@ -79,7 +76,6 @@ sealed trait CommandValidation {
   }
   implicit def argumentVaalidator(arg: String): ArgumentValidator = new ArgumentValidator(arg)
 
-
   def describe(cmd: String)(f: => Unit) {
     try {
       f
@@ -89,4 +85,3 @@ sealed trait CommandValidation {
     }
   }
 }
-
