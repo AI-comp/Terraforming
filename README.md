@@ -5,9 +5,9 @@ http://www.eclipse.org/downloads/
 2. Run Eclipse
 3. Menu > Help > Install new software
 4. Install Scala IDE 3.0 (For Scala 2.9.x) on Eclipse Juno (4.2)  
-  * Please install suitable version
+  * See the following web page and install suitable version
   * http://scala-ide.org/download/current.html
-5. Install m2e-scala connector on Eclipse  
+5. Install m2e-scala connector on Eclipse (the following url indicates a update site instead of a web page)  
 http://alchim31.free.fr/m2e-scala/update-site/
 6. Edit eclipse.ini ("eclipse/eclipse.ini" on Windows, "Eclipse.app/Contents/MacOS/eclipse.ini" on Mac OS)  
 -Xmx???m => -Xmx2048m
