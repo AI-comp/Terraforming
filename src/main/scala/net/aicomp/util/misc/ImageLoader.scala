@@ -7,15 +7,7 @@ import scala.collection.mutable
 
 import jp.ac.waseda.cs.washi.gameaiarena.gui.Renderer
 
-/**
- * 画像の読み込み処理を行うクラスです。
- */
 object ImageLoader {
-  /**
-   * 全ての画像を読み込みます。
-   *
-   * @param render {@link Renderer}
-   */
   def prefetch(render: Renderer) = {
     val fetchedImages = mutable.ListBuffer[Image]()
     for (method <- ImageLoader.getClass().getMethods()) {
@@ -101,7 +93,6 @@ object ImageLoader {
     _sellIcon
   }
 
-  /** プレイヤーインデックス（中立は-1） => 画像の辞書 */
   private val _playerIndices = (-1 to 5)
   private var _veins: Map[Int, Image] = null
 
@@ -236,5 +227,4 @@ object ImageLoader {
     }
     _title
   }
-
 }
