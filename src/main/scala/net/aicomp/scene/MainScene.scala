@@ -22,7 +22,7 @@ abstract class MainScene(val nextScene: Scene[GameEnvironment]) extends Abstract
       case None    => help
     }
 
-    println(game.map)
+    println(game.field)
     this
   }
 }

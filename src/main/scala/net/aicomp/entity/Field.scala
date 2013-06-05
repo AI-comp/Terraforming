@@ -24,7 +24,7 @@ package net.aicomp.entity
  *                                 *
  ***********************************/
 
-class Map(val radius: Int) {
+class Field(val radius: Int) {
   require(radius > 0, "radius should be positive integer")
 
   val tiles: Array[Array[Tile]] = Array.tabulate(radius*2+1, radius*2+1) {

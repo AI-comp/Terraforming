@@ -37,14 +37,14 @@ case class Point(val x: Int, val y: Int) {
     max(max(abs(dx), abs(dy)), abs(dx+dy))
   }
   def within(radius: Int) : Boolean = distance(Point.origin) <= radius
-  def shortestPathTo(goal: Point, map: Map) : Option[List[Direction]] = {
-    def canEnter(p: Point) = p.within(map.radius) && !map(p).hasObstacle
+  def shortestPathTo(goal: Point, field: Field) : Option[List[Direction]] = {
+    def canEnter(p: Point) = p.within(field.radius) && !field(p).hasObstacle
     if (canEnter(this) == false) {
       // invalid starting point
       return None
     }
 
-    val rad = map.radius
+    val rad = field.radius
     val paths = Array.ofDim[List[Direction]](rad*2+1, rad*2+1)
     val q = new scala.collection.mutable.Queue[Point]
     q += this

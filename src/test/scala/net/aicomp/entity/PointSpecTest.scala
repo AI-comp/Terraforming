@@ -25,15 +25,15 @@ class PointSpecTest extends Specification with JUnit {
     }
     "return shortest path to" in {
       // TODO: map with obstacles
-      val map = new Map(7)
-      Point(0, 1).shortestPathTo(Point(0, 1), map) must be equalTo(
+      val field = new Field(7)
+      Point(0, 1).shortestPathTo(Point(0, 1), field) must be equalTo(
           Some(List.empty[Direction]))
-      Point(0, 1).shortestPathTo(Point(0, 3), map) must be equalTo(
+      Point(0, 1).shortestPathTo(Point(0, 3), field) must be equalTo(
           Some(List(Direction.dr, Direction.dr)))
-      Point(2, -1).shortestPathTo(Point(0, 2), map).get.length must_==
+      Point(2, -1).shortestPathTo(Point(0, 2), field).get.length must_==
           Point(2, -1).distance(Point(0, 2))
-      Point(0, -1).shortestPathTo(Point(8, 0), map) must_== None
-      Point(90, -1).shortestPathTo(Point(0, 0), map) must_== None
+      Point(0, -1).shortestPathTo(Point(8, 0), field) must_== None
+      Point(90, -1).shortestPathTo(Point(0, 0), field) must_== None
     }
     "return points within distance" in {
       Point.pointsWithin(1) must be equalTo(List(
