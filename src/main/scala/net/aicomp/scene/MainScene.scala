@@ -1,7 +1,7 @@
 package net.aicomp.scene
 
 import jp.ac.waseda.cs.washi.gameaiarena.gui.Scene
-import net.aicomp.entity.GameEnvironment
+import net.aicomp.entity.{GameEnvironment,CommandException}
 
 abstract class MainScene(val nextScene: Scene[GameEnvironment]) extends AbstractScene {
   def runWithArgs(commandAndArgs: List[String]) = {
@@ -12,18 +12,27 @@ abstract class MainScene(val nextScene: Scene[GameEnvironment]) extends Abstract
       "build" -> game.buildCommand _
     )
     def help = {
-      println("Commands:")
-      println("  move x y (r|ur|dr|l|ul|dl)")
-      println("  build x y (br|sh|at|mt|pk|sq|pl)")
+      displayLine("Commands:")
+      displayLine("  move x y (r|ur|dr|l|ul|dl)")
+      displayLine("  build x y (br|sh|at|mt|pk|sq|pl)")
     }
-    
+
     val cmd :: args = commandAndArgs
     commands.get(cmd) match {
-      case Some(c) => c(args)
+      case Some(c) => {
+        try {
+          c(args)
+          displayLine(game.field.toString)
+        } catch {
+          case CommandException(msg) => {
+            displayLine(msg)
+            help
+          }
+        }
+      }
       case None    => help
     }
 
-    println(game.field)
     this
   }
 }
