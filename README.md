@@ -1,10 +1,14 @@
+Terraforming for CEDEC 2013
+
 # Project Status
 [![Build Status](https://api.travis-ci.org/AI-comp/Terraforming.png?branch=master)]
 (https://travis-ci.org/AI-comp/Terraforming)
 [![Coverage Status](https://coveralls.io/repos/AI-comp/Terraforming/badge.png?branch=master)]
 (https://coveralls.io/r/AI-comp/Terraforming)
 
-# Prepare Eclipse environment
+# Setup Development Environment
+
+## Prepare Eclipse Environment with Maven
 1. Install Eclipse
   * Eclipse IDE for Java Developers Juno (4.2)  
 http://www.eclipse.org/downloads/
@@ -18,7 +22,7 @@ http://alchim31.free.fr/m2e-scala/update-site/
 6. Edit eclipse.ini ("eclipse/eclipse.ini" on Windows, "Eclipse.app/Contents/MacOS/eclipse.ini" on Mac OS)  
 -Xmx???m => -Xmx2048m
 
-# Import the maven project into your Eclipse workspace
+## Import the Maven Project into Your Eclipse Workspace
 You can import maven projects with the following steps:
 
 1. Import > Existing Maven Projects
@@ -27,8 +31,26 @@ You can import maven projects with the following steps:
 4. Push Finish
 5. Right click the imported project > Maven > Update Project Configuration > OK
 
-# Build with Maven 3
+## Build with Maven 3
 1. mvn clean package
+
+## Build with SBT
+1. sbt test
 
 # Dcouments
 * https://docs.google.com/document/d/1bcgHpgDxDQbm94-BdOw0gEG08Wfums8nlGv-kNHlxmE/edit?usp=sharing
+
+# Contributors
+    - Kazunori Sakamoto (National Institute of Informatics)
+    - Naoki Yaguchi (Waseda University)
+    - Kosuke Yatoh (University of Tokyo)
+    - Seiji Sato (Waseda University)
+    - Hiroaki Hosono	(Tokyo Institute of Technology)
+    - Fumiya Kato (Waseda University)
+    - Junichi Kobayashi (Waseda University)
+    - Ryohei Takasawa (Waseda University)
+    - Naohiko Tuda (Waseda University)
+    - Genki Sugimoto (Waseda University)
+    - Koji Tumura (Waseda University)
+    - Dai Hamada	(Waseda University)
+    - Shogo Kishimoto	(Tokyo Institute of Technology)
