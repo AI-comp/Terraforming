@@ -1,7 +1,7 @@
 package net.aicomp.scene
 
 import jp.ac.waseda.cs.washi.gameaiarena.gui.Scene
-import net.aicomp.entity.{GameEnvironment,CommandException}
+import net.aicomp.entity.{ GameEnvironment, CommandException }
 
 abstract class MainScene(val nextScene: Scene[GameEnvironment]) extends AbstractScene {
   def runWithArgs(commandAndArgs: List[String]) = {
@@ -9,8 +9,7 @@ abstract class MainScene(val nextScene: Scene[GameEnvironment]) extends Abstract
 
     val commands = Map(
       "move" -> game.moveCommand _,
-      "build" -> game.buildCommand _
-    )
+      "build" -> game.buildCommand _)
     def help = {
       displayLine("Commands:")
       displayLine("  move x y (r|ur|dr|l|ul|dl)")
@@ -30,7 +29,7 @@ abstract class MainScene(val nextScene: Scene[GameEnvironment]) extends Abstract
           }
         }
       }
-      case None    => help
+      case None => help
     }
 
     this

@@ -1,12 +1,8 @@
 package net.aicomp.entity
 
-import org.specs._
-import org.specs.matcher._
-import org.specs.runner.{ JUnitSuiteRunner, JUnit }
-import org.junit.runner.RunWith
+import org.specs2.mutable._
 
-@RunWith(classOf[JUnitSuiteRunner])
-class PointSpecTest extends Specification with JUnit {
+class PointSpecTest extends SpecificationWithJUnit {
   "Point" should {
     "calculate distance between 2 points" in {
       // x
@@ -26,26 +22,25 @@ class PointSpecTest extends Specification with JUnit {
     "return shortest path to" in {
       // TODO: map with obstacles
       val field = new Field(7)
-      Point(0, 1).shortestPathTo(Point(0, 1), field) must be equalTo(
-          Some(List.empty[Direction]))
-      Point(0, 1).shortestPathTo(Point(0, 3), field) must be equalTo(
-          Some(List(Direction.dr, Direction.dr)))
+      Point(0, 1).shortestPathTo(Point(0, 1), field) must_==
+        Some(List.empty[Direction])
+      Point(0, 1).shortestPathTo(Point(0, 3), field) must_==
+        Some(List(Direction.dr, Direction.dr))
       Point(2, -1).shortestPathTo(Point(0, 2), field).get.length must_==
-          Point(2, -1).distance(Point(0, 2))
+        Point(2, -1).distance(Point(0, 2))
       Point(0, -1).shortestPathTo(Point(8, 0), field) must_== None
       Point(90, -1).shortestPathTo(Point(0, 0), field) must_== None
     }
     "return points within distance" in {
-      Point.pointsWithin(1) must be equalTo(List(
-          Point(-1, 0),
-          Point(-1, 1),
-          Point(0, -1),
-          Point(0, 0),
-          Point(0, 1),
-          Point(1, -1),
-          Point(1, 0)
-      ))
-      Point.pointsWithin(-1) must be equalTo(List())
+      Point.pointsWithin(1) must_== List(
+        Point(-1, 0),
+        Point(-1, 1),
+        Point(0, -1),
+        Point(0, 0),
+        Point(0, 1),
+        Point(1, -1),
+        Point(1, 0))
+      Point.pointsWithin(-1) must_== Nil
     }
   }
 }
