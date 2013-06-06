@@ -4,6 +4,20 @@ import org.specs2.mutable._
 
 class PointSpecTest extends SpecificationWithJUnit {
   "Point" should {
+    "calculate additions" in {
+      Point(1, 1) + Point(2, -1) must_== Point(3, 0)
+    }
+    "calculate subtractions" in {
+      Point(1, 3) - Point(-1, -1) must_== Point(2, 4)
+    }
+    "calculate multiplication" in {
+      Point(2, 1) * 3 must_== Point(6, 3)
+    }
+    "calculate rotated point" in {
+      Point(1, 0).rotate120 must_== Point(-1, 1)
+      Point(-2, 1).rotate120 must_== Point(1, -2)
+      Point(-3, -2).rotate120.rotate240 must_== Point(-3, -2)
+    }
     "calculate distance between 2 points" in {
       // x
       Point(0, 1).distance(Point(3, -1)) must_== 3

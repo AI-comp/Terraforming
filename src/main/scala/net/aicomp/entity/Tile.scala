@@ -1,8 +1,13 @@
 package net.aicomp.entity
 
-sealed trait Tile {
+abstract class Tile {
   def hasObstacle = false
-  var building: String = null
 }
 
-case class Land(squad: Squad) extends Tile
+case class Hole() extends Tile
+
+case class Land(val squad: Squad) extends Tile
+
+case class DevelopedLand(val building: String) extends Tile
+
+case class InitialPosition(val player: Player) extends Tile
