@@ -1,7 +1,7 @@
 package net.aicomp.entity
 
 sealed trait Tile {
-  def hasObstacle = false
+  def hasObstacle = building != null
   var building: String = null
 }
 
