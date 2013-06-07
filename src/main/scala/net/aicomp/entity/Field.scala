@@ -1,5 +1,7 @@
 package net.aicomp.entity
 
+import scala.util.Random
+
 /*
  ***********************************
  *                                 *
@@ -54,11 +56,9 @@ class Field(val radius: Int) {
   }
 
   def build(p: Point, t: String) = {
-    val src = this(p)
-    src.building match {
-      case null => {
-        src.building = t
-      }
+    this(p) match {
+      case Land(_) => this(p) = DevelopedLand(t)
+      case _ => ()
     }
   }
 
@@ -89,9 +89,11 @@ class Field(val radius: Int) {
       ss(y)(x - 3) = '|'
       ss(y)(x + 3) = '|'
 
-      if (t.building != null) ss(y)(x - 2) = 'B'
       t match {
+        case Hole() => ss(y)(x) = 'H'
         case Land(squad) => if (squad != null) ss(y)(x) = 'R'
+        case DevelopedLand(building) => if (building != null) ss(y)(x - 2) = 'B'
+        case InitialPosition(player) => ss(y)(x - 2) = 'I'
       }
     }
     val c = Point((width - 1) / 2, (height - 1) / 2)
@@ -103,4 +105,36 @@ class Field(val radius: Int) {
     ss.mkString("\n")
   }
 
+}
+
+object Field {
+  /** generates field at random */
+  def generate(radius: Int, player1: Player, player2: Player, player3: Player)
+    : Field = {
+    // first, generate 1/3 pattern
+    // region: (x, y) such that y >= 0 && x + y >= 1
+    val random = new Random(0)
+    val field = new Field(radius)
+    for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
+      // TODO: hole frequency
+      field(x, y) = random.nextInt(5) match {
+        case 0 => Hole()
+        case _ => Land(null)
+      }
+    }
+    // second, decide initial position
+    val initialY = random.nextInt(radius + 1)
+    val initialX = random.nextInt(radius) + 1 - initialY
+    field(initialX, initialY) = InitialPosition(player1)
+    // third, expand the pattern
+    def copyTile(t: Tile, p: Player) = t match {
+      case InitialPosition(_) => InitialPosition(p)
+      case t => t
+    }
+    for (y <- 0 to radius; x <- -y to -y + radius) {
+      field(Point(x, y).rotate120) = copyTile(field(x, y), player2)
+      field(Point(x, y).rotate240) = copyTile(field(x, y), player3)
+    }
+    return field
+  }
 }
