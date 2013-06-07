@@ -20,7 +20,6 @@ class PointSpecTest extends SpecificationWithJUnit {
       Point(3, -2).within(3) must_== true
     }
     "return shortest path to" in {
-      // TODO: map with obstacles
       val field = new Field(7)
       Point(0, 1).shortestPathTo(Point(0, 1), field) must_==
         Some(List.empty[Direction])
@@ -30,6 +29,21 @@ class PointSpecTest extends SpecificationWithJUnit {
         Point(2, -1).distance(Point(0, 2))
       Point(0, -1).shortestPathTo(Point(8, 0), field) must_== None
       Point(90, -1).shortestPathTo(Point(0, 0), field) must_== None
+
+      val fieldWithObstacle = new Field(2)
+      fieldWithObstacle.build(Point(0, 0), "b")
+      fieldWithObstacle.build(Point(-1, 0), "b")
+      Point(0, 1).shortestPathTo(Point(0, -1), fieldWithObstacle) must_==
+        Some(List(Direction.ur, Direction.ul, Direction.l))
+      Point(0, 0).shortestPathTo(Point(0, -1), fieldWithObstacle) must_== None
+
+      val fieldWithWall = new Field(1)
+      fieldWithWall.build(Point(-1, 0), "b")
+      fieldWithWall.build(Point(0, 0), "b")
+      fieldWithWall.build(Point(1, 0), "b")
+      Point(0, 1).shortestPathTo(Point(0, -1), fieldWithWall) must_== None
+      Point(-1, 1).shortestPathTo(Point(0, 1), fieldWithWall) must_==
+        Some(List(Direction.r))
     }
     "return points within distance" in {
       Point.pointsWithin(1) must_== List(
