@@ -1,11 +1,5 @@
-Terraforming for CEDEC 2013
+Terraforming for CEDEC 2013 [![Build Status](https://api.travis-ci.org/AI-comp/Terraforming.png?branch=master)](https://travis-ci.org/AI-comp/Terraforming) [![Coverage Status](https://coveralls.io/repos/AI-comp/Terraforming/badge.png?branch=master)](https://coveralls.io/r/AI-comp/Terraforming)
 ========================
-
-## Project Status
-[![Build Status](https://api.travis-ci.org/AI-comp/Terraforming.png?branch=master)]
-(https://travis-ci.org/AI-comp/Terraforming)
-[![Coverage Status](https://coveralls.io/repos/AI-comp/Terraforming/badge.png?branch=master)]
-(https://coveralls.io/r/AI-comp/Terraforming)
 
 ## Setup Development Environment
 
@@ -46,7 +40,10 @@ Start build server (it requires sbt (http://www.scala-sbt.org/)).
 1. mvn package
 
 ## Dcouments
-* https://docs.google.com/document/d/1bcgHpgDxDQbm94-BdOw0gEG08Wfums8nlGv-kNHlxmE/edit?usp=sharing
+- Rule book  
+https://docs.google.com/document/d/1bcgHpgDxDQbm94-BdOw0gEG08Wfums8nlGv-kNHlxmE/edit?usp=sharing
+- Sample code for rendering a game screen
+https://github.com/AI-comp/JavaChallenge2012/blob/master/src/main/scala/net/javachallenge/scene/graphic/GraphicalScene.scala
 
 ## Contributors
 - Kazunori Sakamoto (National Institute of Informatics)
@@ -60,5 +57,7 @@ Start build server (it requires sbt (http://www.scala-sbt.org/)).
 - Genki Sugimoto (Waseda University)
 - Koji Tumura (Waseda University)
 - Junichi Kobayashi (Waseda University)
+- Ryu Yasuda (Waseda University)
+- Masataka Kido (Waseda University)
 - Dai Hamada (Waseda University)
 - Shogo Kishimoto (Tokyo Institute of Technology)
