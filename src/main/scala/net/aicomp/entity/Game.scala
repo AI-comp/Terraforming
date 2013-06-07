@@ -31,6 +31,13 @@ class Game extends CommandValidation {
     val t = args(2)
     field.build(new Point(x, y), t)
   }
+
+  def finishCommand(args: List[String]) {
+    describe("finish") {
+      args.shouldHaveLength(0)
+    }
+    
+  }
 }
 
 sealed trait CommandValidation {

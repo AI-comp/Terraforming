@@ -9,11 +9,14 @@ abstract class MainScene(val nextScene: Scene[GameEnvironment]) extends Abstract
 
     val commands = Map(
       "move" -> game.moveCommand _,
-      "build" -> game.buildCommand _)
+      "build" -> game.buildCommand _,
+      "finish" -> game.finishCommand _)
+
     def help = {
       displayLine("Commands:")
       displayLine("  move x y (r|ur|dr|l|ul|dl)")
       displayLine("  build x y (br|sh|at|mt|pk|sq|pl)")
+      displayLine("  finish")
     }
 
     val cmd :: args = commandAndArgs
