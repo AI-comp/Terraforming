@@ -8,9 +8,9 @@ abstract class MainScene(val nextScene: Scene[GameEnvironment]) extends Abstract
     require(commandAndArgs != Nil)
 
     val commands = Map(
-      "move" -> Command.moveCommand _,
-      "build" -> Command.buildCommand _,
-      "finish" -> Command.finishCommand _)
+      "move" -> Command.moveCommand,
+      "build" -> Command.buildCommand,
+      "finish" -> Command.finishCommand)
     def help = {
       displayLine("Commands:")
       displayLine("  move x y (r|ur|dr|l|ul|dl)")
