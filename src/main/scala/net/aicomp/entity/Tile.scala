@@ -1,17 +1,23 @@
 package net.aicomp.entity
 
-sealed trait Tile {
-  def hasObstacle = false
+@cloneable class Tile {
+  var owner: Option[Player] = None
+  var robots = 0
+  var movedRobots = 0
+  var installation: Option[String] = None
+  var isHole: Boolean = false
+
+  def availableRobots = robots - movedRobots
+
+  def isMovable(player: Player) = owner != Some(player) || installation.isEmpty
+
+  override def clone() = super.clone().asInstanceOf[Tile]
+
+  override def equals(t: Any) = t match {
+    case t: Tile => equals(t)
+    case _ => false
+  }
+
+  def equals(t: Tile) = owner == t.owner && robots == t.robots &&
+    movedRobots == t.movedRobots && installation == t.installation && isHole == t.isHole
 }
-
-case class Hole() extends Tile {
-  override def hasObstacle = true
-}
-
-case class Land(val squad: Squad) extends Tile
-
-case class DevelopedLand(val building: String) extends Tile {
-  override def hasObstacle = true
-}
-
-case class InitialPosition(val player: Player) extends Tile

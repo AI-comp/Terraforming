@@ -2,7 +2,7 @@ package net.aicomp.entity
 
 sealed trait Command
 
-case class MoveCommand(val from: Point, val direction: Direction)
+case class MoveCommand(val from: Point, val direction: Direction, val amount: Int)
   extends Command
 
 case class BuildCommand(val at: Point, val building: String) extends Command
@@ -16,18 +16,17 @@ case class FinishCommand() extends Command
 object Command extends FormatValidation {
   // TODO: def parse(string: String): Command
   // TODO: def parse(elems: List[String]): Command
-
   def moveCommand = mkCommand("move") { c =>
     for {
-      _ <- c.validateLength(c.args, 3)
+      _ <- c.validateLength(c.args, 4)
       x <- c.validateInt(c.args(0))
       y <- c.validateInt(c.args(1))
       d <- c.validateInRange(c.args(2), "r", "ur", "dr", "l", "ul", "dl")
-    } yield MoveCommand(new Point(x, y), Direction.fromString(d))
+      amount <- c.validateInt(c.args(3))
+    } yield MoveCommand(new Point(x, y), Direction.fromString(d), amount)
   }
 
   //TODO
-
   def buildCommand = mkCommand("build") { c =>
     for {
       _ <- c.validateLength(c.args, 3)
@@ -43,6 +42,8 @@ object Command extends FormatValidation {
     } yield FinishCommand()
   }
 }
+
+case class ArgumentException(msg: String) extends Exception(msg)
 
 sealed trait FormatValidation {
   def mkCommand[T <: Command](name: String)(f: CommandBuilder => Either[String, T]) = { (args: List[String]) =>

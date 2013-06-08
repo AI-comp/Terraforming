@@ -31,17 +31,17 @@ You can import maven projects with the following steps:
 4. Push Finish
 5. Right click the imported project > Maven > Update Project Configuration > OK
 
-### Build with Maven 3 and Zinc
-1. zinc -start  
-Start build server (it requires Zinc https://github.com/typesafehub/zinc ).
-1. mvn package
-
-### Build with sbt
+### Build with sbt (Choice 1)
 1. sbt  
 Start build server (it requires sbt http://www.scala-sbt.org/ ).
 2. test
 
-### Build with Maven 3
+### Build with Maven 3 and Zinc (Choice 2)
+1. zinc -start  
+Start build server (it requires Zinc https://github.com/typesafehub/zinc ).
+1. mvn package
+
+### Build with Maven 3 (Choice 3)
 1. mvn package
 
 ## Dcouments
@@ -64,5 +64,6 @@ https://github.com/AI-comp/JavaChallenge2012/blob/master/src/main/scala/net/java
 - Junichi Kobayashi (Waseda University)
 - Ryu Yasuda (Waseda University)
 - Masataka Kido (Waseda University)
+- Daichi Ota (ACCESS CO., LTD.)
 - Dai Hamada (Waseda University)
 - Shogo Kishimoto (Tokyo Institute of Technology)

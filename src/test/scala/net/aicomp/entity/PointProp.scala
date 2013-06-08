@@ -6,22 +6,23 @@ import org.scalacheck.Arbitrary
 import org.scalacheck.Gen
 
 object PointProp extends Properties("Point") {
-  val field = new Field(7)
+  val field = Field(7)
+  val player = new Player("A")
 
   property("shortestPathTo") = forAll(pointWithin, pointWithin) { (p1: Point, p2: Point) =>
-    p1.shortestPathTo(p2, field).get.size == p1.distance(p2)
+    p1.shortestPathTo(p2, field, player).get.size == p1.distance(p2)
   }
 
   property("shortestPathTo") = forAll(pointWithin | pointWithout, pointWithout) { (p1: Point, p2: Point) =>
-    p1.shortestPathTo(p2, field) == None
+    p1.shortestPathTo(p2, field, player) == None
   }
 
   property("shortestPathTo") = forAll(pointWithout, pointWithin | pointWithout) { (p1: Point, p2: Point) =>
-    p1.shortestPathTo(p2, field) == None
+    p1.shortestPathTo(p2, field, player) == None
   }
 
   property("shortestPathTo") = forAll(pointWithout, pointWithout) { (p1: Point, p2: Point) =>
-    p1.shortestPathTo(p2, field) == None
+    p1.shortestPathTo(p2, field, player) == None
   }
 
   def pointWithin = (for {

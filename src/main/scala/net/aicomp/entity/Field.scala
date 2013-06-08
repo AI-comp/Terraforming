@@ -1,5 +1,6 @@
 package net.aicomp.entity
 
+import scala.collection.mutable
 import scala.util.Random
 
 /*
@@ -27,39 +28,37 @@ import scala.util.Random
  *                                 *
  ***********************************
  */
-class Field(val radius: Int) {
+class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   require(radius > 0, "radius should be positive integer")
 
-  val tiles: Array[Array[Tile]] = Array.tabulate(radius * 2 + 1, radius * 2 + 1) {
-    (y, x) => Land(null)
-  }
-  this(0, 0) = Land(Squad())
+  def points: List[Point] = Point.pointsWithin(radius)
+  def apply(x: Int, y: Int): Tile = tiles(new Point(x, y))
+  def apply(p: Point): Tile = tiles(p)
 
-  def apply(x: Int, y: Int): Tile = tiles(y + radius)(x + radius)
-  def apply(p: Point): Tile = this(p.x, p.y)
-
-  def update(x: Int, y: Int, t: Tile) { tiles(y + radius)(x + radius) = t }
-  def update(p: Point, t: Tile) { this(p.x, p.y) = t }
-
-  def foreach[T](f: Tile => T): Unit = for (p <- indices) f(this(p))
-
-  def indices: List[Point] = Point.pointsWithin(radius)
-
-  def moveSquad(p: Point, d: Direction) = {
-    val src = this(p)
-    src match {
-      case Land(squad) => {
-        this(p) = Land(null)
-        this(p + d.p) = Land(squad)
-      }
+  def moveSquad(p: Point, d: Direction, amount: Int) = {
+    val srcTile = this(p)
+    val dstTile = this(p + d.p)
+    if (srcTile.availableRobots < amount) {
+      throw new ArgumentException("The number of moving robots should be less than or equal to the number of existing movable robots.")
     }
+    srcTile.robots -= amount
+    dstTile.robots += amount
+    dstTile.movedRobots += amount
   }
 
-  def build(p: Point, t: String) = {
-    this(p) match {
-      case Land(_) => this(p) = DevelopedLand(t)
-      case _ => ()
+  def build(player: Player, p: Point, t: String) = {
+    val tile = this(p)
+    if (tile.owner != Some(player)) {
+      throw new ArgumentException("You should own a tile where an installation is built.")
     }
+    if (tile.installation.isDefined) {
+      throw new ArgumentException("A tile where an installation is built should have no installation.")
+    }
+    tile.installation = Some(t)
+  }
+
+  def clearMovedRobots() {
+    tiles.values.foreach(t => t.movedRobots = 0)
   }
 
   override def toString: String = {
@@ -89,53 +88,64 @@ class Field(val radius: Int) {
       ss(y)(x - 3) = '|'
       ss(y)(x + 3) = '|'
 
-      t match {
-        case Hole() => ss(y)(x) = 'H'
-        case Land(squad) => if (squad != null) ss(y)(x) = 'R'
-        case DevelopedLand(building) => if (building != null) ss(y)(x - 2) = 'B'
-        case InitialPosition(player) => ss(y)(x - 2) = 'I'
+      ss(y)(x) = if (t.isHole) {
+        'H'
+      } else if (t.robots > 0) {
+        'R'
+      } else if (t.installation.isDefined) {
+        t.installation.get.head
+      } else {
+        ' '
       }
     }
     val c = Point((width - 1) / 2, (height - 1) / 2)
     val dx = Point(6, 0)
     val dy = Point(3, 3)
-    for (p <- indices) {
+    for (p <- points) {
       printTile(c + dx * p.x + dy * p.y, this(p))
     }
     ss.mkString("\n")
   }
-
 }
 
 object Field {
-  /** generates field at random */
-  def generate(radius: Int, players: List[Player]): Field = {
+  /** Generates empty field */
+  def apply(radius: Int) = {
+    new Field(radius, Point.pointsWithin(radius).map(p => (p -> new Tile())).toMap)
+  }
+
+  /** Generates field at random */
+  def apply(radius: Int, players: List[Player]): Field = {
     require(players.length == 3)
 
     // first, generate 1/3 pattern
     // region: (x, y) such that y >= 0 && x + y >= 1
     val random = new Random(0)
-    val field = new Field(radius)
+    val field = mutable.Map(Point.pointsWithin(radius).map(p => (p -> new Tile())).toSeq: _*)
     for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
       // TODO: hole frequency
-      field(x, y) = random.nextInt(5) match {
-        case 0 => Hole()
-        case _ => Land(null)
+      if (random.nextInt(5) == 0) {
+        field(Point(x, y)).isHole = true
       }
     }
     // second, decide initial position
     val initialY = random.nextInt(radius + 1)
     val initialX = random.nextInt(radius) + 1 - initialY
-    field(initialX, initialY) = InitialPosition(players(0))
+    field(Point(initialX, initialY)).owner = Some(players(0))
+    field(Point(initialX, initialY)).installation = Some("initial")
     // third, expand the pattern
-    def copyTile(t: Tile, p: Player) = t match {
-      case InitialPosition(_) => InitialPosition(p)
-      case t => t
+    def copyTile(tile: Tile, player: Player) = {
+      val copiedTile = tile.clone
+      if (copiedTile.owner.isDefined) {
+        copiedTile.owner = Some(player)
+      }
+      copiedTile
     }
     for (y <- 0 to radius; x <- -y to -y + radius) {
-      field(Point(x, y).rotate120) = copyTile(field(x, y), players(1))
-      field(Point(x, y).rotate240) = copyTile(field(x, y), players(2))
+      val p = Point(x, y)
+      field(p.rotate120) = copyTile(field(p), players(1))
+      field(p.rotate240) = copyTile(field(p), players(2))
     }
-    return field
+    new Field(radius, field.toMap)
   }
 }
