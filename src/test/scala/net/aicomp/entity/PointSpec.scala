@@ -1,8 +1,10 @@
 package net.aicomp.entity
 
 import org.specs2.mutable._
+import org.scalacheck.Properties
+import org.scalacheck.Prop.forAll
 
-class PointSpecTest extends SpecificationWithJUnit {
+class PointSpec extends SpecificationWithJUnit {
   "Point" should {
     "calculate distance between 2 points" in {
       // x
