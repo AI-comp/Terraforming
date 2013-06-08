@@ -16,77 +16,63 @@ case class FinishCommand() extends Command
 object Command extends FormatValidation {
   // TODO: def parse(string: String): Command
   // TODO: def parse(elems: List[String]): Command
-
-  def moveCommand(args: List[String]): MoveCommand = {
-    describe("move") {
-      args.shouldHaveLength(3)
-      args(0).shouldBeInt
-      args(1).shouldBeInt
-      args(2).shouldBeIn("r", "ur", "dr", "l", "ul", "dl")
-    }
-
-    val x = args(0).toInt
-    val y = args(1).toInt
-    val d = args(2)
-    MoveCommand(new Point(x, y), Direction.fromString(d))
+  
+  def moveCommand(args: List[String]) = mkCommand("move"){ c =>
+    for {
+      _ <- c.validateLength(args, 3);
+      x <- c.validateInt(args(0));
+      y <- c.validateInt(args(1));
+      d <- c.validateInRange(args(2), "r", "ur", "dr", "l", "ul", "dl")
+    } yield MoveCommand(new Point(x, y), Direction.fromString(d))
   }
 
   //TODO
-  def buildCommand(args: List[String]): BuildCommand = {
-    describe("build") {
-      args.shouldHaveLength(3)
-      args(0).shouldBeInt
-      args(1).shouldBeInt
-      args(2).shouldBeIn("br", "sh", "at", "mt", "pk", "sq", "pl")
-    }
-
-    val x = args(0).toInt
-    val y = args(1).toInt
-    val t = args(2)
-    BuildCommand(new Point(x, y), t)
+  
+  def buildCommand(args: List[String]) = mkCommand("build"){ c =>
+    for {
+      _ <- c.validateLength(args, 3);
+      x <- c.validateInt(args(0));
+      y <- c.validateInt(args(1));
+      t <- c.validateInRange(args(2), "br", "sh", "at", "mt", "pk", "sq", "pl")
+    } yield BuildCommand(new Point(x, y), t)
   }
 
-  def finishCommand(args: List[String]): FinishCommand = {
-    describe("finish") {
-      args.shouldHaveLength(0)
-    }
-    FinishCommand()
+  def finishCommand(args: List[String]) = mkCommand("finish"){ c =>
+    for {
+      _ <- c.validateLength(args, 0)
+    } yield FinishCommand()
   }
 }
 
 sealed trait FormatValidation {
-  case class LengthException(msg: String) extends Exception(msg)
-  class LengthValidator(args: List[String]) {
-    def shouldHaveLength(n: Int) {
-      if (args.length != n) throw new Exception("have " + n + " arguments")
+  def mkCommand(name: String)(f: CommandBuilder => Either[String, Command]) = {
+    f(new CommandBuilder(name)) match {
+      case Left(msg) => throw new CommandException(msg)
+      case Right(cmd) => cmd
     }
   }
-  implicit def lengthValidator(args: List[String]): LengthValidator = new LengthValidator(args)
 
-  case class ArgumentException(msg: String) extends Exception(msg)
-  class ArgumentValidator(arg: String) {
-    def shouldBeInt() {
+  class CommandBuilder(val name: String) {
+    def validateLength(args: List[String], n: Int) = {
+      if (args.length == n)
+        Right(())
+      else
+        Left(name + " should have " + n + " arguments")
+    }.right
+   
+    def validateInt(arg: String) = {
       try {
-        arg.toInt
+        Right(arg.toInt)
       } catch {
-        case e: java.lang.NumberFormatException => throw new ArgumentException("\"" + arg + "\" should be Int")
+        case e: java.lang.NumberFormatException => Left("In " + name + " command, \"" + arg + "\" should be Int")
       }
-    }
-    def shouldBeString() {}
-    def shouldBeIn(args: String*) {
-      if (!args.contains(arg)) {
-        throw new ArgumentException("\"" + arg + "\" should be in " + args.mkString("|"))
-      }
-    }
-  }
-  implicit def argumentValidator(arg: String): ArgumentValidator = new ArgumentValidator(arg)
-
-  def describe(cmd: String)(f: => Unit) {
-    try {
-      f
-    } catch {
-      case LengthException(s) => throw new CommandException(cmd + " should " + s)
-      case ArgumentException(s) => throw new CommandException("In " + cmd + " command, " + s)
-    }
+    }.right
+  
+    def validateInRange(arg: String, range: String*) = {
+      if (range.contains(arg))
+        Right(arg)
+      else
+        Left("In " + name + " command, \"" + arg + "\" should be in " + range.mkString("|"))
+    }.right
   }
 }
