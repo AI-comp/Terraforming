@@ -29,6 +29,8 @@ case class Point(val x: Int, val y: Int) {
   def +(r: Point) = Point(x + r.x, y + r.y)
   def -(r: Point) = Point(x - r.x, y - r.y)
   def *(r: Int) = Point(x * r, y * r)
+  def rotate120() = Point(-(x + y), x)
+  def rotate240() = Point(y, -(x + y))
 
   def distance(p: Point): Int = {
     val dx = x - p.x
