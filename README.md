@@ -13,7 +13,7 @@ http://www.eclipse.org/downloads/
   1. Copy a URL of suitable version on the above site
   1. Menu > Help > Install new software
   1. Enter the copied URL on the textbox of "Enter with" then push enter key
-1. Install m2e-scala connector on Eclipse (the following URL indicates a update site instead of a web page)  
+1. Install m2e-scala connector on Eclipse Juno (4.2)  
   1. Copy the following URL: http://alchim31.free.fr/m2e-scala/update-site/
   1. See the following web page and install suitable version  
      http://scala-ide.org/download/current.html
