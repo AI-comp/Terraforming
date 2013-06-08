@@ -121,7 +121,7 @@ object Field {
     // first, generate 1/3 pattern
     // region: (x, y) such that y >= 0 && x + y >= 1
     val random = new Random(0)
-    val field = mutable.Map(Point.pointsWithin(radius).map(p => (p -> new Tile())).toSeq: _*)
+    val field = mutable.Map(Field(radius).tiles.toSeq: _*)
     for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
       // TODO: hole frequency
       if (random.nextInt(5) == 0) {
