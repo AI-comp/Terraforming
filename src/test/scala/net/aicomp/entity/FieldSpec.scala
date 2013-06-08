@@ -5,10 +5,10 @@ import org.specs2.mutable._
 class FieldSpec extends SpecificationWithJUnit {
   "Field" should {
     "return generated field with initial positions" in {
-      val player1 = new Player
-      val player2 = new Player
-      val player3 = new Player
-      val field = Field.generate(7, player1, player2, player3)
+      val player1 = new Player("a")
+      val player2 = new Player("b")
+      val player3 = new Player("c")
+      val field = Field.generate(7, List(player1, player2, player3))
       def filterByPlayer(player: Player) = field.indices.filter(
         x => field(x) match {
           case InitialPosition(p) => p == player

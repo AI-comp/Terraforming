@@ -109,8 +109,9 @@ class Field(val radius: Int) {
 
 object Field {
   /** generates field at random */
-  def generate(radius: Int, player1: Player, player2: Player, player3: Player)
-    : Field = {
+  def generate(radius: Int, players: List[Player]): Field = {
+    require(players.length == 3)
+
     // first, generate 1/3 pattern
     // region: (x, y) such that y >= 0 && x + y >= 1
     val random = new Random(0)
@@ -125,15 +126,15 @@ object Field {
     // second, decide initial position
     val initialY = random.nextInt(radius + 1)
     val initialX = random.nextInt(radius) + 1 - initialY
-    field(initialX, initialY) = InitialPosition(player1)
+    field(initialX, initialY) = InitialPosition(players(0))
     // third, expand the pattern
     def copyTile(t: Tile, p: Player) = t match {
       case InitialPosition(_) => InitialPosition(p)
       case t => t
     }
     for (y <- 0 to radius; x <- -y to -y + radius) {
-      field(Point(x, y).rotate120) = copyTile(field(x, y), player2)
-      field(Point(x, y).rotate240) = copyTile(field(x, y), player3)
+      field(Point(x, y).rotate120) = copyTile(field(x, y), players(1))
+      field(Point(x, y).rotate240) = copyTile(field(x, y), players(2))
     }
     return field
   }

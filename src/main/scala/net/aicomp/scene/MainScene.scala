@@ -22,7 +22,7 @@ abstract class MainScene(val nextScene: Scene[GameEnvironment]) extends Abstract
     commands.get(cmd) match {
       case Some(c) => {
         try {
-          game.processCommand(game.player, c(args))
+          game.processCommand(game.players(0), c(args))
           displayLine(game.field.toString)
         } catch {
           case CommandException(msg) => {
