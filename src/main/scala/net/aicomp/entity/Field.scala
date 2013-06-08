@@ -39,7 +39,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     val srcTile = this(p)
     val dstTile = this(p + d.p)
     if (srcTile.availableRobots < amount) {
-      throw new ArgumentException("The number of moving robots should be less than or equal to the number of existing movable robots.")
+      throw new CommandException("The number of moving robots should be less than or equal to the number of existing movable robots.")
     }
     srcTile.robots -= amount
     dstTile.robots += amount
@@ -49,10 +49,10 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   def build(player: Player, p: Point, t: String) = {
     val tile = this(p)
     if (tile.owner != Some(player)) {
-      throw new ArgumentException("You should own a tile where an installation is built.")
+      throw new CommandException("You should own a tile where an installation is built.")
     }
     if (tile.installation.isDefined) {
-      throw new ArgumentException("A tile where an installation is built should have no installation.")
+      throw new CommandException("A tile where an installation is built should have no installation.")
     }
     tile.installation = Some(t)
   }

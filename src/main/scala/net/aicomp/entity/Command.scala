@@ -43,9 +43,9 @@ object Command extends FormatValidation {
   }
 }
 
-case class ArgumentException(msg: String) extends Exception(msg)
-
 sealed trait FormatValidation {
+  case class ArgumentException(msg: String) extends Exception(msg)
+
   def mkCommand[T <: Command](name: String)(f: CommandBuilder => Either[String, T]) = { (args: List[String]) =>
     f(new CommandBuilder(name, args)) match {
       case Left(msg) => throw new CommandException(msg)
