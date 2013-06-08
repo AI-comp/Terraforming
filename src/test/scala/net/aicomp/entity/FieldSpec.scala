@@ -17,9 +17,11 @@ class FieldSpec extends SpecificationWithJUnit {
       filterByPlayer(player1).length must_== 1
       filterByPlayer(player2).length must_== 1
       filterByPlayer(player3).length must_== 1
-      field.points.foreach(p => field(p).installation match {
-        case Some("initial") => ()
-        case _ => field(p) must_== field(p.rotate120)
+      field.points.foreach(p => {
+        var copy = field(p).clone
+        if (copy.installation == Some("initial"))
+          copy.owner = field(p.rotate120).owner
+        copy must_== field(p.rotate120)
       })
     }
   }
