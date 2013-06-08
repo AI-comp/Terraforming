@@ -36,7 +36,7 @@ trait WhiteScene extends AbstractScene {
   // following methods must be another module.
 
   // draw points in a map
-  def drawPoints(renderer: Renderer, points: List[Point]) = {
+  def drawPoints(renderer: Renderer, points: Set[Point]) = {
     val pointImages = ImageLoader.loadTiles(renderer)
 
     for (point <- points) {

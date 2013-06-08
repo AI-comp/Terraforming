@@ -31,7 +31,7 @@ import scala.util.Random
 class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   require(radius > 0, "radius should be positive integer")
 
-  def points: List[Point] = Point.pointsWithin(radius)
+  def points: Set[Point] = tiles.keySet
   def apply(x: Int, y: Int): Tile = tiles(new Point(x, y))
   def apply(p: Point): Tile = tiles(p)
 
