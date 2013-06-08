@@ -2,7 +2,7 @@ package net.aicomp.entity
 
 import org.specs2.mutable._
 
-class FieldSpecTest extends SpecificationWithJUnit {
+class FieldSpec extends SpecificationWithJUnit {
   "Field" should {
     "return generated field with initial positions" in {
       val player1 = new Player

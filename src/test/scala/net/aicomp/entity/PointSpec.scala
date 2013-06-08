@@ -1,8 +1,10 @@
 package net.aicomp.entity
 
 import org.specs2.mutable._
+import org.scalacheck.Properties
+import org.scalacheck.Prop.forAll
 
-class PointSpecTest extends SpecificationWithJUnit {
+class PointSpec extends SpecificationWithJUnit {
   "Point" should {
     "calculate additions" in {
       Point(1, 1) + Point(2, -1) must_== Point(3, 0)

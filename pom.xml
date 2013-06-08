@@ -31,6 +31,16 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
+    <repository>
+      <id>oss.sonatype.org</id>
+      <url>http://oss.sonatype.org/content/repositories/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
   </repositories>
 
   <pluginRepositories>
@@ -81,6 +91,11 @@
       <artifactId>specs2_${scala.version}</artifactId> 
       <version>1.12.4.1</version> 
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.scalacheck</groupId>
+      <artifactId>scalacheck_${scala.version}</artifactId>
+      <version>1.10.1</version>
     </dependency>
   </dependencies>
 
@@ -170,6 +185,11 @@
         <configuration>
           <useFile>false</useFile>
           <disableXmlReport>true</disableXmlReport>
+          <includes>
+            <include>**/*Spec.*</include>
+            <include>**/*Test.*</include>
+            <include>**/*Suite.*</include>
+          </includes>
         </configuration>
       </plugin>
       

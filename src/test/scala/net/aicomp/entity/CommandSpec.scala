@@ -2,7 +2,7 @@ package net.aicomp.entity
 
 import org.specs2.mutable._
 
-class CommandSpecTest extends SpecificationWithJUnit {
+class CommandSpec extends SpecificationWithJUnit {
   "Command" should {
     "return MoveCommand" in {
       Command.moveCommand(List("2", "4", "ur")) must_==
