@@ -1,4 +1,4 @@
 package net.aicomp.entity
 
-class Player {
+class Player(val name: String) {
 }
