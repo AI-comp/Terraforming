@@ -16,50 +16,50 @@ case class FinishCommand() extends Command
 object Command extends FormatValidation {
   // TODO: def parse(string: String): Command
   // TODO: def parse(elems: List[String]): Command
-  
-  def moveCommand(args: List[String]) = mkCommand("move"){ c =>
+
+  def moveCommand = mkCommand("move") { c =>
     for {
-      _ <- c.validateLength(args, 3);
-      x <- c.validateInt(args(0));
-      y <- c.validateInt(args(1));
-      d <- c.validateInRange(args(2), "r", "ur", "dr", "l", "ul", "dl")
+      _ <- c.validateLength(c.args, 3)
+      x <- c.validateInt(c.args(0))
+      y <- c.validateInt(c.args(1))
+      d <- c.validateInRange(c.args(2), "r", "ur", "dr", "l", "ul", "dl")
     } yield MoveCommand(new Point(x, y), Direction.fromString(d))
   }
 
   //TODO
-  
-  def buildCommand(args: List[String]) = mkCommand("build"){ c =>
+
+  def buildCommand = mkCommand("build") { c =>
     for {
-      _ <- c.validateLength(args, 3);
-      x <- c.validateInt(args(0));
-      y <- c.validateInt(args(1));
-      t <- c.validateInRange(args(2), "br", "sh", "at", "mt", "pk", "sq", "pl")
+      _ <- c.validateLength(c.args, 3)
+      x <- c.validateInt(c.args(0))
+      y <- c.validateInt(c.args(1))
+      t <- c.validateInRange(c.args(2), "br", "sh", "at", "mt", "pk", "sq", "pl")
     } yield BuildCommand(new Point(x, y), t)
   }
 
-  def finishCommand(args: List[String]) = mkCommand("finish"){ c =>
+  def finishCommand = mkCommand("finish") { c =>
     for {
-      _ <- c.validateLength(args, 0)
+      _ <- c.validateLength(c.args, 0)
     } yield FinishCommand()
   }
 }
 
 sealed trait FormatValidation {
-  def mkCommand(name: String)(f: CommandBuilder => Either[String, Command]) = {
-    f(new CommandBuilder(name)) match {
+  def mkCommand[T <: Command](name: String)(f: CommandBuilder => Either[String, T]) = { (args: List[String]) =>
+    f(new CommandBuilder(name, args)) match {
       case Left(msg) => throw new CommandException(msg)
       case Right(cmd) => cmd
     }
   }
 
-  class CommandBuilder(val name: String) {
+  class CommandBuilder(val name: String, val args: List[String]) {
     def validateLength(args: List[String], n: Int) = {
       if (args.length == n)
         Right(())
       else
         Left(name + " should have " + n + " arguments")
     }.right
-   
+
     def validateInt(arg: String) = {
       try {
         Right(arg.toInt)
@@ -67,7 +67,7 @@ sealed trait FormatValidation {
         case e: java.lang.NumberFormatException => Left("In " + name + " command, \"" + arg + "\" should be Int")
       }
     }.right
-  
+
     def validateInRange(arg: String, range: String*) = {
       if (range.contains(arg))
         Right(arg)
