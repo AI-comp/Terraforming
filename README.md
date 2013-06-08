@@ -33,12 +33,12 @@ You can import maven projects with the following steps:
 
 ### Build with Maven 3 and Zinc
 1. zinc -start  
-Start build server (it requires Zinc (https://github.com/typesafehub/zinc)).
+Start build server (it requires Zinc https://github.com/typesafehub/zinc ).
 1. mvn package
 
 ### Build with sbt
 1. sbt  
-Start build server (it requires sbt (http://www.scala-sbt.org/)).
+Start build server (it requires sbt http://www.scala-sbt.org/ ).
 2. test
 
 ### Build with Maven 3
