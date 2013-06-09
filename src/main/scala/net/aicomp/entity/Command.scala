@@ -11,7 +11,7 @@ case class FinishCommand() extends Command
 
 /**
  * Command object only do validation of format.
- * Game.processCommand must validate the semantics of commands.
+ * Game.acceptCommand must validate the semantics of commands.
  */
 object Command extends FormatValidation {
   // TODO: def parse(string: String): Command
