@@ -38,8 +38,11 @@ case class Point(val x: Int, val y: Int) {
     max(max(abs(dx), abs(dy)), abs(dx + dy))
   }
   def within(radius: Int): Boolean = distance(Point.origin) <= radius
-  def shortestPathTo(goal: Point, field: Field): Option[List[Direction]] = {
-    def canEnter(p: Point) = p.within(field.radius) && !field(p).hasObstacle
+  def shortestPathTo(goal: Point, field: Field, player: Player): Option[List[Direction]] = {
+    shortestPathTo(goal, field, p => field(p).isMovable(player))
+  }
+  def shortestPathTo(goal: Point, field: Field, isMovable: Point => Boolean): Option[List[Direction]] = {
+    def canEnter(p: Point) = p.within(field.radius) && isMovable(p)
     if (canEnter(this) == false) {
       // invalid starting point
       return None
