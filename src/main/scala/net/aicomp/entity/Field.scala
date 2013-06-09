@@ -48,7 +48,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
   def build(player: Player, p: Point, ins: Installation) = {
     val tile = this(p)
-    if (tile.owner != Some(player)) {
+    if (!tile.owner.exists(_ == player)) {
       throw new CommandException("You should own a tile where an installation is built.")
     }
     if (tile.installation.isDefined) {

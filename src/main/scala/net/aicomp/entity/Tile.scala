@@ -9,7 +9,7 @@ package net.aicomp.entity
 
   def availableRobots = robots - movedRobots
 
-  def isMovable(player: Player) = owner != Some(player) || installation.isEmpty
+  def isMovable(player: Player) = !owner.exists(_ == player) || installation.isEmpty
 
   override def clone() = super.clone().asInstanceOf[Tile]
 
