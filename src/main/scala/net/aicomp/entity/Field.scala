@@ -38,6 +38,9 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   def moveSquad(p: Point, d: Direction, amount: Int) = {
     val srcTile = this(p)
     val dstTile = this(p + d.p)
+    if (srcTile.isHole) {
+      throw new CommandException("Robots are not able to move from a hole.")
+    }
     if (srcTile.availableRobots < amount) {
       throw new CommandException("The number of moving robots should be less than or equal to the number of existing movable robots.")
     }
@@ -57,6 +60,10 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     if (tile.robots < ins.cost) {
       throw new CommandException("A number of robot is not enough.")
     }
+    if (tile.isHole && ins != Installation.br) {
+      throw new CommandException("Installations other than bridge are not allowed to be built on a hole")
+    }
+    tile.isHole = false
     tile.robots -= ins.cost
     tile.installation = Some(ins)
   }
