@@ -14,7 +14,7 @@ object Direction {
 
   val all = List[Direction](ur, ul, r, dr, dl, l)
 
-  private val strMap: scala.collection.Map[String, Direction] = scala.collection.Map(
+  private val strMap = scala.collection.immutable.Map(
     "ur" -> ur,
     "ul" -> ul,
     "r" -> r,
@@ -22,7 +22,8 @@ object Direction {
     "dl" -> dl,
     "l" -> l)
 
-  def fromString(s: String): Direction = strMap(s)
+  def find = strMap.get _
+  def keys = strMap.keys
 }
 
 case class Point(val x: Int, val y: Int) {

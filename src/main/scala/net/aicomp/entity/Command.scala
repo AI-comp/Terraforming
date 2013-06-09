@@ -21,9 +21,9 @@ object Command extends FormatValidation {
       _ <- c.validateLength(c.args, 4)
       x <- c.validateInt(c.args(0))
       y <- c.validateInt(c.args(1))
-      d <- c.validateInRange(c.args(2), "r", "ur", "dr", "l", "ul", "dl")
+      d <- c.validateDirection(c.args(2))
       amount <- c.validateInt(c.args(3))
-    } yield MoveCommand(new Point(x, y), Direction.fromString(d), amount)
+    } yield MoveCommand(new Point(x, y), d, amount)
   }
 
   //TODO
@@ -73,15 +73,27 @@ sealed trait FormatValidation {
       if (range.contains(arg))
         Right(arg)
       else
-        Left("In " + name + " command, \"" + arg + "\" should be in " + range.mkString("|"))
+        failInRangeMsg(arg, range)
+    }.right
+
+    def validateDirection(arg: String) = {
+      Direction.find(arg) match {
+        case Some(x) => Right(x)
+        case None => failInRangeMsg(arg, Direction.keys)
+      }
     }.right
 
     def validateInstallation(arg: String) = {
-      var range = Installation.buildables
-      range.find(ins => ins.name == arg) match {
-        case Some(ins) => Right(ins)
-        case None => Left("In " + name + " command, \"" + arg + "\" should be in " + range.mkString("|"))
+      val candidates = Installation.buildables.filter(ins => ins.name.startsWith(arg))
+      candidates match {
+        case Nil => failInRangeMsg(arg, Installation.buildables)
+        case x :: Nil => Right(x)
+        case _ => Left("Ambiguous installation: " + candidates.mkString(", "))
       }
     }.right
+
+    private def failInRangeMsg[T](arg: String, iter: Iterable[T]) = {
+      Left("In " + name + " command, \"" + arg + "\" should be in " + iter.mkString("|"))
+    }
   }
 }
