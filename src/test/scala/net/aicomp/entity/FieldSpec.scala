@@ -41,7 +41,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(0, 0).isHole = false
       initTile(field, Point(1, 0))
       field(1, 0).isHole = true
-      field.moveSquad(Point(0, 0), Direction.r, 4) must_== ()
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 4) must_== ()
     }
     "decline to moveSquad from a hole" in {
       val players = Vector(new Player("a"), new Player("b"), new Player("c"))
@@ -52,7 +52,8 @@ class FieldSpec extends SpecificationWithJUnit {
       field(0, 0).isHole = true
       initTile(field, Point(1, 0))
       field(1, 0).isHole = false
-      field.moveSquad(Point(0, 0), Direction.r, 4) must throwA[CommandException]
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 4) must
+        throwA[CommandException]
     }
     "remove hole when bridge is built" in {
       val players = Vector(new Player("a"), new Player("b"), new Player("c"))
@@ -75,6 +76,77 @@ class FieldSpec extends SpecificationWithJUnit {
         throwA[CommandException]
       field.build(players(0), Point(0, 0), Installation.at) must
         throwA[CommandException]
+    }
+    "decline to moveSquad from unoccupied tile" in {
+      val players = Vector(new Player("a"), new Player("b"), new Player("c"))
+      val field = Field(3, players.toList)
+      initTile(field, Point(0, 0))
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 0) must
+        throwA[CommandException]
+    }
+    "decline to moveSquad from enemy's tile" in {
+      val players = Vector(new Player("a"), new Player("b"), new Player("c"))
+      val field = Field(3, players.toList)
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(1))
+      field(0, 0).robots = 10
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 5) must
+        throwA[CommandException]
+    }
+    "change the owner of tile after moveSquad to an empty tile" in {
+      val players = Vector(new Player("a"), new Player("b"), new Player("c"))
+      val field = Field(3, players.toList)
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).robots = 10
+      initTile(field, Point(1, 0))
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 4) must_== ()
+      field(0, 0).robots must_== 6
+      field(1, 0).owner must_== Some(players(0))
+      field(1, 0).robots must_== 4
+      field(1, 0).movedRobots must_== 4
+    }
+    "change the owner of tile after winning battle" in {
+      val players = Vector(new Player("a"), new Player("b"), new Player("c"))
+      val field = Field(3, players.toList)
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).robots = 10
+      initTile(field, Point(1, 0))
+      field(1, 0).owner = Some(players(1))
+      field(1, 0).robots = 8
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 10) must_== ()
+      field(1, 0).owner must_== Some(players(0))
+      field(1, 0).robots must_== 2
+      field(1, 0).movedRobots must_== 2
+    }
+    "not change the owner of tile after losing battle" in {
+      val players = Vector(new Player("a"), new Player("b"), new Player("c"))
+      val field = Field(3, players.toList)
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).robots = 10
+      initTile(field, Point(1, 0))
+      field(1, 0).owner = Some(players(1))
+      field(1, 0).robots = 18
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 10) must_== ()
+      field(1, 0).owner must_== Some(players(1))
+      field(1, 0).robots must_== 8
+      field(1, 0).movedRobots must_== 0
+    }
+    "not change the owner of tile after draw battle" in {
+      val players = Vector(new Player("a"), new Player("b"), new Player("c"))
+      val field = Field(3, players.toList)
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).robots = 10
+      initTile(field, Point(1, 0))
+      field(1, 0).owner = Some(players(1))
+      field(1, 0).robots = 10
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 10) must_== ()
+      field(1, 0).owner must_== Some(players(1))
+      field(1, 0).robots must_== 0
+      field(1, 0).movedRobots must_== 0
     }
   }
 }

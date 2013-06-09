@@ -18,7 +18,7 @@ class Game(val field: Field, val players: List[Player], val maxTurn: Int) {
       case MoveCommand(p, dir, amount) => {
         checkCanMove
         _isMoving = true
-        field.moveSquad(p, dir, amount)
+        field.moveSquad(currentPlayer, p, dir, amount)
       }
       case BuildCommand(p, t) => {
         checkCanBuild

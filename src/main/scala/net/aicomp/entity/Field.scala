@@ -35,7 +35,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   def apply(x: Int, y: Int): Tile = tiles(new Point(x, y))
   def apply(p: Point): Tile = tiles(p)
 
-  def moveSquad(p: Point, d: Direction, amount: Int) = {
+  def moveSquad(player: Player, p: Point, d: Direction, amount: Int) = {
     val srcTile = this(p)
     val dstTile = this(p + d.p)
     if (srcTile.isHole) {
@@ -44,9 +44,26 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     if (srcTile.availableRobots < amount) {
       throw new CommandException("The number of moving robots should be less than or equal to the number of existing movable robots.")
     }
+    if (srcTile.owner != Some(player)) {
+      throw new CommandException("A player cannot move other player's robots")
+    }
     srcTile.robots -= amount
-    dstTile.robots += amount
-    dstTile.movedRobots += amount
+    if (dstTile.owner == Some(player)) {
+      dstTile.robots += amount
+      dstTile.movedRobots += amount
+    }
+    else {
+      if (amount <= dstTile.robots) {
+        // losing or draw
+        dstTile.robots -= amount
+      }
+      else {
+        // winning
+        dstTile.owner = Some(player)
+        dstTile.robots = amount - dstTile.robots
+        dstTile.movedRobots = dstTile.robots
+      }
+    }
   }
 
   def build(player: Player, p: Point, ins: Installation) = {
