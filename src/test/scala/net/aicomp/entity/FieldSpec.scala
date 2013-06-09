@@ -11,7 +11,7 @@ class FieldSpec extends SpecificationWithJUnit {
       val field = Field(7, List(player1, player2, player3))
       def filterByPlayer(player: Player) = field.points.filter(
         p => field(p).installation match {
-          case Some("initial") => field(p).owner == Some(player)
+          case Some(_) => field(p).owner.exists(_ == player)
           case _ => false
         })
       filterByPlayer(player1).size must_== 1
@@ -19,8 +19,9 @@ class FieldSpec extends SpecificationWithJUnit {
       filterByPlayer(player3).size must_== 1
       field.points.foreach(p => {
         var copy = field(p).clone
-        if (copy.installation == Some("initial"))
+        if (copy.installation.exists(_ == Installation.initial)) {
           copy.owner = field(p.rotate120).owner
+        }
         copy must_== field(p.rotate120)
       })
     }

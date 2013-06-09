@@ -4,12 +4,12 @@ package net.aicomp.entity
   var owner: Option[Player] = None
   var robots = 0
   var movedRobots = 0
-  var installation: Option[String] = None
+  var installation: Option[Installation] = None
   var isHole: Boolean = false
 
   def availableRobots = robots - movedRobots
 
-  def isMovable(player: Player) = owner != Some(player) || installation.isEmpty
+  def isMovable(player: Player) = !owner.exists(_ == player) || installation.isEmpty
 
   override def clone() = super.clone().asInstanceOf[Tile]
 
