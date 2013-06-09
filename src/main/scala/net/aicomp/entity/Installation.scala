@@ -13,8 +13,15 @@ object Installation {
   val buildables = List(br, sh, at, mt, pk, sq, pl)
 }
 
-class Installation(val name: String) {
+@cloneable class Installation(val name: String) {
   def head = name.head
 
   override def toString = name
+
+  override def equals(obj: Any) = obj match {
+    case x: Installation => equals(x)
+    case _ => false
+  }
+
+  def equals(that: Installation) = this.name == that.name
 }

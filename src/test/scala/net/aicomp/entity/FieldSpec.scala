@@ -19,7 +19,7 @@ class FieldSpec extends SpecificationWithJUnit {
       filterByPlayer(player3).size must_== 1
       field.points.foreach(p => {
         var copy = field(p).clone
-        if (copy.installation == Some("initial"))
+        if (copy.installation == Installation.initial)
           copy.owner = field(p.rotate120).owner
         copy must_== field(p.rotate120)
       })
