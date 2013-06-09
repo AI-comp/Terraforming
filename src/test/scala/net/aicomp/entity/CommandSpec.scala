@@ -11,7 +11,7 @@ class CommandSpec extends SpecificationWithJUnit {
     }
     "return BuildCommand" in {
       Command.buildCommand(List("2", "3", "br")) must_==
-        BuildCommand(Point(2, 3), "br")
+        BuildCommand(Point(2, 3), Installation.br)
       Command.buildCommand(List("2", "3", "ur")) must throwA[CommandException]
     }
   }

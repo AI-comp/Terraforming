@@ -5,7 +5,7 @@ sealed trait Command
 case class MoveCommand(val from: Point, val direction: Direction, val amount: Int)
   extends Command
 
-case class BuildCommand(val at: Point, val building: String) extends Command
+case class BuildCommand(val at: Point, val instllation: Installation) extends Command
 
 case class FinishCommand() extends Command
 
@@ -32,7 +32,7 @@ object Command extends FormatValidation {
       _ <- c.validateLength(c.args, 3)
       x <- c.validateInt(c.args(0))
       y <- c.validateInt(c.args(1))
-      t <- c.validateInRange(c.args(2), "br", "sh", "at", "mt", "pk", "sq", "pl")
+      t <- c.validateInstallation(c.args(2))
     } yield BuildCommand(new Point(x, y), t)
   }
 
@@ -74,6 +74,14 @@ sealed trait FormatValidation {
         Right(arg)
       else
         Left("In " + name + " command, \"" + arg + "\" should be in " + range.mkString("|"))
+    }.right
+
+    def validateInstallation(arg: String) = {
+      var range = Installation.buildables
+      range.find(ins => ins.name == arg) match {
+        case Some(ins) => Right(ins)
+        case None => Left("In " + name + " command, \"" + arg + "\" should be in " + range.mkString("|"))
+      }
     }.right
   }
 }

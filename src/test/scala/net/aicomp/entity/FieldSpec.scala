@@ -11,7 +11,7 @@ class FieldSpec extends SpecificationWithJUnit {
       val field = Field(7, List(player1, player2, player3))
       def filterByPlayer(player: Player) = field.points.filter(
         p => field(p).installation match {
-          case Some("initial") => field(p).owner == Some(player)
+          case Some(_) => field(p).owner == Some(player)
           case _ => false
         })
       filterByPlayer(player1).size must_== 1

@@ -46,7 +46,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     dstTile.movedRobots += amount
   }
 
-  def build(player: Player, p: Point, t: String) = {
+  def build(player: Player, p: Point, ins: Installation) = {
     val tile = this(p)
     if (tile.owner != Some(player)) {
       throw new CommandException("You should own a tile where an installation is built.")
@@ -54,7 +54,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     if (tile.installation.isDefined) {
       throw new CommandException("A tile where an installation is built should have no installation.")
     }
-    tile.installation = Some(t)
+    tile.installation = Some(ins)
   }
 
   def clearMovedRobots() {
@@ -92,10 +92,11 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
         'H'
       } else if (t.robots > 0) {
         'R'
-      } else if (t.installation.isDefined) {
-        t.installation.get.head
       } else {
-        ' '
+        t.installation match {
+          case Some(x) => x.head
+          case None => ' '
+        }
       }
     }
     val c = Point((width - 1) / 2, (height - 1) / 2)
@@ -132,7 +133,7 @@ object Field {
     val initialY = random.nextInt(radius + 1)
     val initialX = random.nextInt(radius) + 1 - initialY
     field(Point(initialX, initialY)).owner = Some(players(0))
-    field(Point(initialX, initialY)).installation = Some("initial")
+    field(Point(initialX, initialY)).installation = Some(Installation.initial)
     // third, expand the pattern
     def copyTile(tile: Tile, player: Player) = {
       val copiedTile = tile.clone
