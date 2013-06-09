@@ -1,27 +1,22 @@
 package net.aicomp.entity
 
 object Installation {
+
+  // TODO: rename
   val initial = new Installation("initial")
-  val br = new Installation("br")
-  val sh = new Installation("sh")
-  val at = new Installation("at")
-  val mt = new Installation("mt")
-  val pk = new Installation("pk")
-  val sq = new Installation("sq")
-  val pl = new Installation("pl")
+  val br = new Installation("bridge")
+  val sh = new Installation("shield")
+  val at = new Installation("attack")
+  val mt = new Installation("material")
+  val pk = new Installation("park")
+  val sq = new Installation("square")
+  val pl = new Installation("public")
 
   val buildables = List(br, sh, at, mt, pk, sq, pl)
 }
 
-@cloneable class Installation(val name: String) {
+class Installation(val name: String) {
   def head = name.head
 
   override def toString = name
-
-  override def equals(obj: Any) = obj match {
-    case x: Installation => equals(x)
-    case _ => false
-  }
-
-  def equals(that: Installation) = this.name == that.name
 }

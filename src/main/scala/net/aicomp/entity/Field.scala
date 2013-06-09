@@ -48,7 +48,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
   def build(player: Player, p: Point, ins: Installation) = {
     val tile = this(p)
-    if (!tile.owner.exists(_ == player)) {
+    if (!tile.ownedBy(player)) {
       throw new CommandException("You should own a tile where an installation is built.")
     }
     if (tile.installation.isDefined) {
@@ -59,6 +59,15 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
   def clearMovedRobots() {
     tiles.values.foreach(t => t.movedRobots = 0)
+  }
+
+  def getMaterial(p: Point, player: Player) = {
+    val baseMaterial = if (this(p) ownedBy player) 1 else 0
+    val around = Direction.all.map(_.p + p).filter(_.within(radius))
+    val aroundMaterial = around.map(apply).count(tile =>
+      tile.ownedBy(player) &&
+        tile.installation.exists(_ == Installation.mt))
+    baseMaterial + aroundMaterial
   }
 
   override def toString: String = {
