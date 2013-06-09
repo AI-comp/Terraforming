@@ -47,9 +47,14 @@ class PointSpec extends SpecificationWithJUnit {
       Point(0, -1).shortestPathTo(Point(8, 0), field, player) must_== None
       Point(90, -1).shortestPathTo(Point(0, 0), field, player) must_== None
 
+      def update(t: Tile) {
+        t.owner = Some(player)
+        t.robots = 1000000000
+      }
+      
       val fieldWithObstacle = Field(2)
-      fieldWithObstacle(0, 0).owner = Some(player)
-      fieldWithObstacle(-1, 0).owner = Some(player)
+      update(fieldWithObstacle(0, 0))
+      update(fieldWithObstacle(-1, 0))
       fieldWithObstacle.build(player, Point(0, 0), Installation.br)
       fieldWithObstacle.build(player, Point(-1, 0), Installation.br)
       Point(0, 1).shortestPathTo(Point(0, -1), fieldWithObstacle, player) must_==
@@ -57,9 +62,9 @@ class PointSpec extends SpecificationWithJUnit {
       Point(0, 0).shortestPathTo(Point(0, -1), fieldWithObstacle, player) must_== None
 
       val fieldWithWall = Field(1)
-      fieldWithWall(-1, 0).owner = Some(player)
-      fieldWithWall(0, 0).owner = Some(player)
-      fieldWithWall(1, 0).owner = Some(player)
+      update(fieldWithWall(-1, 0))
+      update(fieldWithWall(0, 0))
+      update(fieldWithWall(1, 0))
       fieldWithWall.build(player, Point(-1, 0), Installation.br)
       fieldWithWall.build(player, Point(0, 0), Installation.br)
       fieldWithWall.build(player, Point(1, 0), Installation.br)

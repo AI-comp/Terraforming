@@ -54,6 +54,10 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     if (tile.installation.isDefined) {
       throw new CommandException("A tile where an installation is built should have no installation.")
     }
+    if (tile.robots < ins.cost) {
+      throw new CommandException("A number of robot is not enough.")
+    }
+    tile.robots -= ins.cost
     tile.installation = Some(ins)
   }
 
