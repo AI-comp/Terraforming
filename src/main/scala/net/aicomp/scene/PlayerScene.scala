@@ -19,7 +19,8 @@ abstract class PlayerScene(nextScene: Scene[GameEnvironment], setting: GameSetti
     } else {
       val players = names.map(new Player(_))
       val field = Field(7, players)
-      env.game = new Game(field, players)
+      // TODO: maxTurn
+      env.game = new Game(field, players, 2*3)
       displayLine(names.size + " players have joined the game. (" + names.mkString(", ") + ")")
       nextScene
     }
