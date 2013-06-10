@@ -38,6 +38,7 @@ class PointSpec extends SpecificationWithJUnit {
     "return shortest path to" in {
       val field = Field(7)
       val player = new Player("A")
+      val enemy = new Player("B")
       Point(0, 1).shortestPathTo(Point(0, 1), field, player) must_==
         Some(List.empty[Direction])
       Point(0, 1).shortestPathTo(Point(0, 3), field, player) must_==
@@ -47,27 +48,23 @@ class PointSpec extends SpecificationWithJUnit {
       Point(0, -1).shortestPathTo(Point(8, 0), field, player) must_== None
       Point(90, -1).shortestPathTo(Point(0, 0), field, player) must_== None
 
-      def update(t: Tile) {
-        t.owner = Some(player)
+      def obstacle(t: Tile) {
+        t.owner = Some(enemy)
         t.robots = 1000000000
+        t.installation = Some(Installation.br)
       }
       
       val fieldWithObstacle = Field(2)
-      update(fieldWithObstacle(0, 0))
-      update(fieldWithObstacle(-1, 0))
-      fieldWithObstacle.build(player, Point(0, 0), Installation.br)
-      fieldWithObstacle.build(player, Point(-1, 0), Installation.br)
+      obstacle(fieldWithObstacle(0, 0))
+      obstacle(fieldWithObstacle(-1, 0))
       Point(0, 1).shortestPathTo(Point(0, -1), fieldWithObstacle, player) must_==
         Some(List(Direction.ur, Direction.ul, Direction.l))
       Point(0, 0).shortestPathTo(Point(0, -1), fieldWithObstacle, player) must_== None
 
       val fieldWithWall = Field(1)
-      update(fieldWithWall(-1, 0))
-      update(fieldWithWall(0, 0))
-      update(fieldWithWall(1, 0))
-      fieldWithWall.build(player, Point(-1, 0), Installation.br)
-      fieldWithWall.build(player, Point(0, 0), Installation.br)
-      fieldWithWall.build(player, Point(1, 0), Installation.br)
+      obstacle(fieldWithWall(-1, 0))
+      obstacle(fieldWithWall(0, 0))
+      obstacle(fieldWithWall(1, 0))
       Point(0, 1).shortestPathTo(Point(0, -1), fieldWithWall, player) must_== None
       Point(-1, 1).shortestPathTo(Point(0, 1), fieldWithWall, player) must_==
         Some(List(Direction.r))
