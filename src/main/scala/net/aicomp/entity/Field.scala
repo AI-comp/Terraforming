@@ -35,18 +35,14 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   def apply(x: Int, y: Int): Tile = tiles(new Point(x, y))
   def apply(p: Point): Tile = tiles(p)
 
-  def moveSquad(p: Point, d: Direction, amount: Int) = {
+  def moveSquad(player: Player, p: Point, d: Direction, amount: Int) = {
     val srcTile = this(p)
     val dstTile = this(p + d.p)
-    if (srcTile.isHole) {
-      throw new CommandException("Robots are not able to move from a hole.")
-    }
-    if (srcTile.availableRobots < amount) {
-      throw new CommandException("The number of moving robots should be less than or equal to the number of existing movable robots.")
-    }
-    srcTile.robots -= amount
-    dstTile.robots += amount
-    dstTile.movedRobots += amount
+    // check ALL constraints before any change written
+    srcTile.checkLeave(player, amount)
+    dstTile.checkEnter(player, amount)
+    srcTile.leave(player, amount)
+    dstTile.enter(player, amount)
   }
 
   def build(player: Player, p: Point, ins: Installation) = {

@@ -13,6 +13,47 @@ package net.aicomp.entity
 
   def isMovable(player: Player) = !ownedBy(player) || installation.isEmpty
 
+  def checkLeave(player: Player, amount: Int) {
+    if (isHole) {
+      throw new CommandException("Robots are not able to move from a hole.")
+    }
+    if (availableRobots < amount) {
+      throw new CommandException("The number of moving robots should be less than or equal to the number of existing movable robots.")
+    }
+    if (ownedBy(player)) {
+      throw new CommandException("A player cannot move other player's robots")
+    }
+  }
+
+  def leave(player: Player, amount: Int) {
+    checkLeave(player, amount) // defensive
+    robots -= amount
+  }
+
+  def checkEnter(player: Player, amount: Int) {
+  }
+
+  def enter(player: Player, amount: Int) {
+    checkEnter(player, amount) // defensive
+    if (ownedBy(player)) {
+      robots += amount
+      movedRobots += amount
+    }
+    else {
+      // battle
+      if (amount <= robots) {
+        // losing or draw
+        robots -= amount
+      }
+      else {
+        // winning
+        owner = Some(player)
+        robots = amount - robots
+        movedRobots = robots
+      }
+    }
+  }
+
   override def clone() = super.clone().asInstanceOf[Tile]
 
   override def equals(t: Any) = t match {
