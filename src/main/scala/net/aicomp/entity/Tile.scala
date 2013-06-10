@@ -38,19 +38,13 @@ package net.aicomp.entity
 
   def enter(player: Player, amount: Int) {
     checkEnter(player, amount) // defensive
-    if (owner.isEmpty) {
-      // wasted land
-      owner = Some(player)
-      robots = amount
-      movedRobots = amount
-    }
-    else if (ownedBy(player)) {
-      // undeveloped land or developed land of the player
+    if (ownedBy(player)) {
+      // developed land of the player
       robots += amount
       movedRobots += amount
     }
     else {
-      // battle
+      // battle (with wasted land's robots or enemy robots)
       if (amount <= robots) {
         // losing or draw
         robots -= amount
