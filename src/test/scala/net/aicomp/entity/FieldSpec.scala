@@ -93,7 +93,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field.moveSquad(players(0), Point(0, 0), Direction.r, 5) must
         throwA[CommandException]
     }
-    "change the owner of tile after moveSquad to an empty tile" in {
+    "change the occupier of tile after moveSquad to an empty tile" in {
       val players = Vector(new Player("a"), new Player("b"), new Player("c"))
       val field = Field(3, players.toList)
       initTile(field, Point(0, 0))
@@ -106,7 +106,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(1, 0).robots must_== 4
       field(1, 0).movedRobots must_== 4
     }
-    "change the owner of tile after winning battle" in {
+    "change the occupier of tile after winning battle" in {
       val players = Vector(new Player("a"), new Player("b"), new Player("c"))
       val field = Field(3, players.toList)
       initTile(field, Point(0, 0))
