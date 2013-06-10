@@ -148,5 +148,28 @@ class FieldSpec extends SpecificationWithJUnit {
       field(1, 0).robots must_== 0
       field(1, 0).movedRobots must_== 0
     }
+    "allow to move robots onto one's own developed land" in {
+      val players = Vector(new Player("a"), new Player("b"), new Player("c"))
+      val field = Field(3, players.toList)
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).robots = 10
+      initTile(field, Point(1, 0))
+      field(1, 0).owner = Some(players(0))
+      field(1, 0).installation = Some(Installation.br)
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 10) must_== ()
+    }
+    "decline to move robots onto other player's developed land" in {
+      val players = Vector(new Player("a"), new Player("b"), new Player("c"))
+      val field = Field(3, players.toList)
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).robots = 10
+      initTile(field, Point(1, 0))
+      field(1, 0).owner = Some(players(1))
+      field(1, 0).installation = Some(Installation.br)
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 10) must
+        throwA[CommandException]
+    }
   }
 }

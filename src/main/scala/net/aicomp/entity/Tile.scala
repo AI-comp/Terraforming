@@ -11,7 +11,7 @@ package net.aicomp.entity
 
   def ownedBy(p: Player) = owner.exists(_ == p)
 
-  def isMovable(player: Player) = !ownedBy(player) || installation.isEmpty
+  def isMovable(player: Player) = ownedBy(player) || installation.isEmpty
 
   def checkLeave(player: Player, amount: Int) {
     if (isHole) {
