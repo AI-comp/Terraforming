@@ -20,8 +20,8 @@ package net.aicomp.entity
     if (availableRobots < amount) {
       throw new CommandException("The number of moving robots should be less than or equal to the number of existing movable robots.")
     }
-    if (ownedBy(player)) {
-      throw new CommandException("A player cannot move other player's robots")
+    if (!ownedBy(player)) {
+      throw new CommandException("A player cannot move from a wasted land")
     }
   }
 
@@ -31,11 +31,21 @@ package net.aicomp.entity
   }
 
   def checkEnter(player: Player, amount: Int) {
+    if (!isMovable(player)) {
+      throw new CommandException("A player cannot move to an other player's developed land")
+    }
   }
 
   def enter(player: Player, amount: Int) {
     checkEnter(player, amount) // defensive
-    if (ownedBy(player)) {
+    if (owner.isEmpty) {
+      // wasted land
+      owner = Some(player)
+      robots = amount
+      movedRobots = amount
+    }
+    else if (ownedBy(player)) {
+      // undeveloped land or developed land of the player
       robots += amount
       movedRobots += amount
     }
