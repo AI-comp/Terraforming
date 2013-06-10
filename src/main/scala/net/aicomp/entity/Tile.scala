@@ -32,7 +32,7 @@ package net.aicomp.entity
 
   def checkEnter(player: Player, amount: Int) {
     if (!isMovable(player)) {
-      throw new CommandException("A player cannot move other player's developed land")
+      throw new CommandException("A player cannot move to an other player's developed land")
     }
   }
 
