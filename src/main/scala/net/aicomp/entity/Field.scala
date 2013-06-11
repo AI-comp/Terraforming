@@ -65,8 +65,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   }
 
   def produceRobot(player: Player) = {
-    for (p <- points) {
-      val tile = this(p)
+    for (tile <- tiles.values) {
       if (tile.installation == Installation.initial) {
         tile.enter(player, 5)
       }

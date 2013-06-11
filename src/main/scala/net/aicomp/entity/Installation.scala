@@ -2,7 +2,6 @@ package net.aicomp.entity
 
 object Installation {
 
-  // TODO: rename
   val initial = new Installation("initial", 0)
   val factory = new Installation("factory", 1)
   val bridge = new Installation("bridge", 2)
