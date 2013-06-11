@@ -134,7 +134,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(1, 0).robots must_== 8
       field(1, 0).movedRobots must_== 0
     }
-    "change the owner of wasted land after winning battle" in {
+    "change the owner of waste land after winning battle" in {
       val players = Vector(new Player("a"), new Player("b"), new Player("c"))
       val field = Field(3, players.toList)
       initTile(field, Point(0, 0))
@@ -148,7 +148,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(1, 0).robots must_== 2
       field(1, 0).movedRobots must_== 2
     }
-    "not change the owner of wasted land after losing battle" in {
+    "not change the owner of waste land after losing battle" in {
       val players = Vector(new Player("a"), new Player("b"), new Player("c"))
       val field = Field(3, players.toList)
       initTile(field, Point(0, 0))
