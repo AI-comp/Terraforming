@@ -51,7 +51,7 @@ class PointSpec extends SpecificationWithJUnit {
       def obstacle(t: Tile) {
         t.owner = Some(enemy)
         t.robots = 1000000000
-        t.installation = Some(Installation.br)
+        t.installation = Some(Installation.bridge)
       }
       
       val fieldWithObstacle = Field(2)

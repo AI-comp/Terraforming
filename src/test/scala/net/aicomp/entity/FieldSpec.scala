@@ -62,7 +62,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(0, 0).owner = Some(players(0))
       field(0, 0).robots = 10
       field(0, 0).isHole = true
-      field.build(players(0), Point(0, 0), Installation.br) must_== ()
+      field.build(players(0), Point(0, 0), Installation.bridge) must_== ()
       field(0, 0).isHole must_== false
     }
     "decline to build installations othe than bridge on a hole" in {
@@ -72,9 +72,9 @@ class FieldSpec extends SpecificationWithJUnit {
       field(0, 0).owner = Some(players(0))
       field(0, 0).robots = 10
       field(0, 0).isHole = true
-      field.build(players(0), Point(0, 0), Installation.sh) must
+      field.build(players(0), Point(0, 0), Installation.shield) must
         throwA[CommandException]
-      field.build(players(0), Point(0, 0), Installation.at) must
+      field.build(players(0), Point(0, 0), Installation.attack) must
         throwA[CommandException]
     }
     "decline to moveSquad from unoccupied tile" in {
@@ -156,7 +156,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(0, 0).robots = 10
       initTile(field, Point(1, 0))
       field(1, 0).owner = Some(players(0))
-      field(1, 0).installation = Some(Installation.br)
+      field(1, 0).installation = Some(Installation.bridge)
       field.moveSquad(players(0), Point(0, 0), Direction.r, 10) must_== ()
     }
     "decline to move robots onto other player's developed land" in {
@@ -167,7 +167,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(0, 0).robots = 10
       initTile(field, Point(1, 0))
       field(1, 0).owner = Some(players(1))
-      field(1, 0).installation = Some(Installation.br)
+      field(1, 0).installation = Some(Installation.bridge)
       field.moveSquad(players(0), Point(0, 0), Direction.r, 10) must
         throwA[CommandException]
     }
