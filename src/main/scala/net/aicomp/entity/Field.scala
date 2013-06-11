@@ -56,12 +56,24 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     if (tile.robots < ins.cost) {
       throw new CommandException("A number of robot is not enough.")
     }
-    if (tile.isHole && ins != Installation.br) {
+    if (tile.isHole && ins != Installation.bridge) {
       throw new CommandException("Installations other than bridge are not allowed to be built on a hole")
     }
     tile.isHole = false
     tile.robots -= ins.cost
     tile.installation = Some(ins)
+  }
+
+  def produceRobot(player: Player) = {
+    for (p <- points) {
+      val tile = this(p)
+      if (tile.installation == Installation.initial) {
+        tile.enter(player, 5)
+      }
+      if (tile.installation == Installation.factory) {
+        tile.enter(player, 1)
+      }
+    }
   }
 
   def clearMovedRobots() {
@@ -73,7 +85,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     val aroundTiles = Direction.all.map(_.p + p).filter(_.within(radius)).map(apply)
     val aroundAmount = aroundTiles.count(tile =>
       tile.ownedBy(player) &&
-        tile.installation.exists(_ == Installation.mt))
+        tile.installation.exists(_ == Installation.pit))
     baseAmount + aroundAmount
   }
 

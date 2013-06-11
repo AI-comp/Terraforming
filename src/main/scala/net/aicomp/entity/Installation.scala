@@ -4,15 +4,17 @@ object Installation {
 
   // TODO: rename
   val initial = new Installation("initial", 0)
-  val br = new Installation("bridge", 1)
-  val sh = new Installation("shield", 2)
-  val at = new Installation("attack", 3)
-  val mt = new Installation("material", 4)
-  val pk = new Installation("park", 5)
-  val sq = new Installation("square", 6)
-  val pl = new Installation("public", 7)
+  val factory = new Installation("factory", 1)
+  val bridge = new Installation("bridge", 2)
+  val shield = new Installation("shield", 3)
+  val attack = new Installation("attack", 4)
+  val pit = new Installation("pit", 5)
+  val park = new Installation("park", 6)
+  val square = new Installation("square", 7)
+  val public = new Installation("public", 8)
+  
 
-  val buildables = List(br, sh, at, mt, pk, sq, pl)
+  val buildables = List(factory, bridge, shield, attack, pit, park, square, public)
 }
 
 class Installation(val name: String, val cost: Int) {
