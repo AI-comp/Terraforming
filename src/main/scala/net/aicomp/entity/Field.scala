@@ -47,20 +47,25 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
   def build(player: Player, p: Point, ins: Installation) = {
     val tile = this(p)
+
     if (!tile.ownedBy(player)) {
       throw new CommandException("You should own a tile where an installation is built.")
     }
     if (tile.installation.isDefined) {
       throw new CommandException("A tile where an installation is built should have no installation.")
     }
-    if (tile.robots < ins.cost) {
+    if (tile.robots < ins.robotCost) {
       throw new CommandException("A number of robot is not enough.")
     }
     if (tile.isHole && ins != Installation.bridge) {
       throw new CommandException("Installations other than bridge are not allowed to be built on a hole")
     }
+    if (this.aroundMaterialAmount(p, player) < ins.materialCost) {
+      throw new CommandException("A number of material is not enough.")
+    }
+
     tile.isHole = false
-    tile.robots -= ins.cost
+    tile.robots -= ins.robotCost
     tile.installation = Some(ins)
   }
 
@@ -79,13 +84,20 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     tiles.values.foreach(t => t.movedRobots = 0)
   }
 
-  def calculateMaterialAmount(p: Point, player: Player) = {
+  def materialAmount(p: Point, player: Player) = {
     val baseAmount = if (this(p) ownedBy player) 1 else 0
     val aroundTiles = Direction.all.map(_.p + p).filter(_.within(radius)).map(apply)
-    val aroundAmount = aroundTiles.count(tile =>
+    val aroundPit = aroundTiles.count(tile =>
       tile.ownedBy(player) &&
         tile.installation.exists(_ == Installation.pit))
-    baseAmount + aroundAmount
+    baseAmount + aroundPit
+  }
+
+  def aroundMaterialAmount(p: Point, player: Player) = {
+    val baseAmount = materialAmount(p, player)
+    val aroundPoint = Direction.all.map(_.p + p).filter(_.within(radius))
+    val aroundMount = aroundPoint.map(materialAmount(_, player)).sum
+    baseAmount + aroundMount
   }
 
   override def toString: String = {
