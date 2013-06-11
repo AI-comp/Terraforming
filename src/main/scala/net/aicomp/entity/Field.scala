@@ -55,13 +55,13 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
       throw new CommandException("A tile where an installation is built should have no installation.")
     }
     if (tile.robots < ins.robotCost) {
-      throw new CommandException("A number of robot is not enough.")
+      throw new CommandException("The number of robots is not enough.")
     }
     if (tile.isHole && ins != Installation.bridge) {
       throw new CommandException("Installations other than bridge are not allowed to be built on a hole")
     }
     if (this.aroundMaterialAmount(p, player) < ins.materialCost) {
-      throw new CommandException("A number of material is not enough.")
+      throw new CommandException("The number of materials is not enough.")
     }
 
     tile.isHole = false
