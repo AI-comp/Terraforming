@@ -65,11 +65,11 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   }
 
   def produceRobot(player: Player) = {
-    for (tile <- tiles.values) {
-      if (tile.installation == Installation.initial) {
+    for (tile <- tiles.values.filter(_.ownedBy(player))) {
+      if (tile.installation.exists(_ == Installation.initial)) {
         tile.enter(player, 5)
       }
-      if (tile.installation == Installation.factory) {
+      else if (tile.installation.exists(_ == Installation.factory)) {
         tile.enter(player, 1)
       }
     }
@@ -77,6 +77,10 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
   def clearMovedRobots() {
     tiles.values.foreach(t => t.movedRobots = 0)
+  }
+  
+  def robotAmout(player: Player) = {
+    tiles.values.filter(_.ownedBy(player)).map(_.robots).sum
   }
 
   def calculateMaterialAmount(p: Point, player: Player) = {
