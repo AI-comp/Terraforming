@@ -39,6 +39,7 @@ class Game(val field: Field, val players: List[Player], val maxTurn: Int) {
     field.clearMovedRobots
     _currentPlayerIndex = (_currentPlayerIndex + 1) % players.length
     _currentTurn += 1
+    field.produceRobot(currentPlayer)
     if (!isFinished) startTurn
   }
 
