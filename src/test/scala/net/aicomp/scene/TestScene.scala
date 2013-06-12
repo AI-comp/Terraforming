@@ -4,6 +4,7 @@ import net.aicomp.scene.console.ConsoleScene
 import scala.collection.mutable.Queue
 import jp.ac.waseda.cs.washi.gameaiarena.gui.Scene
 import net.aicomp.entity.GameEnvironment
+import org.specs2.specification.Scope
 
 trait TestScene extends ConsoleScene {
   val output = Queue[String]()
@@ -30,4 +31,12 @@ trait TestScene extends ConsoleScene {
     }
     lastScene
   }
+}
+
+trait TestSceneInitializer extends Scope {
+  val env = GameEnvironment()
+  env.getSceneManager().setFps(1000)
+  val mainScene = new MainScene(null) with TestScene
+  val playerScene = new PlayerScene(mainScene) with TestScene
+  def g = env.game
 }
