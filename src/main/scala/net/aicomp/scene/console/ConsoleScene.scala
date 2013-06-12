@@ -10,7 +10,7 @@ trait ConsoleScene extends AbstractScene {
 }
 
 object ConsoleScene {
-  var scanner = new Scanner(System.in)
+  val scanner = new Scanner(System.in)
 
   def nextCommand = {
     Some(scanner.nextLine().split(" ").filter(_.length > 0).toList)

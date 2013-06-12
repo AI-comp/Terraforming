@@ -55,6 +55,16 @@ class FieldSpec extends SpecificationWithJUnit {
       field.moveSquad(players(0), Point(0, 0), Direction.r, 4) must
         throwA[CommandException]
     }
+    "decline to move too many robots" in {
+      val players = Vector(new Player("a"), new Player("b"), new Player("c"))
+      val field = Field(3, players.toList)
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).robots = 10
+      initTile(field, Point(1, 0))
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 20) must
+        throwA[CommandException]
+    }
     "remove hole when bridge is built" in {
       val players = Vector(new Player("a"), new Player("b"), new Player("c"))
       val field = Field(3, players.toList)
