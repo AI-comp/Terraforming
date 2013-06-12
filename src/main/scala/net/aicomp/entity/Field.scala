@@ -79,7 +79,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     tiles.values.foreach(t => t.movedRobots = 0)
   }
   
-  def robotAmout(player: Player) = {
+  def robotAmount(player: Player) = {
     tiles.values.filter(_.ownedBy(player)).map(_.robots).sum
   }
 

@@ -24,9 +24,9 @@ class MainSceneSpec extends SpecificationWithJUnit {
     "produce robots after finishing" in {
       playerScene.accept(env, "abc def ghi")
       mainScene.acceptAll(env, "finish" :: "finish" :: "finish" :: Nil)
-      g.field.robotAmout(g.players(0)) must_== 10
-      g.field.robotAmout(g.players(1)) must_== 5
-      g.field.robotAmout(g.players(2)) must_== 5
+      g.field.robotAmount(g.players(0)) must_== 10
+      g.field.robotAmount(g.players(1)) must_== 5
+      g.field.robotAmount(g.players(2)) must_== 5
     }
   }
 }
