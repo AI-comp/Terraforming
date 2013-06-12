@@ -5,6 +5,8 @@ import net.aicomp.entity.Field
 import net.aicomp.entity.Point
 import net.aicomp.scene.AbstractScene
 import net.aicomp.util.misc.ImageLoader
+import net.aicomp.entity.OrthogonalPoint
+import net.aicomp.entity.OrthogonalPoint._
 
 trait WhiteScene extends AbstractScene {
   // TODO should be defined in a property
@@ -40,8 +42,9 @@ trait WhiteScene extends AbstractScene {
     val pointImages = ImageLoader.loadTiles(renderer)
 
     for (point <- points) {
-      val (orthX, orthY) = transToOrthogonal(point.x, point.y)
-      renderer.drawImage(pointImages.get(32).get, orthX, orthY)
+      drawPoint(renderer, point)
+      // val (orthX, orthY) = transToOrthogonal(point.x, point.y)
+      // renderer.drawImage(pointImages.get(32).get, orthX, orthY)
     }
   }
 
@@ -56,6 +59,12 @@ trait WhiteScene extends AbstractScene {
     val orthY = centerY + (3 * pointSize / 4) * pointY
 
     (orthX, orthY)
+  }
+  
+  def drawPoint(renderer: Renderer, point:OrthogonalPoint) = {
+    val pointImages = ImageLoader.loadTiles(renderer)
+    
+    renderer.drawImage(pointImages.get(32).get, point.orthX, point.orthY)
   }
 
   // draw squad and num of them on a point
