@@ -92,6 +92,10 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     baseAmount + aroundAmount
   }
 
+  def stringify: String =
+    radius + " " + tiles.size + "\n" + points.toList.sorted.map(p =>
+      p.stringify + " " + tiles(p).stringify + "\n").mkString
+
   override def toString: String = {
     val height = radius * 6 + 5
     val width = radius * 12 + 7

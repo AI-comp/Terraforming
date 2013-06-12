@@ -26,10 +26,12 @@ object Direction {
   def keys = strMap.keys
 }
 
-case class Point(val x: Int, val y: Int) {
+case class Point(val x: Int, val y: Int) extends Ordered[Point] {
   def +(r: Point) = Point(x + r.x, y + r.y)
   def -(r: Point) = Point(x - r.x, y - r.y)
   def *(r: Int) = Point(x * r, y * r)
+  def compare(p: Point) = if (x != p.x) x - p.x else y - p.y
+
   def rotate120() = Point(-(x + y), x)
   def rotate240() = Point(y, -(x + y))
 
@@ -72,6 +74,7 @@ case class Point(val x: Int, val y: Int) {
     return None
   }
 
+  def stringify() = x + " " + y
   override def toString() = "(" + x + "," + y + ")"
 }
 

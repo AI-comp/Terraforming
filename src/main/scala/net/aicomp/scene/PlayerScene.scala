@@ -17,7 +17,8 @@ abstract class PlayerScene(nextScene: Scene[GameEnvironment], setting: GameSetti
       displayLine("Please enter two or more names.")
       this
     } else {
-      val players = names.map(new Player(_))
+      val players = List.range(0, names.length).map(i =>
+        new Player(names(i), i))
       val field = Field(7, players)
       // TODO: maxTurn
       env.game = new Game(field, players, 2*3)

@@ -58,6 +58,19 @@ package net.aicomp.entity
     }
   }
 
+  def stringify: String = {
+    // "owner_id robots object"
+    val owner_id = owner match {
+      case Some(player) => player.id
+      case None => -1
+    }
+    val obj = if (isHole) "hole" else installation match {
+      case Some(b) => b.toString
+      case None => "none"
+    }
+    owner_id + " " + robots + " " + obj
+  }
+
   override def clone() = super.clone().asInstanceOf[Tile]
 
   override def equals(t: Any) = t match {
