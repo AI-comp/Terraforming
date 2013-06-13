@@ -37,8 +37,8 @@ class PointSpec extends SpecificationWithJUnit {
     }
     "return shortest path to" in {
       val field = Field(7)
-      val player = new Player("A")
-      val enemy = new Player("B")
+      val player = new Player("A", 1)
+      val enemy = new Player("B", 2)
       Point(0, 1).shortestPathTo(Point(0, 1), field, player) must_==
         Some(List.empty[Direction])
       Point(0, 1).shortestPathTo(Point(0, 3), field, player) must_==
@@ -68,6 +68,9 @@ class PointSpec extends SpecificationWithJUnit {
       Point(0, 1).shortestPathTo(Point(0, -1), fieldWithWall, player) must_== None
       Point(-1, 1).shortestPathTo(Point(0, 1), fieldWithWall, player) must_==
         Some(List(Direction.r))
+    }
+    "stringify itself" in {
+      Point(1, 2).stringify must_== "1 2"
     }
     "return points within distance" in {
       Point.pointsWithin(1) must_== List(
