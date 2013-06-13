@@ -183,6 +183,25 @@ class FieldSpec extends SpecificationWithJUnit {
       field.moveSquad(players(0), Point(0, 0), Direction.r, 10) must
         throwA[CommandException]
     }
+    "calculate the one's own score of the initilized field" in new fields {
+      field.calculateScore(players(0)) must_== 1
+      field.calculateScore(players(1)) must_== 1
+      field.calculateScore(players(2)) must_== 1 
+    }
+    "calculate the one's own score of the field" in new fields {
+      initTile(field, Point(0, 0)) // tile(0, 0) should be a waste land
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).installation = Some(Installation.attack)
+      field.calculateScore(players(0)) must_== 1 + 3
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).installation = Some(Installation.public)
+      field.calculateScore(players(0)) must_== 1 + 3 + 10
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).installation = Some(Installation.initial)
+      field.calculateScore(players(0)) must_== 1 + 1
+    }
     "stringify itself" in {
       val players = Vector(new Player("a", 1), new Player("b", 2),
         new Player("c", 3))

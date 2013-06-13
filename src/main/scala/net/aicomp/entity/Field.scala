@@ -91,6 +91,18 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
         tile.installation.exists(_ == Installation.pit))
     baseAmount + aroundAmount
   }
+  
+  def calculateScore(player: Player): Int = {
+    def score(tile: Tile): Int = {
+      val undevelopedLand = 1
+      val developedLand   = 3
+      val publicFacility  = 10
+      if (tile.installation.get == Installation.initial) undevelopedLand
+      else if (tile.installation.get == Installation.public) publicFacility + developedLand
+      else developedLand
+    }
+    tiles.values.filter(_.ownedBy(player)).filter(_.installation.isDefined).map(score).sum
+  }
 
   def stringify: String =
     radius + " " + tiles.size + "\n" + points.toList.sorted.map(p =>
