@@ -34,12 +34,4 @@ object PointProp extends Properties("Point") {
     x <- Gen.choose(-field.radius * 2, field.radius * 2)
     y <- Gen.choose(-field.radius * 2, field.radius * 2)
   } yield Point(x, y)).filter(p => !p.within(field.radius))
-
-  implicit def arbPoint: Arbitrary[Point] =
-    Arbitrary {
-      for {
-        x <- Gen.choose(-field.radius, field.radius)
-        y <- Gen.choose(-field.radius, field.radius)
-      } yield Point(x, y)
-    }
 }

@@ -3,16 +3,11 @@ package net.aicomp.scene
 import org.specs2.mutable.SpecificationWithJUnit
 import net.aicomp.entity.GameEnvironment
 import net.aicomp.entity.Installation
+import org.specs2.specification.Scope
 
 class MainSceneSpec extends SpecificationWithJUnit {
-  val env = GameEnvironment()
-  env.getSceneManager().setFps(1000)
-  val mainScene = new MainScene(null) with TestScene
-  val playerScene = new PlayerScene(mainScene) with TestScene
-  def g = env.game
-
   "MainScene" should {
-    "has a proper initial state" in {
+    "has a proper initial state" in new TestSceneInitializer {
       playerScene.accept(env, "abc def ghi")
       g.field.tiles.values.filter(_.ownedBy(g.players(0)))
         .map(_.installation.get).toList must_== List(Installation.initial)
@@ -21,7 +16,7 @@ class MainSceneSpec extends SpecificationWithJUnit {
       g.field.tiles.values.filter(_.ownedBy(g.players(2)))
         .map(_.installation.get).toList must_== List(Installation.initial)
     }
-    "produce robots after finishing" in {
+    "produce robots after finishing" in new TestSceneInitializer {
       playerScene.accept(env, "abc def ghi")
       mainScene.acceptAll(env, "finish" :: "finish" :: "finish" :: Nil)
       g.field.robotAmount(g.players(0)) must_== 10
