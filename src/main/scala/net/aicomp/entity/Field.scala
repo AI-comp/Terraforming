@@ -97,11 +97,13 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
       val undevelopedLand = 1
       val developedLand   = 3
       val publicFacility  = 10
-      if (tile.installation.get == Installation.initial) undevelopedLand
-      else if (tile.installation.get == Installation.public) publicFacility + developedLand
-      else developedLand
+      tile.installation.get match {
+        case Installation.initial => undevelopedLand
+        case Installation.public  => developedLand + publicFacility
+        case _                    => developedLand
+      }
     }
-    tiles.values.filter(_.ownedBy(player)).filter(_.installation.isDefined).map(score).sum
+    tiles.values.filter(_.ownedBy(player)).foldLeft(0)(_ + score(_))
   }
 
   def stringify: String =
