@@ -31,18 +31,27 @@ You can import maven projects with the following steps:
 4. Push Finish
 5. Right click the imported project > Maven > Update Project Configuration > OK
 
-### Build with sbt (Choice 1)
+### Build tools
+Please install the following tools selecting the following choices.
+- sbt ( http://www.scala-sbt.org/ )
+- Maven 3 ( http://www.scala-sbt.org/ )
+- Zinc ( https://github.com/typesafehub/zinc )
+
+### Test with sbt (Choice 1)
 1. sbt  
-Start build server (it requires sbt http://www.scala-sbt.org/ ).
-2. test
+Start a build server.
+2. test  
+Conduct testing.
 
-### Build with Maven 3 and Zinc (Choice 2)
+### Test with Maven 3 and Zinc (Choice 2)
 1. zinc -start  
-Start build server (it requires Zinc https://github.com/typesafehub/zinc ).
-1. mvn package
+Start a build server.  
+1. mvn test  
+Conduct testing.
 
-### Build with Maven 3 (Choice 3)
-1. mvn package
+### Test with Maven 3 (Choice 3)
+1. mvn test  
+Conduct testing.
 
 ## Dcouments
 - Rule book  
