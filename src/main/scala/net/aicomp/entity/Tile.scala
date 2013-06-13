@@ -21,7 +21,7 @@ package net.aicomp.entity
       throw new CommandException("The number of moving robots should be less than or equal to the number of existing movable robots.")
     }
     if (!ownedBy(player)) {
-      throw new CommandException("A player cannot move from a wasted land")
+      throw new CommandException("A player cannot move from a waste land")
     }
   }
 
@@ -44,7 +44,7 @@ package net.aicomp.entity
       movedRobots += amount
     }
     else {
-      // battle (with wasted land's robots or enemy robots)
+      // battle (with waste land's robots or enemy robots)
       if (amount <= robots) {
         // losing or draw
         robots -= amount

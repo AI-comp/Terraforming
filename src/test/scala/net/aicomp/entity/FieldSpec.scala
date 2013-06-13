@@ -128,7 +128,13 @@ class FieldSpec extends SpecificationWithJUnit {
       field(1, 0).robots must_== 8
       field(1, 0).movedRobots must_== 0
     }
+<<<<<<< HEAD
     "change the owner of wasted land after winning battle" in new fields {
+=======
+    "change the owner of waste land after winning battle" in {
+      val players = Vector(new Player("a"), new Player("b"), new Player("c"))
+      val field = Field(3, players.toList)
+>>>>>>> 86_Wasteland
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
       field(0, 0).robots = 10
@@ -140,7 +146,13 @@ class FieldSpec extends SpecificationWithJUnit {
       field(1, 0).robots must_== 2
       field(1, 0).movedRobots must_== 2
     }
+<<<<<<< HEAD
     "not change the owner of wasted land after losing battle" in new fields {
+=======
+    "not change the owner of waste land after losing battle" in {
+      val players = Vector(new Player("a"), new Player("b"), new Player("c"))
+      val field = Field(3, players.toList)
+>>>>>>> 86_Wasteland
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
       field(0, 0).robots = 10
