@@ -48,17 +48,26 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   def build(player: Player, p: Point, ins: Installation) = {
     val tile = this(p)
 
+    //tile check
     if (!tile.ownedBy(player)) {
       throw new CommandException("You should own a tile where an installation is built.")
     }
     if (tile.installation.isDefined) {
       throw new CommandException("A tile where an installation is built should have no installation.")
     }
+    if (tile.isHole) {
+      if (ins != Installation.bridge) {
+        throw new CommandException("Installations other than bridge are not allowed to be built on a hole")
+      }
+    } else {
+      if (ins == Installation.bridge) {
+        throw new CommandException("Bridge is not allowed to be built except for a hole.")
+      }
+    }
+
+    //cost check
     if (tile.robots < ins.robotCost) {
       throw new CommandException("The number of robots is not enough.")
-    }
-    if (tile.isHole && ins != Installation.bridge) {
-      throw new CommandException("Installations other than bridge are not allowed to be built on a hole")
     }
     if (this.aroundMaterialAmount(p, player) < ins.materialCost) {
       throw new CommandException("The number of materials is not enough.")
