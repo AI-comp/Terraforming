@@ -46,10 +46,14 @@ trait WhiteScene extends AbstractScene {
     }
   }
 
-  def drawPoint(renderer: Renderer, op: OrthogonalPoint) = {
+  def drawPoint(renderer: Renderer, point: Point) = {
     val pointImages = ImageLoader.loadTiles(renderer)
+    val tile = game.field.tiles(point)
+    val op: OrthogonalPoint = point
 
-    renderer.drawImage(pointImages.get(32).get, op.x, op.y)
+    val imgKey = tile.owner.map{p => "32_" + p.id}.getOrElse("32")
+
+    renderer.drawImage(pointImages.get(imgKey).get, op.x, op.y)
   }
 
   // draw squad and num of them on a point
