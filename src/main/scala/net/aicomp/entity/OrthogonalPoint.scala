@@ -12,8 +12,6 @@ object OrthogonalPoint {
   val defaultY = 250
   // TODO should be defined in a property
   val pointSize = 32
-  val squadSizeX = 10
-  val squadSizeY = 9
   val numSizeX = 6
   val numSizeY = 9
 

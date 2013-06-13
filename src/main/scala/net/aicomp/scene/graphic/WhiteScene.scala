@@ -7,6 +7,8 @@ import net.aicomp.scene.AbstractScene
 import net.aicomp.util.misc.ImageLoader
 import net.aicomp.entity.OrthogonalPoint
 import net.aicomp.entity.OrthogonalPoint._
+import net.aicomp.entity.Tile
+import net.aicomp.entity.Player
 
 trait WhiteScene extends AbstractScene {
   // TODO should be defined in a property
@@ -14,8 +16,8 @@ trait WhiteScene extends AbstractScene {
   val defaultY = 250
   // TODO should be defined in a property
   val pointSize = 32
-  val squadSizeX = 10
-  val squadSizeY = 9
+  val robotSizeX = 10
+  val robotSizeY = 9
   val numSizeX = 6
   val numSizeY = 9
 
@@ -29,10 +31,11 @@ trait WhiteScene extends AbstractScene {
     val backgrounds = ImageLoader.loadBackgrounds(renderer)
     val field = game.field
     val points = field.points
+    val tiles = field.tiles
 
     renderer.drawImage(backgrounds.get(32).get, 0, 0)
     drawPoints(renderer, points)
-    drawSquadAndNumOnPoint(renderer)
+    drawRobotAndNumOnPoint(renderer, tiles)
   }
 
   // following methods must be another module.
@@ -52,40 +55,56 @@ trait WhiteScene extends AbstractScene {
     renderer.drawImage(pointImages.get(32).get, op.x, op.y)
   }
 
-  // draw squad and num of them on a point
-  def drawSquadAndNumOnPoint(renderer: Renderer) = {
-    // TODO this dummy data should be replaced with squad's position
-    val point = Point(0, 0)
+  // draw robot and num of them on a point
+  def drawRobotAndNumOnPoint(renderer: Renderer, tiles: Map[Point, Tile]) = {
 
-    drawSquadOnPoint(renderer, point)
-    drawNumOnPoint(renderer, point)
+    tiles.foreach {
+      tile =>
+        val num = tile._2.robots
+        // val num = tile._2.availableRobots
+        if (num > 0) {
+          val op = OrthogonalPoint.pointToOrthogonalPoint(tile._1)
+          val owner = tile._2.owner
+          owner match {
+            case Some(o) => {
+              drawRobotOnPoint(renderer, op, o.id)
+              drawNumOnPoint(renderer, op, o.id, num)
+            }
+            case _ =>
+          }
+        }
+    }
   }
 
-  // draw squad on a point
-  def drawSquadOnPoint(renderer: Renderer, op: OrthogonalPoint) = {
-    val squadImages = ImageLoader.loadRobots(renderer)
+  // draw robot on a point
+  def drawRobotOnPoint(renderer: Renderer, op: OrthogonalPoint, oId: Int = -1) = {
+    val robotImages = ImageLoader.loadRobots(renderer)
 
-    val squadX = op.x + (pointSize / 2) - (squadSizeX / 2)
-    val squadY = op.y + (pointSize / 2) - (squadSizeY * 0)
+    val robotX = op.x + (pointSize / 2) - (robotSizeX / 2)
+    val robotY = op.y + (pointSize / 2) - (robotSizeY * 0)
 
-    // TODO pattern matching by team squad belong to
-    renderer.drawImage(squadImages.get(1).get, squadX, squadY)
+    renderer.drawImage(robotImages.get(oId).get, robotX, robotY)
   }
 
-  // draw num of squad on a tile
-  def drawNumOnPoint(renderer: Renderer, op: OrthogonalPoint) = {
+  // draw num of robot on a tile
+  def drawNumOnPoint(renderer: Renderer, op: OrthogonalPoint, oId: Int = -1, num: Int) = {
     val numImages = ImageLoader.loadNumbers(renderer)
 
+    // TODO now, num of robots is assumed to be from 0 to 999
+    val num1 = (num / 100) % 10
     val num1X = op.x + (pointSize / 2) - (3 * numSizeX / 2)
     val num1Y = op.y + (pointSize / 2) - numSizeY
+    
+    val num2 = (num / 10) % 10
     val num2X = op.x + (pointSize / 2) - (numSizeX / 2)
     val num2Y = op.y + (pointSize / 2) - numSizeY
+    
+    val num3 = num % 10
     val num3X = op.x + (pointSize / 2) + (numSizeX / 2)
     val num3Y = op.y + (pointSize / 2) - numSizeY
 
-    // TODO pattern matching by num of squad
-    renderer.drawImage(numImages.get(1, 0).get, num1X, num1Y)
-    renderer.drawImage(numImages.get(1, 6).get, num2X, num2Y)
-    renderer.drawImage(numImages.get(1, 3).get, num3X, num3Y)
+    renderer.drawImage(numImages.get(oId, num1).get, num1X, num1Y)
+    renderer.drawImage(numImages.get(oId, num2).get, num2X, num2Y)
+    renderer.drawImage(numImages.get(oId, num3).get, num3X, num3Y)
   }
 }
