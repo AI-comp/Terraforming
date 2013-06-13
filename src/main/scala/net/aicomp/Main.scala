@@ -29,6 +29,10 @@ import net.aicomp.scene.graphic.TextBoxScene
 import net.aicomp.scene.graphic.TitleScene
 import net.aicomp.util.misc.ImageLoader
 import net.aicomp.scene.graphic.WhiteScene
+import net.aicomp.entity.Point
+import net.aicomp.entity.Field
+import net.aicomp.entity.OrthogonalPoint
+import net.aicomp.util.settings.Defaults
 
 object Main {
 
@@ -168,6 +172,14 @@ object Main {
   def initializeListener(gamePanel: JPanel, env: GameEnvironment, commandField: JTextField, logArea: JTextArea) {
     gamePanel.addMouseListener(new MouseAdapter() {
       override def mouseClicked(e: MouseEvent) = {
+        if (env.game != null) {
+          val cp = new OrthogonalPoint(e.getPoint().x, e.getPoint().y)
+          val square = OrthogonalPoint.orthogonalPointToPoints(cp, env.game.field)
+          if (square.nonEmpty) {
+            TextBoxScene.display("Your clicked location is ( " + square.head.x + ", " + square.head.y + " )")
+            TextBoxScene.display(Defaults.NEW_LINE)
+          }
+        }
       }
     });
     val memorizer = new AwtKeyMemorizer()
