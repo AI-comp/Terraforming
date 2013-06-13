@@ -30,7 +30,7 @@ object OrthogonalPoint {
     OrthogonalPoint(orthX, orthY)
   }
 
-  implicit def orthogonalPointToPoints(orthP: OrthogonalPoint, field: Field): Set[Point] = {
+  def orthogonalPointToPoints(orthP: OrthogonalPoint, field: Field): Set[Point] = {
     field.points.filter(p => {
       val op = pointToOrthogonalPoint(p)
       op.x <= orthP.x && orthP.x < op.x + pointSize && op.y <= orthP.y && orthP.y < op.y + pointSize
