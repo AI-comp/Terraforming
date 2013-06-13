@@ -27,7 +27,7 @@ trait WhiteScene extends AbstractScene {
 
   def drawInitialMap(renderer: Renderer) = {
     val backgrounds = ImageLoader.loadBackgrounds(renderer)
-    val field = Field(6)
+    val field = game.field
     val points = field.points
 
     renderer.drawImage(backgrounds.get(32).get, 0, 0)
@@ -45,43 +45,43 @@ trait WhiteScene extends AbstractScene {
       drawPoint(renderer, point)
     }
   }
-  
-  def drawPoint(renderer: Renderer, point:OrthogonalPoint) = {
+
+  def drawPoint(renderer: Renderer, op: OrthogonalPoint) = {
     val pointImages = ImageLoader.loadTiles(renderer)
-    
-    renderer.drawImage(pointImages.get(32).get, point.x, point.y)
+
+    renderer.drawImage(pointImages.get(32).get, op.x, op.y)
   }
 
   // draw squad and num of them on a point
   def drawSquadAndNumOnPoint(renderer: Renderer) = {
     // TODO this dummy data should be replaced with squad's position
-    val point = Point(0,0)
-    
+    val point = Point(0, 0)
+
     drawSquadOnPoint(renderer, point)
     drawNumOnPoint(renderer, point)
   }
 
   // draw squad on a point
-  def drawSquadOnPoint(renderer: Renderer, point: OrthogonalPoint) = {
+  def drawSquadOnPoint(renderer: Renderer, op: OrthogonalPoint) = {
     val squadImages = ImageLoader.loadRobots(renderer)
 
-    val squadX = point.x + (pointSize / 2) - (squadSizeX / 2)
-    val squadY = point.y + (pointSize / 2) - (squadSizeY * 0)
+    val squadX = op.x + (pointSize / 2) - (squadSizeX / 2)
+    val squadY = op.y + (pointSize / 2) - (squadSizeY * 0)
 
     // TODO pattern matching by team squad belong to
     renderer.drawImage(squadImages.get(1).get, squadX, squadY)
   }
 
   // draw num of squad on a tile
-  def drawNumOnPoint(renderer: Renderer, point: OrthogonalPoint) = {
+  def drawNumOnPoint(renderer: Renderer, op: OrthogonalPoint) = {
     val numImages = ImageLoader.loadNumbers(renderer)
 
-    val num1X = point.x + (pointSize / 2) - (3 * numSizeX / 2)
-    val num1Y = point.y + (pointSize / 2) - numSizeY
-    val num2X = point.x + (pointSize / 2) - (numSizeX / 2)
-    val num2Y = point.y + (pointSize / 2) - numSizeY
-    val num3X = point.x + (pointSize / 2) + (numSizeX / 2)
-    val num3Y = point.y + (pointSize / 2) - numSizeY
+    val num1X = op.x + (pointSize / 2) - (3 * numSizeX / 2)
+    val num1Y = op.y + (pointSize / 2) - numSizeY
+    val num2X = op.x + (pointSize / 2) - (numSizeX / 2)
+    val num2Y = op.y + (pointSize / 2) - numSizeY
+    val num3X = op.x + (pointSize / 2) + (numSizeX / 2)
+    val num3Y = op.y + (pointSize / 2) - numSizeY
 
     // TODO pattern matching by num of squad
     renderer.drawImage(numImages.get(1, 0).get, num1X, num1Y)

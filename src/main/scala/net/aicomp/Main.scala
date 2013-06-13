@@ -173,9 +173,8 @@ object Main {
     gamePanel.addMouseListener(new MouseAdapter() {
       override def mouseClicked(e: MouseEvent) = {
         if (env.game != null) {
-          val pointSize = 32
-          val cp = new Point(e.getPoint().x, e.getPoint().y)
-          val square = OrthogonalPoint.getClickedPoint(cp.x, cp.y)
+          val cp = new OrthogonalPoint(e.getPoint().x, e.getPoint().y)
+          val square = OrthogonalPoint.orthogonalPointToPoints(cp, env.game.field)
           if (square.nonEmpty) {
             TextBoxScene.display("Your clicked location is ( " + square.head.x + ", " + square.head.y + " )")
             TextBoxScene.display(Defaults.NEW_LINE)
