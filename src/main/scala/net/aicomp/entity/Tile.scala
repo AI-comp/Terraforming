@@ -64,7 +64,7 @@ package net.aicomp.entity
     val developedLand   = 3
     val hole            = 0
     if (ownedBy(player)) {
-      if (isHole) hole 
+      if (isHole) hole
       else installation match {
         case Some(ins)  => developedLand + ins.score
         case None       => undevelopedLand

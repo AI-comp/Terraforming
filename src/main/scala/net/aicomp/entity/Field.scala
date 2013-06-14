@@ -37,7 +37,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
   def moveSquad(player: Player, p: Point, d: Direction, amount: Int) = {
     val srcTile = this(p)
-    val dstTile = this(p + d.p)
+    val dstTile = this(p + d)
     // check ALL constraints before any change written
     srcTile.checkLeave(player, amount)
     dstTile.checkEnter(player, amount)
@@ -78,20 +78,20 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   def clearMovedRobots() {
     tiles.values.foreach(t => t.movedRobots = 0)
   }
-  
+
   def robotAmount(player: Player) = {
     tiles.values.filter(_.ownedBy(player)).map(_.robots).sum
   }
 
   def calculateMaterialAmount(p: Point, player: Player) = {
     val baseAmount = if (this(p) ownedBy player) 1 else 0
-    val aroundTiles = Direction.all.map(_.p + p).filter(_.within(radius)).map(apply)
+    val aroundTiles = Direction.all.map(p +).filter(_.within(radius)).map(apply)
     val aroundAmount = aroundTiles.count(tile =>
       tile.ownedBy(player) &&
         tile.installation.exists(_ == Installation.pit))
     baseAmount + aroundAmount
   }
-  
+
   def calculateScore(player: Player): Int = tiles.values.foldLeft(0)(_ + _.score(player))
 
   def stringify: String =
