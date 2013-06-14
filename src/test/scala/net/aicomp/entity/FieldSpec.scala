@@ -128,7 +128,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(1, 0).robots must_== 8
       field(1, 0).movedRobots must_== 0
     }
-    "change the owner of wasted land after winning battle" in new fields {
+    "change the owner of waste land after winning battle" in new fields {
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
       field(0, 0).robots = 10
@@ -140,7 +140,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(1, 0).robots must_== 2
       field(1, 0).movedRobots must_== 2
     }
-    "not change the owner of wasted land after losing battle" in new fields {
+    "not change the owner of waste land after losing battle" in new fields {
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
       field(0, 0).robots = 10
@@ -182,6 +182,29 @@ class FieldSpec extends SpecificationWithJUnit {
       field(1, 0).installation = Some(Installation.bridge)
       field.moveSquad(players(0), Point(0, 0), Direction.r, 10) must
         throwA[CommandException]
+    }
+    "calculate the one's own score of the initilized field" in new fields {
+      val initialScore = 3
+      field.calculateScore(players(0)) must_== initialScore
+      field.calculateScore(players(1)) must_== initialScore
+      field.calculateScore(players(2)) must_== initialScore
+    }
+    "calculate the one's own score of the field" in new fields {
+      val initialScore = 3
+      val undevelopedLandScore = 1
+      val developedLandScore = 3
+      val publicFacilityScore = 10
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(0))
+      field.calculateScore(players(0)) must_== initialScore + undevelopedLandScore
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).installation = Some(Installation.attack)
+      field.calculateScore(players(0)) must_== initialScore + developedLandScore
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).installation = Some(Installation.public)
+      field.calculateScore(players(0)) must_== initialScore + developedLandScore + publicFacilityScore
     }
     "stringify itself" in {
       val players = Vector(new Player("a", 1), new Player("b", 2),

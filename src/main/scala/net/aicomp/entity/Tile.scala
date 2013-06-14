@@ -57,6 +57,21 @@ package net.aicomp.entity
       }
     }
   }
+  
+  def score(player: Player): Int = {
+    val wasteLand       = 0
+    val undevelopedLand = 1
+    val developedLand   = 3
+    val hole            = 0
+    if (ownedBy(player)) {
+      if (isHole) hole
+      else installation match {
+        case Some(ins)  => developedLand + ins.score
+        case None       => undevelopedLand
+      }
+    }
+    else wasteLand
+  }
 
   def stringify: String = {
     // "owner_id robots object"
