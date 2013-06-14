@@ -7,6 +7,7 @@ import net.aicomp.scene.AbstractScene
 import net.aicomp.util.misc.ImageLoader
 import net.aicomp.entity.OrthogonalPoint
 import net.aicomp.entity.OrthogonalPoint._
+import net.aicomp.entity.Tile
 
 trait WhiteScene extends AbstractScene {
   // TODO should be defined in a property
@@ -42,15 +43,12 @@ trait WhiteScene extends AbstractScene {
     val pointImages = ImageLoader.loadTiles(renderer)
 
     for (point <- points) {
-      drawPoint(renderer, point)
+      drawPoint(renderer, point, game.field.tiles(point))
     }
   }
 
-  def drawPoint(renderer: Renderer, point: Point) = {
+  def drawPoint(renderer: Renderer, op : OrthogonalPoint, tile : Tile) = {
     val pointImages = ImageLoader.loadTiles(renderer)
-    val tile = game.field.tiles(point)
-    val op: OrthogonalPoint = point
-
     val imgKey = tile.owner.map{p => "32_" + p.id}.getOrElse("32")
 
     renderer.drawImage(pointImages.get(imgKey).get, op.x, op.y)
