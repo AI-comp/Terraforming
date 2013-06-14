@@ -15,10 +15,7 @@ object OrthogonalPoint {
   val robotSize = Size(10, 9)
   val numSize = Size(6, 9)
 
-  class Size(val x: Int, val y: Int)
-  object Size {
-    def apply(x: Int, y: Int) = new Size(x, y)
-  }
+  case class Size(val x: Int, val y: Int)
 
   // transformation point coordinate to orthogonal coordinate
   implicit def pointToOrthogonalPoint(p: Point): OrthogonalPoint = {
