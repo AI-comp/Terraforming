@@ -53,7 +53,7 @@ class PointSpec extends SpecificationWithJUnit {
         t.robots = 1000000000
         t.installation = Some(Installation.bridge)
       }
-      
+
       val fieldWithObstacle = Field(2)
       obstacle(fieldWithObstacle(0, 0))
       obstacle(fieldWithObstacle(-1, 0))

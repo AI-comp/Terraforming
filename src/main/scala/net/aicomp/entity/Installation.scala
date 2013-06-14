@@ -11,7 +11,7 @@ object Installation {
   val park = new Installation("park", 1)
   val square = new Installation("square", 1)
   val public = new Installation("public", 1, 10)
-  
+
 
   val buildables = List(factory, bridge, shield, attack, pit, park, square, public)
 }

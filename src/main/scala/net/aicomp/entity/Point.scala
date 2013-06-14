@@ -2,7 +2,10 @@ package net.aicomp.entity
 
 import math.{ abs, max, min }
 
-case class Direction private (val p: Point)
+case class Direction private (val p: Point) {
+  def +(r: Point): Point = p + r
+  def -(r: Point): Point = p - r
+}
 
 object Direction {
   val ur = new Direction(new Point(1, -1))
@@ -14,7 +17,7 @@ object Direction {
 
   val all = List[Direction](ur, ul, r, dr, dl, l)
 
-  private val strMap = scala.collection.immutable.Map(
+  private val strMap = Map(
     "ur" -> ur,
     "ul" -> ul,
     "r" -> r,
@@ -28,7 +31,9 @@ object Direction {
 
 case class Point(val x: Int, val y: Int) extends Ordered[Point] {
   def +(r: Point) = Point(x + r.x, y + r.y)
+  def +(r: Direction): Point = this + r.p
   def -(r: Point) = Point(x - r.x, y - r.y)
+  def -(r: Direction): Point = this - r.p
   def *(r: Int) = Point(x * r, y * r)
   def compare(p: Point) = if (x != p.x) x - p.x else y - p.y
 
@@ -63,7 +68,7 @@ case class Point(val x: Int, val y: Int) extends Ordered[Point] {
         return Some(paths(curr.x + rad)(curr.y + rad).reverse)
       }
       for (dir <- Direction.all) {
-        val next = curr + dir.p
+        val next = curr + dir
         if (canEnter(next) && paths(next.x + rad)(next.y + rad) == null) {
           q += next
           paths(next.x + rad)(next.y + rad) = dir :: paths(curr.x + rad)(curr.y + rad)
