@@ -92,19 +92,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     baseAmount + aroundAmount
   }
   
-  def calculateScore(player: Player): Int = {
-    def score(tile: Tile): Int = {
-      val undevelopedLand = 1
-      val developedLand   = 3
-      val publicFacility  = 10
-      tile.installation.get match {
-        case Installation.initial => undevelopedLand
-        case Installation.public  => developedLand + publicFacility
-        case _                    => developedLand
-      }
-    }
-    tiles.values.filter(_.ownedBy(player)).foldLeft(0)(_ + score(_))
-  }
+  def calculateScore(player: Player): Int = tiles.values.foldLeft(0)(_ + _.score(player))
 
   def stringify: String =
     radius + " " + tiles.size + "\n" + points.toList.sorted.map(p =>
