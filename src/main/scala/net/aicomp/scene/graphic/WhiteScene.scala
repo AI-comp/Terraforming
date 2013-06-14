@@ -15,48 +15,50 @@ trait WhiteScene extends AbstractScene {
   val defaultX = 500
   val defaultY = 250
   // TODO should be defined in a property
-  val pointSize = 32
-  val robotSizeX = 10
-  val robotSizeY = 9
-  val numSizeX = 6
-  val numSizeY = 9
+  val pointSize = Size(32, 32)
+  val robotSize = Size(10, 9)
+  val numSize = Size(6, 9)
 
-  override def draw() = {
-    val renderer = getRenderer()
-
-    drawInitialMap(renderer)
+  class Size(val x: Int, val y: Int)
+  object Size {
+    def apply(x: Int, y: Int) = new Size(x, y)
   }
 
-  def drawInitialMap(renderer: Renderer) = {
+  override def draw() = {
+
+    drawInitialMap()
+  }
+
+  def drawInitialMap() = {
     val backgrounds = ImageLoader.loadBackgrounds(renderer)
     val field = game.field
     val points = field.points
     val tiles = field.tiles
 
     renderer.drawImage(backgrounds.get(32).get, 0, 0)
-    drawPoints(renderer, points)
-    drawRobotAndNumOnPoint(renderer, tiles)
+    drawPoints(points)
+    drawRobotAndNumOnPoint(tiles)
   }
 
   // following methods must be another module.
 
   // draw points in a map
-  def drawPoints(renderer: Renderer, points: Set[Point]) = {
+  def drawPoints(points: Set[Point]) = {
     val pointImages = ImageLoader.loadTiles(renderer)
 
     for (point <- points) {
-      drawPoint(renderer, point)
+      drawPoint(point)
     }
   }
 
-  def drawPoint(renderer: Renderer, op: OrthogonalPoint) = {
+  def drawPoint(op: OrthogonalPoint) = {
     val pointImages = ImageLoader.loadTiles(renderer)
 
     renderer.drawImage(pointImages.get(32).get, op.x, op.y)
   }
 
   // draw robot and num of them on a point
-  def drawRobotAndNumOnPoint(renderer: Renderer, tiles: Map[Point, Tile]) = {
+  def drawRobotAndNumOnPoint(tiles: Map[Point, Tile]) = {
 
     tiles.foreach {
       tile =>
@@ -67,8 +69,8 @@ trait WhiteScene extends AbstractScene {
           val owner = tile._2.owner
           owner match {
             case Some(o) => {
-              drawRobotOnPoint(renderer, op, o.id)
-              drawNumOnPoint(renderer, op, o.id, num)
+              drawRobotOnPoint(op, o.id)
+              drawNumOnPoint("%03d", num, op, o.id)
             }
             case _ =>
           }
@@ -77,34 +79,26 @@ trait WhiteScene extends AbstractScene {
   }
 
   // draw robot on a point
-  def drawRobotOnPoint(renderer: Renderer, op: OrthogonalPoint, oId: Int = -1) = {
+  def drawRobotOnPoint(op: OrthogonalPoint, oId: Int = -1) = {
     val robotImages = ImageLoader.loadRobots(renderer)
 
-    val robotX = op.x + (pointSize / 2) - (robotSizeX / 2)
-    val robotY = op.y + (pointSize / 2) - (robotSizeY * 0)
+    val robotX = op.x + (pointSize.x / 2) - (robotSize.x / 2)
+    val robotY = op.y + (pointSize.y / 2) - (robotSize.y * 0)
 
     renderer.drawImage(robotImages.get(oId).get, robotX, robotY)
   }
 
   // draw num of robot on a tile
-  def drawNumOnPoint(renderer: Renderer, op: OrthogonalPoint, oId: Int = -1, num: Int) = {
+  // note align: left
+  def drawNumOnPoint(format: String, num: Int, op: OrthogonalPoint, oId: Int = -1) = {
     val numImages = ImageLoader.loadNumbers(renderer)
 
-    // TODO now, num of robots is assumed to be from 0 to 999
-    val num1 = (num / 100) % 10
-    val num1X = op.x + (pointSize / 2) - (3 * numSizeX / 2)
-    val num1Y = op.y + (pointSize / 2) - numSizeY
-    
-    val num2 = (num / 10) % 10
-    val num2X = op.x + (pointSize / 2) - (numSizeX / 2)
-    val num2Y = op.y + (pointSize / 2) - numSizeY
-    
-    val num3 = num % 10
-    val num3X = op.x + (pointSize / 2) + (numSizeX / 2)
-    val num3Y = op.y + (pointSize / 2) - numSizeY
+    val drawY = op.y + (2 * numSize.y / 3)
+    var drawX = op.x
 
-    renderer.drawImage(numImages.get(oId, num1).get, num1X, num1Y)
-    renderer.drawImage(numImages.get(oId, num2).get, num2X, num2Y)
-    renderer.drawImage(numImages.get(oId, num3).get, num3X, num3Y)
+    format.format(num).foreach(d => {
+      drawX += numSize.x
+      renderer.drawImage(numImages.get(oId, d.toString().toInt).get, drawX, drawY)
+    })
   }
 }
