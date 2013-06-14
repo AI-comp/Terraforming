@@ -10,84 +10,83 @@ import net.aicomp.entity.OrthogonalPoint._
 import net.aicomp.entity.Tile
 
 trait WhiteScene extends AbstractScene {
-  // TODO should be defined in a property
-  val defaultX = 500
-  val defaultY = 250
-  // TODO should be defined in a property
-  val pointSize = 32
-  val squadSizeX = 10
-  val squadSizeY = 9
-  val numSizeX = 6
-  val numSizeY = 9
 
   override def draw() = {
-    val renderer = getRenderer()
 
-    drawInitialMap(renderer)
+    drawMap()
   }
 
-  def drawInitialMap(renderer: Renderer) = {
+  def drawMap() = {
     val backgrounds = ImageLoader.loadBackgrounds(renderer)
     val field = game.field
     val points = field.points
+    val tiles = field.tiles
 
     renderer.drawImage(backgrounds.get(32).get, 0, 0)
-    drawPoints(renderer, points)
-    drawSquadAndNumOnPoint(renderer)
+    drawPoints(points)
+    drawRobotAndNumOnPoint(tiles)
   }
 
   // following methods must be another module.
 
   // draw points in a map
-  def drawPoints(renderer: Renderer, points: Set[Point]) = {
+  def drawPoints(points: Set[Point]) = {
     val pointImages = ImageLoader.loadTiles(renderer)
 
     for (point <- points) {
-      drawPoint(renderer, point, game.field.tiles(point))
+      drawPoint(point, game.field.tiles(point))
     }
   }
 
-  def drawPoint(renderer: Renderer, op : OrthogonalPoint, tile : Tile) = {
+  def drawPoint(op : OrthogonalPoint, tile : Tile) = {
     val pointImages = ImageLoader.loadTiles(renderer)
     val imgKey = tile.owner.map{p => "32_" + p.id}.getOrElse("32")
 
     renderer.drawImage(pointImages.get(imgKey).get, op.x, op.y)
   }
 
-  // draw squad and num of them on a point
-  def drawSquadAndNumOnPoint(renderer: Renderer) = {
-    // TODO this dummy data should be replaced with squad's position
-    val point = Point(0, 0)
+  // draw robot and num of them on a point
+  def drawRobotAndNumOnPoint(tiles: Map[Point, Tile]) = {
 
-    drawSquadOnPoint(renderer, point)
-    drawNumOnPoint(renderer, point)
+    tiles.foreach {
+      case (point, tile) =>
+        val num = tile.robots
+        if (num > 0) {
+          val op = OrthogonalPoint.pointToOrthogonalPoint(point)
+          
+          tile.owner match {
+            case Some(owner) => {
+              val numString = "%03d".format(num)             
+              drawRobotOnPoint(op, owner.id)
+              drawNumOnPoint(numString, op, owner.id)
+            }
+            case _ =>
+          }
+        }
+    }
   }
 
-  // draw squad on a point
-  def drawSquadOnPoint(renderer: Renderer, op: OrthogonalPoint) = {
-    val squadImages = ImageLoader.loadRobots(renderer)
+  // draw robot on a point
+  def drawRobotOnPoint(op: OrthogonalPoint, ownerId: Int = -1) = {
+    val robotImages = ImageLoader.loadRobots(renderer)
 
-    val squadX = op.x + (pointSize / 2) - (squadSizeX / 2)
-    val squadY = op.y + (pointSize / 2) - (squadSizeY * 0)
+    val robotX = op.x + (pointSize.x / 2) - (robotSize.x / 2)
+    val robotY = op.y + (pointSize.y / 2) - (robotSize.y * 0)
 
-    // TODO pattern matching by team squad belong to
-    renderer.drawImage(squadImages.get(1).get, squadX, squadY)
+    renderer.drawImage(robotImages.get(ownerId).get, robotX, robotY)
   }
 
-  // draw num of squad on a tile
-  def drawNumOnPoint(renderer: Renderer, op: OrthogonalPoint) = {
+  // draw num of robot on a tile
+  // note align: left
+  def drawNumOnPoint(numString: String, op: OrthogonalPoint, ownerId: Int = -1) = {
     val numImages = ImageLoader.loadNumbers(renderer)
 
-    val num1X = op.x + (pointSize / 2) - (3 * numSizeX / 2)
-    val num1Y = op.y + (pointSize / 2) - numSizeY
-    val num2X = op.x + (pointSize / 2) - (numSizeX / 2)
-    val num2Y = op.y + (pointSize / 2) - numSizeY
-    val num3X = op.x + (pointSize / 2) + (numSizeX / 2)
-    val num3Y = op.y + (pointSize / 2) - numSizeY
+    val drawY = op.y + (2 * numSize.y / 3)
+    var drawX = op.x
 
-    // TODO pattern matching by num of squad
-    renderer.drawImage(numImages.get(1, 0).get, num1X, num1Y)
-    renderer.drawImage(numImages.get(1, 6).get, num2X, num2Y)
-    renderer.drawImage(numImages.get(1, 3).get, num3X, num3Y)
+    numString.foreach(d => {
+      drawX += numSize.x
+      renderer.drawImage(numImages.get(ownerId, d.toString().toInt).get, drawX, drawY)
+    })
   }
 }
