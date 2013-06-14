@@ -45,6 +45,7 @@ class GameSpec extends SpecificationWithJUnit {
     }
     "decline to accept move after build" in new games {
       initTile(field, Point(0, 0), players(0))
+      field(0, 0).robots = 25
       game.acceptCommand(BuildCommand(Point(0, 0), Installation.shield)) must_== ()
       game.acceptCommand(MoveCommand(Point(0, 0), Direction.r, 1)) must
         throwA[CommandException]
@@ -52,6 +53,7 @@ class GameSpec extends SpecificationWithJUnit {
     "decline to accept build after build" in new games {
       initTile(field, Point(0, 0), players(0))
       initTile(field, Point(0, 1), players(0))
+      field(0, 0).robots = 25
       game.acceptCommand(BuildCommand(Point(0, 0), Installation.shield)) must_== ()
       game.acceptCommand(BuildCommand(Point(0, 1), Installation.shield)) must
         throwA[CommandException]
