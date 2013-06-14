@@ -37,10 +37,10 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
   def moveSquad(player: Player, p: Point, d: Direction, amount: Int) = {
     if (!points.contains(p)) {
-      throw new CommandException("You cannot choose outer tile of field")
+      throw new CommandException("You cannot choose an outer tile of the field")
     }
     if (!points.contains(p + d)) {
-      throw new CommandException("Robots cannot go out from field")
+      throw new CommandException("Robots cannot go out from the field")
     }
 
     val srcTile = this(p)
@@ -54,7 +54,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
   def build(player: Player, p: Point, ins: Installation) = {
     if (!points.contains(p)) {
-      throw new CommandException("You cannot choose outer tile of field")
+      throw new CommandException("You cannot choose an outer tile of the field")
     }
 
     val tile = this(p)

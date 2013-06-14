@@ -183,13 +183,13 @@ class FieldSpec extends SpecificationWithJUnit {
       field.moveSquad(players(0), Point(0, 0), Direction.r, 10) must
         throwA[CommandException]
     }
-    "decline to choose outer tile of field" in new fields {
+    "decline to choose an outer tile of the field" in new fields {
       field.moveSquad(players(0), Point(99, 99), Direction.r, 10) must
         throwA[CommandException]
       field.build(players(0), Point(99, 99), Installation.park) must
         throwA[CommandException]
     }
-    "decline to move robots onto outside of field" in new fields {
+    "decline to move robots onto outside of the field" in new fields {
       val p = Point(field.radius, 0)
       initTile(field, p)
       field(p).owner = Some(players(0))
