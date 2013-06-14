@@ -13,10 +13,10 @@ trait WhiteScene extends AbstractScene {
 
   override def draw() = {
 
-    drawInitialMap()
+    drawMap()
   }
 
-  def drawInitialMap() = {
+  def drawMap() = {
     val backgrounds = ImageLoader.loadBackgrounds(renderer)
     val field = game.field
     val points = field.points
@@ -51,15 +51,14 @@ trait WhiteScene extends AbstractScene {
     tiles.foreach {
       case (point, tile) =>
         val num = tile.robots
-        // val num = tile._2.availableRobots
         if (num > 0) {
           val op = OrthogonalPoint.pointToOrthogonalPoint(point)
-          val owner = tile.owner
-          owner match {
-            case Some(o) => {
+          
+          tile.owner match {
+            case Some(owner) => {
               val numString = "%03d".format(num)             
-              drawRobotOnPoint(op, o.id)
-              drawNumOnPoint(numString, op, o.id)
+              drawRobotOnPoint(op, owner.id)
+              drawNumOnPoint(numString, op, owner.id)
             }
             case _ =>
           }
