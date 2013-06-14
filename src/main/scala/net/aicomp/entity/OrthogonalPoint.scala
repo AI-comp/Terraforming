@@ -1,7 +1,5 @@
 package net.aicomp.entity
 
-import jp.ac.waseda.cs.washi.gameaiarena.gui.Renderer
-
 // new Point class for rendering
 case class OrthogonalPoint(x: Int, y: Int) {
 }

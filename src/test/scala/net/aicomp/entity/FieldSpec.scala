@@ -5,8 +5,8 @@ import org.specs2.specification.Scope
 
 class FieldSpec extends SpecificationWithJUnit {
   trait fields extends Scope {
-    val players = Vector(new Player("a", 1), new Player("b", 2),
-        new Player("c", 3))
+    val players = Vector(new Player(1), new Player(2),
+      new Player(3))
     val field = Field(7, players.toList)
 
     def initTile(field: Field, p: Point) {
@@ -221,8 +221,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field.calculateScore(players(0)) must_== initialScore + developedLandScore + publicFacilityScore
     }
     "stringify itself" in {
-      val players = Vector(new Player("a", 1), new Player("b", 2),
-        new Player("c", 3))
+      val players = Vector(new Player(1), new Player(2), new Player(3))
       val field = Field(1, players.toList)
       field.stringify must_==
         "1 7\n" +

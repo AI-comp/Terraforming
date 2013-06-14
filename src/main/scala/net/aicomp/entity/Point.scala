@@ -1,6 +1,8 @@
 package net.aicomp.entity
 
-import math.{ abs, max, min }
+import scala.math.abs
+import scala.math.max
+import scala.math.min
 
 case class Direction private (val p: Point) {
   def +(r: Point): Point = p + r

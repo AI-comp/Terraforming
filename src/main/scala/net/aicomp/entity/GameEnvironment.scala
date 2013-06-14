@@ -1,7 +1,8 @@
 package net.aicomp.entity
 
-import jp.ac.waseda.cs.washi.gameaiarena.gui.Environment
-import jp.ac.waseda.cs.washi.gameaiarena.gui.GamePanel
+import net.exkazuu.gameaiarena.gui.Environment
+import net.exkazuu.gameaiarena.gui.GamePanel
+import net.aicomp.entity.input.Manipulator
 
 class GameEnvironment(panel: GamePanel) extends Environment(panel) {
   var game: Game = null

@@ -11,7 +11,8 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
   "commons-cli" % "commons-cli" % "1.2",
-  "jp.ac.waseda.cs.washi" % "GameAIArena" % "1.4.4",
+  "com.google.guava" % "guava" % "14.0.1",
+  "jp.ac.waseda" % "GameAIArena" % "1.5.4",
   "junit" % "junit" % "4.10" % "test",
   "org.hamcrest" % "hamcrest-all" % "1.1" % "test",
   "org.specs2" %% "specs2" % "1.12.4.1" % "test",
