@@ -37,13 +37,16 @@ object ImageLoader {
     _backgrounds
   }
 
-  private var _tiles: Map[Int, Image] = null
+  private var _tiles: Map[String, Image] = null
 
   def loadTiles(render: Renderer) = {
     if (_tiles == null) {
       _tiles = Map(
-        32 -> render.loadImage("img/hex32.png"),
-        48 -> render.loadImage("img/hex48.png"))
+        "32" -> render.loadImage("img/hex32.png"),
+        "32_0" -> render.loadImage("img/hex32_0.png"),
+        "32_1" -> render.loadImage("img/hex32_1.png"),
+        "32_2" -> render.loadImage("img/hex32_2.png"),
+        "48" -> render.loadImage("img/hex48.png"))
     }
     _tiles
   }
