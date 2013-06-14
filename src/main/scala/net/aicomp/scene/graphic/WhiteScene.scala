@@ -10,18 +10,6 @@ import net.aicomp.entity.OrthogonalPoint._
 import net.aicomp.entity.Tile
 
 trait WhiteScene extends AbstractScene {
-  // TODO should be defined in a property
-  val defaultX = 500
-  val defaultY = 250
-  // TODO should be defined in a property
-  val pointSize = Size(32, 32)
-  val robotSize = Size(10, 9)
-  val numSize = Size(6, 9)
-
-  class Size(val x: Int, val y: Int)
-  object Size {
-    def apply(x: Int, y: Int) = new Size(x, y)
-  }
 
   override def draw() = {
 
@@ -61,16 +49,17 @@ trait WhiteScene extends AbstractScene {
   def drawRobotAndNumOnPoint(tiles: Map[Point, Tile]) = {
 
     tiles.foreach {
-      tile =>
-        val num = tile._2.robots
+      case (point, tile) =>
+        val num = tile.robots
         // val num = tile._2.availableRobots
         if (num > 0) {
-          val op = OrthogonalPoint.pointToOrthogonalPoint(tile._1)
-          val owner = tile._2.owner
+          val op = OrthogonalPoint.pointToOrthogonalPoint(point)
+          val owner = tile.owner
           owner match {
             case Some(o) => {
+              val numString = "%03d".format(num)             
               drawRobotOnPoint(op, o.id)
-              drawNumOnPoint("%03d", num, op, o.id)
+              drawNumOnPoint(numString, op, o.id)
             }
             case _ =>
           }
@@ -79,26 +68,26 @@ trait WhiteScene extends AbstractScene {
   }
 
   // draw robot on a point
-  def drawRobotOnPoint(op: OrthogonalPoint, oId: Int = -1) = {
+  def drawRobotOnPoint(op: OrthogonalPoint, ownerId: Int = -1) = {
     val robotImages = ImageLoader.loadRobots(renderer)
 
     val robotX = op.x + (pointSize.x / 2) - (robotSize.x / 2)
     val robotY = op.y + (pointSize.y / 2) - (robotSize.y * 0)
 
-    renderer.drawImage(robotImages.get(oId).get, robotX, robotY)
+    renderer.drawImage(robotImages.get(ownerId).get, robotX, robotY)
   }
 
   // draw num of robot on a tile
   // note align: left
-  def drawNumOnPoint(format: String, num: Int, op: OrthogonalPoint, oId: Int = -1) = {
+  def drawNumOnPoint(numString: String, op: OrthogonalPoint, ownerId: Int = -1) = {
     val numImages = ImageLoader.loadNumbers(renderer)
 
     val drawY = op.y + (2 * numSize.y / 3)
     var drawX = op.x
 
-    format.format(num).foreach(d => {
+    numString.foreach(d => {
       drawX += numSize.x
-      renderer.drawImage(numImages.get(oId, d.toString().toInt).get, drawX, drawY)
+      renderer.drawImage(numImages.get(ownerId, d.toString().toInt).get, drawX, drawY)
     })
   }
 }
