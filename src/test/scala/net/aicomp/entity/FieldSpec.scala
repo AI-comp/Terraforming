@@ -183,6 +183,20 @@ class FieldSpec extends SpecificationWithJUnit {
       field.moveSquad(players(0), Point(0, 0), Direction.r, 10) must
         throwA[CommandException]
     }
+    "decline to choose outer tile of field" in new fields {
+      field.moveSquad(players(0), Point(99, 99), Direction.r, 10) must
+        throwA[CommandException]
+      field.build(players(0), Point(99, 99), Installation.park) must
+        throwA[CommandException]
+    }
+    "decline to move robots onto outside of field" in new fields {
+      val p = Point(field.radius, 0)
+      initTile(field, p)
+      field(p).owner = Some(players(0))
+      field(p).robots = 10
+      field.moveSquad(players(0), p, Direction.r, 10) must
+        throwA[CommandException]
+    }
     "calculate the one's own score of the initilized field" in new fields {
       val initialScore = 3
       field.calculateScore(players(0)) must_== initialScore
