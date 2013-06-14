@@ -36,6 +36,13 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   def apply(p: Point): Tile = tiles(p)
 
   def moveSquad(player: Player, p: Point, d: Direction, amount: Int) = {
+    if (!points.contains(p)) {
+      throw new CommandException("You cannot choose outer tile of field")
+    }
+    if (!points.contains(p + d)) {
+      throw new CommandException("Robots cannot go out from field")
+    }
+
     val srcTile = this(p)
     val dstTile = this(p + d)
     // check ALL constraints before any change written
@@ -46,6 +53,10 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   }
 
   def build(player: Player, p: Point, ins: Installation) = {
+    if (!points.contains(p)) {
+      throw new CommandException("You cannot choose outer tile of field")
+    }
+
     val tile = this(p)
     if (!tile.ownedBy(player)) {
       throw new CommandException("You should own a tile where an installation is built.")
