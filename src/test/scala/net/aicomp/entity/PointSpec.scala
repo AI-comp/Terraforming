@@ -12,6 +12,10 @@ class PointSpec extends SpecificationWithJUnit {
     "calculate subtractions" in {
       Point(1, 3) - Point(-1, -1) must_== Point(2, 4)
     }
+    "calculate with directions" in {
+      Point(2, 2) + Direction.ur must_== Point(3, 1)
+      Point(2, 2) - Direction.ul must_== Point(2, 3)
+    }
     "calculate multiplication" in {
       Point(2, 1) * 3 must_== Point(6, 3)
     }
@@ -37,8 +41,8 @@ class PointSpec extends SpecificationWithJUnit {
     }
     "return shortest path to" in {
       val field = Field(7)
-      val player = new Player("A")
-      val enemy = new Player("B")
+      val player = new Player("A", 1)
+      val enemy = new Player("B", 2)
       Point(0, 1).shortestPathTo(Point(0, 1), field, player) must_==
         Some(List.empty[Direction])
       Point(0, 1).shortestPathTo(Point(0, 3), field, player) must_==
@@ -53,7 +57,7 @@ class PointSpec extends SpecificationWithJUnit {
         t.robots = 1000000000
         t.installation = Some(Installation.bridge)
       }
-      
+
       val fieldWithObstacle = Field(2)
       obstacle(fieldWithObstacle(0, 0))
       obstacle(fieldWithObstacle(-1, 0))
@@ -68,6 +72,9 @@ class PointSpec extends SpecificationWithJUnit {
       Point(0, 1).shortestPathTo(Point(0, -1), fieldWithWall, player) must_== None
       Point(-1, 1).shortestPathTo(Point(0, 1), fieldWithWall, player) must_==
         Some(List(Direction.r))
+    }
+    "stringify itself" in {
+      Point(1, 2).stringify must_== "1 2"
     }
     "return points within distance" in {
       Point.pointsWithin(1) must_== List(

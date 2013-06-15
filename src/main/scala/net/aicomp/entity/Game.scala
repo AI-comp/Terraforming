@@ -30,16 +30,15 @@ class Game(val field: Field, val players: List[Player], val maxTurn: Int) {
   }
 
   private def startTurn() {
-    // TODO: increase robots
+    field.produceRobot(currentPlayer)
+    field.clearMovedRobots()
     _isMoving = false
     _isBuilding = false
   }
 
   private def finishTurn() {
-    field.clearMovedRobots
     _currentPlayerIndex = (_currentPlayerIndex + 1) % players.length
     _currentTurn += 1
-    field.produceRobot(currentPlayer)
     if (!isFinished) startTurn
   }
 
@@ -51,4 +50,7 @@ class Game(val field: Field, val players: List[Player], val maxTurn: Int) {
     if (_isMoving) throw new CommandException("Installations cannot be built after some robots moved")
     if (_isBuilding) throw new CommandException("Only one installations can be built in one turn")
   }
+
+  def stringify: String = "turn " + currentTurn + "\n" +
+    players.map(_.stringify + "\n").mkString + field.stringify
 }

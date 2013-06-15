@@ -11,6 +11,8 @@ package net.aicomp.entity
 
   def ownedBy(p: Player) = owner.exists(_ == p)
 
+  def existBaseMaterialOf(p: Player) = owner.exists(_ == p) && installation.isEmpty
+  
   def isMovable(player: Player) = ownedBy(player) || installation.isEmpty
 
   def checkLeave(player: Player, amount: Int) {
@@ -21,7 +23,7 @@ package net.aicomp.entity
       throw new CommandException("The number of moving robots should be less than or equal to the number of existing movable robots.")
     }
     if (!ownedBy(player)) {
-      throw new CommandException("A player cannot move from a wasted land")
+      throw new CommandException("A player cannot move from a waste land")
     }
   }
 
@@ -38,19 +40,13 @@ package net.aicomp.entity
 
   def enter(player: Player, amount: Int) {
     checkEnter(player, amount) // defensive
-    if (owner.isEmpty) {
-      // wasted land
-      owner = Some(player)
-      robots = amount
-      movedRobots = amount
-    }
-    else if (ownedBy(player)) {
-      // undeveloped land or developed land of the player
+    if (ownedBy(player)) {
+      // developed land of the player
       robots += amount
       movedRobots += amount
     }
     else {
-      // battle
+      // battle (with waste land's robots or enemy robots)
       if (amount <= robots) {
         // losing or draw
         robots -= amount
@@ -62,6 +58,34 @@ package net.aicomp.entity
         movedRobots = robots
       }
     }
+  }
+  
+  def score(player: Player): Int = {
+    val wasteLand       = 0
+    val undevelopedLand = 1
+    val developedLand   = 3
+    val hole            = 0
+    if (ownedBy(player)) {
+      if (isHole) hole
+      else installation match {
+        case Some(ins)  => developedLand + ins.score
+        case None       => undevelopedLand
+      }
+    }
+    else wasteLand
+  }
+
+  def stringify: String = {
+    // "owner_id robots object"
+    val owner_id = owner match {
+      case Some(player) => player.id
+      case None => -1
+    }
+    val obj = if (isHole) "hole" else installation match {
+      case Some(b) => b.toString
+      case None => "none"
+    }
+    owner_id + " " + robots + " " + obj
   }
 
   override def clone() = super.clone().asInstanceOf[Tile]

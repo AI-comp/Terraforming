@@ -7,7 +7,7 @@ import org.scalacheck.Gen
 
 object PointProp extends Properties("Point") {
   val field = Field(7)
-  val player = new Player("A")
+  val player = new Player("A", 2)
 
   property("shortestPathTo") = forAll(pointWithin, pointWithin) { (p1: Point, p2: Point) =>
     p1.shortestPathTo(p2, field, player).get.size == p1.distance(p2)
@@ -34,12 +34,4 @@ object PointProp extends Properties("Point") {
     x <- Gen.choose(-field.radius * 2, field.radius * 2)
     y <- Gen.choose(-field.radius * 2, field.radius * 2)
   } yield Point(x, y)).filter(p => !p.within(field.radius))
-
-  implicit def arbPoint: Arbitrary[Point] =
-    Arbitrary {
-      for {
-        x <- Gen.choose(-field.radius, field.radius)
-        y <- Gen.choose(-field.radius, field.radius)
-      } yield Point(x, y)
-    }
 }

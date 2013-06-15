@@ -36,8 +36,15 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   def apply(p: Point): Tile = tiles(p)
 
   def moveSquad(player: Player, p: Point, d: Direction, amount: Int) = {
+    if (!points.contains(p)) {
+      throw new CommandException("You cannot choose an outer tile of the field")
+    }
+    if (!points.contains(p + d)) {
+      throw new CommandException("Robots cannot go out from the field")
+    }
+
     val srcTile = this(p)
-    val dstTile = this(p + d.p)
+    val dstTile = this(p + d)
     // check ALL constraints before any change written
     srcTile.checkLeave(player, amount)
     dstTile.checkEnter(player, amount)
@@ -46,6 +53,10 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   }
 
   def build(player: Player, p: Point, ins: Installation) = {
+    if (!points.contains(p)) {
+      throw new CommandException("You cannot choose an outer tile of the field")
+    }
+
     val tile = this(p)
 
     //tile check
@@ -79,11 +90,10 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   }
 
   def produceRobot(player: Player) = {
-    for (tile <- tiles.values) {
-      if (tile.installation == Installation.initial) {
+    for (tile <- tiles.values.filter(_.ownedBy(player))) {
+      if (tile.installation.exists(_ == Installation.initial)) {
         tile.enter(player, 5)
-      }
-      if (tile.installation == Installation.factory) {
+      } else if (tile.installation.exists(_ == Installation.factory)) {
         tile.enter(player, 1)
       }
     }
@@ -93,12 +103,15 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     tiles.values.foreach(t => t.movedRobots = 0)
   }
 
+  def robotAmount(player: Player) = {
+    tiles.values.filter(_.ownedBy(player)).map(_.robots).sum
+  }
+
   def materialAmount(p: Point, player: Player) = {
-    val baseAmount = if (this(p) ownedBy player) 1 else 0
+    val baseAmount = if (this(p) existBaseMaterialOf player) 1 else 0
     val aroundTiles = Direction.all.map(_.p + p).filter(_.within(radius)).map(apply)
-    val aroundPit = aroundTiles.count(tile =>
-      tile.ownedBy(player) &&
-        tile.installation.exists(_ == Installation.pit))
+    val aroundPit = aroundTiles.count(tile => tile.ownedBy(player) &&
+      tile.installation.exists(_ == Installation.pit))
     baseAmount + aroundPit
   }
 
@@ -108,6 +121,12 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     val aroundMount = aroundPoint.map(materialAmount(_, player)).sum
     baseAmount + aroundMount
   }
+
+  def calculateScore(player: Player): Int = tiles.values.foldLeft(0)(_ + _.score(player))
+
+  def stringify: String =
+    radius + " " + tiles.size + "\n" + points.toList.sorted.map(p =>
+      p.stringify + " " + tiles(p).stringify + "\n").mkString
 
   override def toString: String = {
     val height = radius * 6 + 5
