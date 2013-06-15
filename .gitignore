@@ -46,6 +46,7 @@ download
 # eclipse
 .settings
 .cache
+.classpath
 
 # emacs
 *~
