@@ -7,8 +7,10 @@ import net.exkazuu.gameaiarena.gui.Scene
 import net.aicomp.entity.input.Manipulator
 
 abstract class MainScene(nextScene: Scene[GameEnvironment]) extends AbstractScene {
-  override def runWithCommands(commandStrings: List[List[String]]) = {
-    require(commandStrings != null)
+  override def runWithCommand(commandString: List[String]) = {
+    require(commandString != null)
+    require(!commandString.isEmpty)
+
     val commands = Map(
       "move" -> Command.moveCommand,
       "build" -> Command.buildCommand,
@@ -20,22 +22,20 @@ abstract class MainScene(nextScene: Scene[GameEnvironment]) extends AbstractScen
       displayLine("  finish")
     }
 
-    for (commandString <- commandStrings) {
-      val cmd :: args = commandString.toList
-      commands.get(cmd) match {
-        case Some(c) => {
-          try {
-            game.acceptCommand(c(args))
-            displayLine(game.field.toString)
-          } catch {
-            case CommandException(msg) => {
-              displayLine(msg)
-              help
-            }
+    val cmd :: args = commandString.toList
+    commands.get(cmd) match {
+      case Some(c) => {
+        try {
+          game.acceptCommand(c(args))
+          displayLine(game.field.toString)
+        } catch {
+          case CommandException(msg) => {
+            displayLine(msg)
+            help
           }
         }
-        case None => help
       }
+      case None => help
     }
 
     this

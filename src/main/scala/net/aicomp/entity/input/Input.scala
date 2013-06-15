@@ -20,7 +20,7 @@ class ConsoleUserInput(scanner: Scanner) extends Input {
 
 class GraphicalUserInput extends Input {
   def inputCommandLists(game: Game) = {
-    TextBoxScene.nextCommand()
+    TextBoxScene.inputCommandLists()
   }
 }
 

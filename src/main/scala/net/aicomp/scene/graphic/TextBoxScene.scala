@@ -15,7 +15,7 @@ object TextBoxScene {
 
   def addCommand(command: String) = commands.enqueue(command)
 
-  def nextCommand() = {
+  def inputCommandLists() = {
     if (commands.size > 0)
       Array(commands.dequeue.split(" ").toArray)
     else

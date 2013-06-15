@@ -16,13 +16,12 @@ abstract class PlayerScene(nextScene: Scene[GameEnvironment], setting: GameSetti
     displayLine("Please enter player names with space delimiters.")
   }
 
-  override def runWithCommands(commandStrings: List[List[String]]) = {
-    if (commandStrings.length <= 0) {
+  override def runWithCommand(commandString: List[String]) = {
+    if (commandString.length <= 0) {
       displayLine("Please enter a name.")
       this
     } else {
-      val a = commandStrings
-      val (name :: _) :: _ = commandStrings
+      val name :: _ = commandString
       game.currentPlayer.name = name
       if (game.changePlayerIndex() == 0) {
         displayLine(game.players.size + " players have joined the game. ("

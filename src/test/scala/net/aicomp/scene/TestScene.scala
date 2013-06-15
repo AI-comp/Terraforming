@@ -15,7 +15,7 @@ trait TestScene extends ConsoleScene {
   private var lastScene: Scene[GameEnvironment] = this
 
   override def run() = {
-    lastScene = runWithCommands(List(input.dequeue().split(" ").toList))
+    lastScene = runWithCommand(input.dequeue().split(" ").toList)
     null
   }
   override def nextCommandStrnigs = throw new Exception()
