@@ -323,9 +323,7 @@ class InstallationSpec extends SpecificationWithJUnit {
       field.build(players(0), origin, Installation.public) must_== ()
     }
 
-    "decline to accept building a \"public\" in hole" in new installations {
-      val pitPlaces = List(Point(1, 1), Point(2, -1), Point(1, -2), Point(-1, -1), Point(-2, 1), Point(-1, 2))
-
+    "decline to accept building a \"public\" in hole" in new installations with originAndPits{
       field(origin).isHole = true
 
       pitPlaces.foreach(_p =>
