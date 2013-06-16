@@ -6,7 +6,7 @@ import org.specs2.specification.Scope
 class FieldSpec extends SpecificationWithJUnit {
   trait fields extends Scope {
     val players = Vector(new Player("a", 1), new Player("b", 2),
-        new Player("c", 3))
+      new Player("c", 3))
     val field = Field(7, players.toList)
 
     def initTile(field: Field, p: Point) {
@@ -25,6 +25,7 @@ class FieldSpec extends SpecificationWithJUnit {
           case Some(_) => field(p).owner.exists(_ == player)
           case _ => false
         })
+
       filterByPlayer(players(0)).size must_== 1
       filterByPlayer(players(1)).size must_== 1
       filterByPlayer(players(2)).size must_== 1
@@ -66,12 +67,20 @@ class FieldSpec extends SpecificationWithJUnit {
     "remove hole when bridge is built" in new fields {
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
+      field(0, -1).owner = Some(players(0))
+      field(0, -1).isHole = false
+      field(0, 1).owner = Some(players(0))
+      field(0, 1).isHole = false
+      field(1, 0).owner = Some(players(0))
+      field(1, 0).isHole = false
+      field(-1, 0).owner = Some(players(0))
+      field(-1, 0).isHole = false
       field(0, 0).robots = 10
       field(0, 0).isHole = true
       field.build(players(0), Point(0, 0), Installation.bridge) must_== ()
       field(0, 0).isHole must_== false
     }
-    "decline to build installations othe than bridge on a hole" in new fields {
+    "decline to build installations other than bridge on a hole" in new fields {
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
       field(0, 0).robots = 10
@@ -196,6 +205,17 @@ class FieldSpec extends SpecificationWithJUnit {
       field(p).robots = 10
       field.moveSquad(players(0), p, Direction.r, 10) must
         throwA[CommandException]
+    }
+    "calculate the one's materialAMount of the initilized field" in new fields {
+      def filterByPlayer(player: Player) = field.points.filter(
+        p => field(p).installation match {
+          case Some(_) => field(p).owner.exists(_ == player)
+          case _ => false
+        })
+      for (player <- players) {
+        filterByPlayer(player).foreach(
+          field.aroundMaterialAmount(_, players(0)) must_== 0)
+      }
     }
     "calculate the one's own score of the initilized field" in new fields {
       val initialScore = 3
