@@ -252,7 +252,7 @@ class InstallationSpec extends SpecificationWithJUnit {
  *                                 *
  ***********************************
  */
-    "allow to accept building a \"square\"" in new installations {
+    trait originAndPit extends installations {
       val pitPlace = Point(1, 1)
       initTile(field, origin, players(0))
       initTile(field, pitPlace, players(0))
@@ -260,19 +260,14 @@ class InstallationSpec extends SpecificationWithJUnit {
       aroundPoints(pitPlace).foreach(initTile(field, _, players(0)))
       field(origin).robots = 1
       field(pitPlace).robots = 20
+    }
 
+    "allow to accept building a \"square\"" in new installations with originAndPit {
       field.build(players(0), pitPlace, Installation.pit) must_== ()
       field.build(players(0), origin, Installation.square) must_== ()
     }
 
-    "decline to accept building a \"square\" in hole" in new installations {
-      val pitPlace = Point(1, 1)
-      initTile(field, origin, players(0))
-      initTile(field, pitPlace, players(0))
-      aroundPoints(origin).foreach(initTile(field, _, players(0)))
-      aroundPoints(pitPlace).foreach(initTile(field, _, players(0)))
-      field(origin).robots = 1
-      field(pitPlace).robots = 20
+    "decline to accept building a \"square\" in hole" in new installations with originAndPit {
       field(origin).isHole = true
 
       field.build(players(0), pitPlace, Installation.pit) must_== ()
@@ -309,9 +304,8 @@ class InstallationSpec extends SpecificationWithJUnit {
  *                                 *
  ***********************************
  */
-    "allow to accept building a \"public\"" in new installations {
+    trait originAndPits extends installations {
       val pitPlaces = List(Point(1, 1), Point(2, -1), Point(1, -2), Point(-1, -1), Point(-2, 1), Point(-1, 2))
-
       initTile(field, origin, players(0))
       aroundPoints(origin).foreach(initTile(field, _, players(0)))
       pitPlaces.foreach(_p => {
@@ -321,7 +315,9 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field(origin).robots = 1
       pitPlaces.foreach(_p => field(_p).robots = 20)
+    }
 
+    "allow to accept building a \"public\"" in new installations with originAndPits {
       pitPlaces.foreach(_p =>
         field.build(players(0), _p, Installation.pit) must_== ())
       field.build(players(0), origin, Installation.public) must_== ()
@@ -330,16 +326,7 @@ class InstallationSpec extends SpecificationWithJUnit {
     "decline to accept building a \"public\" in hole" in new installations {
       val pitPlaces = List(Point(1, 1), Point(2, -1), Point(1, -2), Point(-1, -1), Point(-2, 1), Point(-1, 2))
 
-      initTile(field, origin, players(0))
-      aroundPoints(origin).foreach(initTile(field, _, players(0)))
-      pitPlaces.foreach(_p => {
-        initTile(field, _p, players(0))
-        aroundPoints(_p).foreach(initTile(field, _, players(0)))
-      })
-
-      field(origin).robots = 1
       field(origin).isHole = true
-      pitPlaces.foreach(_p => field(_p).robots = 20)
 
       pitPlaces.foreach(_p =>
         field.build(players(0), _p, Installation.pit) must_== ())
