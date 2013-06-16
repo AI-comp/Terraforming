@@ -18,7 +18,7 @@ trait TestScene extends ConsoleScene {
     lastScene = runWithCommand(input.dequeue().split(" ").toList)
     null
   }
-  override def nextCommandStrnigs = throw new Exception()
+  override def nextCommandStrings = throw new Exception()
   override def displayCore(text: String) { output += text }
 
   def accept(env: GameEnvironment, command: String) = {

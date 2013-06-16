@@ -16,7 +16,7 @@ abstract class AbstractScene extends DefaultScene[GameEnvironment] {
 
   override def run() = {
     if (input.isEmpty) {
-      val commandStrings = nextCommandStrnigs
+      val commandStrings = nextCommandStrings
         .filter(_ != null)
         .map(_.filter(_.length > 0).toList)
         .filter(_.length > 0)
@@ -33,7 +33,7 @@ abstract class AbstractScene extends DefaultScene[GameEnvironment] {
     }
   }
 
-  protected def nextCommandStrnigs = game.currentPlayer.manipulator.run(game)
+  protected def nextCommandStrings = game.currentPlayer.manipulator.run(game)
 
   protected def runWithCommand(commandString: List[String]): Scene[GameEnvironment]
 
