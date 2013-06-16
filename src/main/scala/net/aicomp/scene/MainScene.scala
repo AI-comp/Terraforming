@@ -4,7 +4,6 @@ import net.aicomp.entity.Command
 import net.aicomp.entity.CommandException
 import net.aicomp.entity.GameEnvironment
 import net.exkazuu.gameaiarena.gui.Scene
-import net.aicomp.entity.input.Manipulator
 
 abstract class MainScene(nextScene: Scene[GameEnvironment]) extends AbstractScene {
   override def runWithCommand(commandString: List[String]) = {
@@ -38,6 +37,9 @@ abstract class MainScene(nextScene: Scene[GameEnvironment]) extends AbstractScen
       case None => help
     }
 
-    this
+    if (!game.isFinished)
+      this
+    else
+      nextScene
   }
 }

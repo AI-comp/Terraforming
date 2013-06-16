@@ -1,4 +1,4 @@
-package net.aicomp.entity.input
+package net.aicomp.input
 
 import net.aicomp.entity.Game
 import net.exkazuu.gameaiarena.runner.AbstractRunner

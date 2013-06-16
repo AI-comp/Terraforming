@@ -113,7 +113,7 @@ class GameSpec extends SpecificationWithJUnit {
         players(0).stringify + "\n" +
         players(1).stringify + "\n" +
         players(2).stringify + "\n" +
-        field.stringify
+        field.stringify + "EOS"
     }
   }
 }
