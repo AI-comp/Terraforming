@@ -229,29 +229,21 @@ class FieldSpec extends SpecificationWithJUnit {
     }
 
     "calculate the one's materialAmount of the own settlment surrounded own settlement" in new fields with origin {
-
       for (p <- aroundPoints) {
         initTile(field, p)
         field(p).owner = player
       }
-
       field.aroundMaterialAmount(origin, players(0)) must_== 7
-
     }
-
     "calculate the one's materialAmount of the own settlment surrounded own hole" in new fields with origin {
-
       for (p <- aroundPoints) {
         initTile(field, p)
         field(p).owner = Some(players(0))
         field(p).isHole = true
       }
-
       field.aroundMaterialAmount(origin, players(0)) must_== 1
     }
-
     "calculate the one's materialAmount of the own settlment surrounded own city" in new fields with origin {
-
       for (p <- aroundPoints) {
         initTile(field, p)
         Direction.all.map(_.p + p).filter(_.within(radius)).foreach({ _p =>
@@ -259,51 +251,40 @@ class FieldSpec extends SpecificationWithJUnit {
           field(_p).owner = player
         })
       }
-
       for (p <- aroundPoints) {
         field(p).owner = player
         field(p).robots = 1
         field.build(player.get, p, Installation.park)
       }
-
       field.aroundMaterialAmount(origin, players(0)) must_== 1
     }
-
     trait originAndPit extends origin {
       val pitPlace = Point(1, 1)
-
       val aroundPits = Direction.all.map(_.p + pitPlace).filter(_.within(radius))
       for (p <- aroundPits) {
         initTile(field, p)
         field(p).owner = player
       }
-
       initTile(field, pitPlace)
       field(pitPlace).owner = player
       field(pitPlace).robots = 20
       field.build(player.get, pitPlace, Installation.pit)
-
     }
-
     "calculate the one's materialAmount of the own settlment surrounded own settlement and pit" in new fields with originAndPit {
       for (p <- aroundPoints) {
         initTile(field, p)
         field(p).owner = Some(players(0))
       }
-
       field.aroundMaterialAmount(origin, players(0)) must_== 9
     }
-
     "calculate the one's materialAmount of the own settlment surrounded own hole and pit" in new fields with originAndPit {
       for (p <- aroundPoints) {
         initTile(field, p)
         field(p).owner = Some(players(0))
         field(p).isHole = true
       }
-
       field.aroundMaterialAmount(origin, players(0)) must_== 1
     }
-
     "calculate the one's materialAmount of the own settlment surrounded own city and pit" in new fields with originAndPit {
       for (p <- aroundPoints) {
         initTile(field, p)
@@ -314,16 +295,13 @@ class FieldSpec extends SpecificationWithJUnit {
           }
         })
       }
-
       for (p <- aroundPoints) {
         field(p).owner = player
         field(p).robots = 1
         field.build(player.get, p, Installation.park)
       }
-
       field.aroundMaterialAmount(origin, players(0)) must_== 1
     }
-
     "calculate the one's own score of the initilized field" in new fields {
       val initialScore = 3
       field.calculateScore(players(0)) must_== initialScore

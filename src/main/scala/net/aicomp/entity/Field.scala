@@ -113,14 +113,12 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   }
 
   def materialAmount(p: Point, player: Player) = {
-    val baseAmount = if (this(p) existBaseMaterialOf player) 1 else 0
-    val aroundTiles = Direction.all.map(_.p + p).filter(_.within(radius)).map(apply)
-    val aroundPit =
-      if (baseAmount == 1)
-        aroundTiles.count(tile => tile.ownedBy(player) && tile.installation.exists(_ == Installation.pit))
-      else
-        0
-    baseAmount + aroundPit
+    if (this(p) existBaseMaterialOf player) {
+      val aroundTiles = Direction.all.map(_.p + p).filter(_.within(radius)).map(apply)
+      1 + aroundTiles.count(tile => tile.ownedBy(player) && tile.installation.exists(_ == Installation.pit))
+    } else {
+      0
+    }    
   }
 
   def aroundMaterialAmount(p: Point, player: Player) = {
