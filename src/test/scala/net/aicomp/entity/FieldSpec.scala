@@ -294,7 +294,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field.aroundMaterialAmount(origin, players(0)) must_== 9
     }
 
-    "calculate the one's materialAmount of the own settlment surrounded own hole" in new fields with originAndPit {
+    "calculate the one's materialAmount of the own settlment surrounded own hole and pit" in new fields with originAndPit {
       for (p <- aroundPoints) {
         initTile(field, p)
         field(p).owner = Some(players(0))
@@ -304,7 +304,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field.aroundMaterialAmount(origin, players(0)) must_== 1
     }
 
-    "calculate the one's materialAmount of the own settlment surrounded own city" in new fields with originAndPit {
+    "calculate the one's materialAmount of the own settlment surrounded own city and pit" in new fields with originAndPit {
       for (p <- aroundPoints) {
         initTile(field, p)
         Direction.all.map(_.p + p).filter(_.within(radius)).foreach({ _p =>
