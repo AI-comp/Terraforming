@@ -308,8 +308,10 @@ class FieldSpec extends SpecificationWithJUnit {
       for (p <- aroundPoints) {
         initTile(field, p)
         Direction.all.map(_.p + p).filter(_.within(radius)).foreach({ _p =>
-          initTile(field, _p)
-          field(_p).owner = player
+          if (_p != pitPlace) {
+            initTile(field, _p)
+            field(_p).owner = player
+          }
         })
       }
 
