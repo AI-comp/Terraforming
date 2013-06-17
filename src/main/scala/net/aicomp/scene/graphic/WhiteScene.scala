@@ -24,7 +24,7 @@ trait WhiteScene extends AbstractScene {
 
     renderer.drawImage(backgrounds.get(32).get, 0, 0)
     drawPoints(points)
-    drawRobotAndNumOnPoint(tiles)
+    drawRobotAndNumAndInstOnPoint(tiles)
   }
 
   // following methods must be another module.
@@ -46,23 +46,34 @@ trait WhiteScene extends AbstractScene {
   }
 
   // draw robot and num of them on a point
-  def drawRobotAndNumOnPoint(tiles: Map[Point, Tile]) = {
+  def drawRobotAndNumAndInstOnPoint(tiles: Map[Point, Tile]) = {
 
     tiles.foreach {
       case (point, tile) =>
-        val num = tile.robots
-        if (num > 0) {
-          val op = OrthogonalPoint.pointToOrthogonalPoint(point)
-          
-          tile.owner match {
-            case Some(owner) => {
-              val numString = "%03d".format(num)             
-              drawRobotOnPoint(op, owner.id)
-              drawNumOnPoint(numString, op, owner.id)
-            }
-            case _ =>
+      val num = tile.robots
+      val op = OrthogonalPoint.pointToOrthogonalPoint(point)
+
+      drawInstallationOnPoint(op, tile)
+
+      if (num > 0) {
+        tile.owner match {
+          case Some(owner) => {
+            val numString = "%03d".format(num)             
+            drawRobotOnPoint(op, owner.id)
+            drawNumOnPoint(numString, op, owner.id)
           }
+          case _ =>
         }
+      }
+    }
+  }
+
+  def drawInstallationOnPoint(op: OrthogonalPoint, tile: Tile) = {
+    val x = op.x + (pointSize.x / 2) + robotSize.x - 2
+    val y = op.y + (pointSize.y / 2) + robotSize.y / 2
+
+    tile.installation.map{inst => 
+      renderer.drawString(inst.head.toString(), x, y)
     }
   }
 
