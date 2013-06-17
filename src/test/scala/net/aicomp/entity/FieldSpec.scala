@@ -7,7 +7,8 @@ class FieldSpec extends SpecificationWithJUnit {
   trait fields extends Scope {
     val players = Vector(new Player("a", 1), new Player("b", 2),
       new Player("c", 3))
-    val field = Field(7, players.toList)
+    val radius = 7
+    val field = Field(radius, players.toList)
 
     def initTile(field: Field, p: Point) {
       field(p).owner = None
@@ -206,7 +207,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field.moveSquad(players(0), p, Direction.r, 10) must
         throwA[CommandException]
     }
-    "calculate the one's materialAMount of the initilized field" in new fields {
+    "calculate the one's materialAmount of the initilized field" in new fields {
       def filterByPlayer(player: Player) = field.points.filter(
         p => field(p).installation match {
           case Some(_) => field(p).owner.exists(_ == player)
@@ -217,6 +218,110 @@ class FieldSpec extends SpecificationWithJUnit {
           field.aroundMaterialAmount(_, players(0)) must_== 0)
       }
     }
+
+    trait origin extends fields {
+      val origin = Point(0, 0)
+      val player = Some(players(0))
+      val aroundPoints = Direction.all.map(_.p + origin).filter(_.within(radius))
+
+      initTile(field, origin)
+      field(origin).owner = player
+    }
+
+    "calculate the one's materialAmount of the own settlment surrounded own settlement" in new fields with origin {
+
+      for (p <- aroundPoints) {
+        initTile(field, p)
+        field(p).owner = player
+      }
+
+      field.aroundMaterialAmount(origin, players(0)) must_== 7
+
+    }
+
+    "calculate the one's materialAmount of the own settlment surrounded own hole" in new fields with origin {
+
+      for (p <- aroundPoints) {
+        initTile(field, p)
+        field(p).owner = Some(players(0))
+        field(p).isHole = true
+      }
+
+      field.aroundMaterialAmount(origin, players(0)) must_== 1
+    }
+
+    "calculate the one's materialAmount of the own settlment surrounded own city" in new fields with origin {
+
+      for (p <- aroundPoints) {
+        initTile(field, p)
+        Direction.all.map(_.p + p).filter(_.within(radius)).foreach({ _p =>
+          initTile(field, _p)
+          field(_p).owner = player
+        })
+      }
+
+      for (p <- aroundPoints) {
+        field(p).owner = player
+        field(p).robots = 1
+        field.build(player.get, p, Installation.park)
+      }
+
+      field.aroundMaterialAmount(origin, players(0)) must_== 1
+    }
+
+    trait originAndPit extends origin {
+      val pitPlace = Point(1, 1)
+
+      val aroundPits = Direction.all.map(_.p + pitPlace).filter(_.within(radius))
+      for (p <- aroundPits) {
+        initTile(field, p)
+        field(p).owner = player
+      }
+
+      initTile(field, pitPlace)
+      field(pitPlace).owner = player
+      field(pitPlace).robots = 20
+      field.build(player.get, pitPlace, Installation.pit)
+
+    }
+
+    "calculate the one's materialAmount of the own settlment surrounded own settlement and pit" in new fields with originAndPit {
+      for (p <- aroundPoints) {
+        initTile(field, p)
+        field(p).owner = Some(players(0))
+      }
+
+      field.aroundMaterialAmount(origin, players(0)) must_== 9
+    }
+
+    "calculate the one's materialAmount of the own settlment surrounded own hole" in new fields with originAndPit {
+      for (p <- aroundPoints) {
+        initTile(field, p)
+        field(p).owner = Some(players(0))
+        field(p).isHole = true
+      }
+
+      field.aroundMaterialAmount(origin, players(0)) must_== 1
+    }
+
+    "calculate the one's materialAmount of the own settlment surrounded own city" in new fields with originAndPit {
+      for (p <- aroundPoints) {
+        initTile(field, p)
+        Direction.all.map(_.p + p).filter(_.within(radius)).foreach({ _p =>
+          initTile(field, _p)
+          field(_p).owner = player
+        })
+      }
+
+      for (p <- aroundPoints) {
+        field(p).owner = player
+        field(p).robots = 1
+        field.build(player.get, p, Installation.park)
+      }
+
+      field.aroundMaterialAmount(origin, players(0)) must_== 1
+    }
+
     "calculate the one's own score of the initilized field" in new fields {
       val initialScore = 3
       field.calculateScore(players(0)) must_== initialScore

@@ -56,9 +56,9 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     if (!points.contains(p)) {
       throw new CommandException("You cannot choose an outer tile of the field")
     }
-    
-    if(!Installation.buildables.contains(ins)){
-      throw new CommandException("You cannot choose this installation")      
+
+    if (!Installation.buildables.contains(ins)) {
+      throw new CommandException("You cannot choose this installation")
     }
 
     val tile = this(p)
@@ -88,7 +88,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     if (aroundMaterialAmount < ins.materialCost) {
       throw new CommandException("Although it is " + ins.materialCost + " material cost necessity for building " + ins.name + ", only " + aroundMaterialAmount + " costs are obtained from this tile.")
     }
-    
+
     tile.isHole = false
     tile.robots -= ins.robotCost
     tile.installation = Some(ins)
@@ -115,8 +115,11 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   def materialAmount(p: Point, player: Player) = {
     val baseAmount = if (this(p) existBaseMaterialOf player) 1 else 0
     val aroundTiles = Direction.all.map(_.p + p).filter(_.within(radius)).map(apply)
-    val aroundPit = aroundTiles.count(tile => tile.ownedBy(player) &&
-      tile.installation.exists(_ == Installation.pit))
+    val aroundPit =
+      if (baseAmount == 1)
+        aroundTiles.count(tile => tile.ownedBy(player) && tile.installation.exists(_ == Installation.pit))
+      else
+        0
     baseAmount + aroundPit
   }
 
