@@ -7,32 +7,38 @@ import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.util.Scanner
+
 import org.apache.commons.cli.BasicParser
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
+
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTextArea
 import javax.swing.JTextField
 import javax.swing.SpringLayout
-import jp.ac.waseda.cs.washi.gameaiarena.gui.GamePanels
-import jp.ac.waseda.cs.washi.gameaiarena.key.AwtKeyMemorizer
+import net.aicomp.entity.Field
+import net.aicomp.entity.Game
 import net.aicomp.entity.GameEnvironment
-import net.aicomp.entity.GameSetting
+import net.aicomp.entity.OrthogonalPoint
+import net.aicomp.entity.Player
+import net.aicomp.entity.input.ConsoleUserInput
+import net.aicomp.entity.input.GraphicalUserInput
+import net.aicomp.entity.input.Manipulator
 import net.aicomp.scene.MainScene
 import net.aicomp.scene.PlayerScene
 import net.aicomp.scene.console.ConsoleScene
 import net.aicomp.scene.graphic.TextBoxScene
 import net.aicomp.scene.graphic.TitleScene
-import net.aicomp.util.misc.ImageLoader
 import net.aicomp.scene.graphic.WhiteScene
-import net.aicomp.entity.Point
-import net.aicomp.entity.Field
-import net.aicomp.entity.OrthogonalPoint
+import net.aicomp.util.misc.ImageLoader
 import net.aicomp.util.settings.Defaults
+import net.exkazuu.gameaiarena.gui.GamePanels
+import net.exkazuu.gameaiarena.key.AwtKeyMemorizer
 
 object Main {
 
@@ -74,7 +80,13 @@ object Main {
 
   def startConsoleGame() = {
     val env = GameEnvironment()
+
+    val scanner = new Scanner(System.in)
+    val players = Range(0, 3).map(new Player(_, new Manipulator(new ConsoleUserInput(scanner)))).toList
+    val field = Field(7, players)
+    env.game = new Game(field, players, 2 * 3)
     env.getSceneManager().setFps(1000)
+
     val mainScene = new MainScene(null) with ConsoleScene
     val playerScene = new PlayerScene(mainScene) with ConsoleScene
     env.start(playerScene)
@@ -85,13 +97,15 @@ object Main {
       startConsoleGame()
     } else {
       val (window, env) = initializeComponents(cl.hasOption(LARGE_MODE))
-      val setting = GameSetting()
+
+      val players = Range(0, 3).map(new Player(_, new Manipulator(new GraphicalUserInput()))).toList
+      val field = Field(7, players)
+      env.game = new Game(field, players, 2 * 3)
+      env.getSceneManager().setFps(1000)
 
       val mainScene = new MainScene(null) with WhiteScene with TextBoxScene
-      val playerScene = new PlayerScene(mainScene, setting) with TitleScene with TextBoxScene
-
+      val playerScene = new PlayerScene(mainScene) with TitleScene with TextBoxScene
       val f: Function1[String, Unit] = mainScene.displayCore(_)
-
       env.start(playerScene)
 
       window.dispose()

@@ -17,12 +17,12 @@ class TileSpec extends SpecificationWithJUnit {
     }
     "score a waste land" in {
       val wasteLandScore = 0
-      val player = new Player("a", 1)
+      val player = new Player(1)
       new Tile().score(player) must_== wasteLandScore
     }
     "score a hole" in {
       val holeScore = 0
-      val player = new Player("a", 1)
+      val player = new Player(1)
       val tile = new Tile
       tile.owner = Some(player)
       tile.isHole = true
@@ -30,14 +30,14 @@ class TileSpec extends SpecificationWithJUnit {
     }
     "score a undeveloped land" in {
       val undevelopedLandScore = 1
-      val player = new Player("a", 1)
+      val player = new Player(1)
       val tile = new Tile
       tile.owner = Some(player)
       tile.score(player) must_== undevelopedLandScore
     }
     "score a developed land" in {
       val developedLandScore = 3
-      val player = new Player("a", 1)
+      val player = new Player(1)
       val tile = new Tile
       tile.owner = Some(player)
       tile.installation = Some(Installation.attack)
@@ -46,7 +46,7 @@ class TileSpec extends SpecificationWithJUnit {
     "score a developed land in which a public facility built" in {
       val developedLandScore = 3
       val publicFacilityScore = 10
-      val player = new Player("a", 1)
+      val player = new Player(1)
       val tile = new Tile
       tile.owner = Some(player)
       tile.installation = Some(Installation.public)
@@ -58,14 +58,14 @@ class TileSpec extends SpecificationWithJUnit {
       tile.stringify must_== "-1 1 none"
     }
     "stringify undeveloped land" in {
-      val player = new Player("a", 1)
+      val player = new Player(1)
       val tile = new Tile
       tile.owner = Some(player)
       tile.robots = 2
       tile.stringify must_== "1 2 none"
     }
     "stringify developed land" in {
-      val player = new Player("b", 2)
+      val player = new Player(2)
       val tile = new Tile
       tile.owner = Some(player)
       tile.robots = 3
@@ -79,7 +79,7 @@ class TileSpec extends SpecificationWithJUnit {
       tile.stringify must_== "-1 1 hole"
     }
     "stringify occupied hole" in {
-      val player = new Player("b", 2)
+      val player = new Player(2)
       val tile = new Tile
       tile.owner = Some(player)
       tile.robots = 3

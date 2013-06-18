@@ -5,8 +5,7 @@ import org.specs2.specification.Scope
 
 class GameSpec extends SpecificationWithJUnit {
   class games(val turn: Int = 12) extends Scope {
-    val players = Vector(new Player("a", 1), new Player("b", 2),
-      new Player("c", 3))
+    val players = Vector(new Player(1), new Player(2), new Player(3))
     val radius = 7
     val field = Field(radius, players.toList)
     val game = new Game(field, players.toList, turn)

@@ -1,13 +1,14 @@
 package net.aicomp.scene.graphic
 
-import jp.ac.waseda.cs.washi.gameaiarena.gui.Renderer
-import net.aicomp.entity.Field
+import net.aicomp.entity.OrthogonalPoint
+import net.aicomp.entity.OrthogonalPoint.numSize
+import net.aicomp.entity.OrthogonalPoint.pointSize
+import net.aicomp.entity.OrthogonalPoint.pointToOrthogonalPoint
+import net.aicomp.entity.OrthogonalPoint.robotSize
 import net.aicomp.entity.Point
+import net.aicomp.entity.Tile
 import net.aicomp.scene.AbstractScene
 import net.aicomp.util.misc.ImageLoader
-import net.aicomp.entity.OrthogonalPoint
-import net.aicomp.entity.OrthogonalPoint._
-import net.aicomp.entity.Tile
 
 trait WhiteScene extends AbstractScene {
 
@@ -38,33 +39,32 @@ trait WhiteScene extends AbstractScene {
     }
   }
 
-  def drawPoint(op : OrthogonalPoint, tile : Tile) = {
+  def drawPoint(op: OrthogonalPoint, tile: Tile) = {
     val pointImages = ImageLoader.loadTiles(renderer)
-    val imgKey = tile.owner.map{p => "32_" + p.id}.getOrElse("32")
+    val imgKey = tile.owner.map { p => "32_" + p.id }.getOrElse("32")
 
     renderer.drawImage(pointImages.get(imgKey).get, op.x, op.y)
   }
 
   // draw robot and num of them on a point
   def drawRobotAndNumAndInstOnPoint(tiles: Map[Point, Tile]) = {
-
     tiles.foreach {
       case (point, tile) =>
-      val num = tile.robots
-      val op = OrthogonalPoint.pointToOrthogonalPoint(point)
+        val num = tile.robots
+        val op = OrthogonalPoint.pointToOrthogonalPoint(point)
 
-      drawInstallationOnPoint(op, tile)
+        drawInstallationOnPoint(op, tile)
 
-      if (num > 0) {
-        tile.owner match {
-          case Some(owner) => {
-            val numString = "%03d".format(num)             
-            drawRobotOnPoint(op, owner.id)
-            drawNumOnPoint(numString, op, owner.id)
+        if (num > 0) {
+          tile.owner match {
+            case Some(owner) => {
+              val numString = "%03d".format(num)
+              drawRobotOnPoint(op, owner.id)
+              drawNumOnPoint(numString, op, owner.id)
+            }
+            case _ =>
           }
-          case _ =>
         }
-      }
     }
   }
 
@@ -72,7 +72,7 @@ trait WhiteScene extends AbstractScene {
     val x = op.x + (pointSize.x / 2) + robotSize.x - 2
     val y = op.y + (pointSize.y / 2) + robotSize.y / 2
 
-    tile.installation.map{inst => 
+    tile.installation.map { inst =>
       renderer.drawString(inst.head.toString(), x, y)
     }
   }

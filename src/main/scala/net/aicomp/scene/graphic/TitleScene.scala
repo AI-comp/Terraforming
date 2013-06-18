@@ -1,9 +1,7 @@
 package net.aicomp.scene.graphic
 
-import jp.ac.waseda.cs.washi.gameaiarena.gui.Scene
-import net.aicomp.entity.GameEnvironment
-import net.aicomp.util.misc.ImageLoader
 import net.aicomp.scene.AbstractScene
+import net.aicomp.util.misc.ImageLoader
 
 trait TitleScene extends AbstractScene {
   override def draw() = {

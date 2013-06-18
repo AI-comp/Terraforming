@@ -5,7 +5,7 @@ import java.awt.Image
 import scala.collection.Seq
 import scala.collection.mutable
 
-import jp.ac.waseda.cs.washi.gameaiarena.gui.Renderer
+import net.exkazuu.gameaiarena.gui.Renderer
 
 object ImageLoader {
   def prefetch(render: Renderer) = {

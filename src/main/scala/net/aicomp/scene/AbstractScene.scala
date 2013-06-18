@@ -1,34 +1,41 @@
 package net.aicomp.scene
 
-import jp.ac.waseda.cs.washi.gameaiarena.gui.Scene
-import net.aicomp.entity.Game
 import net.aicomp.entity.GameEnvironment
-import java.io.File
-import com.google.common.io.Files
-import net.aicomp.util.settings.Defaults
-import net.aicomp.util.misc.DateUtils
-import java.nio.charset.Charset
 import net.aicomp.util.misc.Logger
+import net.aicomp.util.settings.Defaults
+import net.exkazuu.gameaiarena.gui.DefaultScene
+import net.exkazuu.gameaiarena.gui.Scene
+import scala.collection.mutable.Queue
 
-abstract class AbstractScene extends Scene[GameEnvironment] {
+abstract class AbstractScene extends DefaultScene[GameEnvironment] {
   def env = getEnvironment
   def renderer = env.getRenderer
   def inputer = env.getInputer
   def game = env.game
+  private val input = Queue[List[String]]()
 
   override def run() = {
-    nextCommand match {
-      case Some(command) =>
-        displayLine("> " + command.mkString(" "))
-        if (command.length > 0) runWithArgs(command) else AbstractScene.this
-      case None =>
-        AbstractScene.this
+    if (input.isEmpty) {
+      val commandStrings = nextCommandStrings
+        .filter(_ != null)
+        .map(_.filter(_.length > 0).toList)
+        .filter(_.length > 0)
+      for (commandString <- commandStrings) {
+        input.enqueue(commandString)
+      }
+    }
+    if (!input.isEmpty) {
+      val commandString = input.dequeue()
+      displayLine("> " + commandString.mkString(" "))
+      runWithCommand(commandString)
+    } else {
+      AbstractScene.this
     }
   }
 
-  protected def nextCommand: Option[List[String]]
+  protected def nextCommandStrings = game.currentPlayer.manipulator.run(game)
 
-  protected def runWithArgs(words: List[String]): Scene[GameEnvironment]
+  protected def runWithCommand(commandString: List[String]): Scene[GameEnvironment]
 
   protected def displayCore(text: String)
 

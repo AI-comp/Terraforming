@@ -5,8 +5,7 @@ import org.specs2.specification.Scope
 
 class FieldSpec extends SpecificationWithJUnit {
   trait fields extends Scope {
-    val players = Vector(new Player("a", 1), new Player("b", 2),
-      new Player("c", 3))
+    val players = Vector(new Player(1), new Player(2), new Player(3))
     val radius = 7
     val field = Field(radius, players.toList)
 
@@ -200,7 +199,7 @@ class FieldSpec extends SpecificationWithJUnit {
         throwA[CommandException]
     }
     "decline to move robots onto outside of the field" in new fields {
-      val p = Point(field.radius, 0)
+      val p = Point(radius, 0)
       initTile(field, p)
       field(p).owner = Some(players(0))
       field(p).robots = 10
@@ -326,8 +325,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field.calculateScore(players(0)) must_== initialScore + developedLandScore + publicFacilityScore
     }
     "stringify itself" in {
-      val players = Vector(new Player("a", 1), new Player("b", 2),
-        new Player("c", 3))
+      val players = Vector(new Player(1), new Player(2), new Player(3))
       val field = Field(1, players.toList)
       field.stringify must_==
         "1 7\n" +

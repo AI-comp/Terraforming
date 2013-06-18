@@ -1,8 +1,9 @@
 package net.aicomp.util.misc
 
 import java.io.File
-import com.google.common.io.Files
 import java.nio.charset.Charset
+
+import com.google.common.io.Files
 
 object Logger {
   val logDirectory = new File("log")
