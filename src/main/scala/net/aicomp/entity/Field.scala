@@ -57,21 +57,40 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
       throw new CommandException("You cannot choose an outer tile of the field")
     }
 
+    if (!Installation.buildables.contains(ins)) {
+      throw new CommandException("You cannot choose this installation")
+    }
+
     val tile = this(p)
+
+    //tile check
     if (!tile.ownedBy(player)) {
       throw new CommandException("You should own a tile where an installation is built.")
     }
     if (tile.installation.isDefined) {
       throw new CommandException("A tile where an installation is built should have no installation.")
     }
-    if (tile.robots < ins.cost) {
-      throw new CommandException("A number of robot is not enough.")
+    if (tile.isHole) {
+      if (ins != Installation.bridge) {
+        throw new CommandException("Installations other than bridge are not allowed to be built on a hole")
+      }
+    } else {
+      if (ins == Installation.bridge) {
+        throw new CommandException("Bridge is not allowed to be built except for a hole.")
+      }
     }
-    if (tile.isHole && ins != Installation.bridge) {
-      throw new CommandException("Installations other than bridge are not allowed to be built on a hole")
+
+    //cost check
+    if (tile.robots < ins.robotCost) {
+      throw new CommandException("The number of robots is not enough.")
     }
+    val aroundMaterialAmount = this.aroundMaterialAmount(p, player)
+    if (aroundMaterialAmount < ins.materialCost) {
+      throw new CommandException("Although it is " + ins.materialCost + " material cost necessity for building " + ins.name + ", only " + aroundMaterialAmount + " costs are obtained from this tile.")
+    }
+
     tile.isHole = false
-    tile.robots -= ins.cost
+    tile.robots -= ins.robotCost
     tile.installation = Some(ins)
   }
 
@@ -79,8 +98,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     for (tile <- tiles.values.filter(_.ownedBy(player))) {
       if (tile.installation.exists(_ == Installation.initial)) {
         tile.enter(player, 5)
-      }
-      else if (tile.installation.exists(_ == Installation.factory)) {
+      } else if (tile.installation.exists(_ == Installation.factory)) {
         tile.enter(player, 1)
       }
     }
@@ -94,13 +112,20 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     tiles.values.filter(_.ownedBy(player)).map(_.robots).sum
   }
 
-  def calculateMaterialAmount(p: Point, player: Player) = {
-    val baseAmount = if (this(p) ownedBy player) 1 else 0
-    val aroundTiles = Direction.all.map(p +).filter(_.within(radius)).map(apply)
-    val aroundAmount = aroundTiles.count(tile =>
-      tile.ownedBy(player) &&
-        tile.installation.exists(_ == Installation.pit))
-    baseAmount + aroundAmount
+  def materialAmount(p: Point, player: Player) = {
+    if (this(p) existBaseMaterialOf player) {
+      val aroundTiles = Direction.all.map(_.p + p).filter(_.within(radius)).map(apply)
+      1 + aroundTiles.count(tile => tile.ownedBy(player) && tile.installation.exists(_ == Installation.pit))
+    } else {
+      0
+    }    
+  }
+
+  def aroundMaterialAmount(p: Point, player: Player) = {
+    val baseAmount = materialAmount(p, player)
+    val aroundPoint = Direction.all.map(_.p + p).filter(_.within(radius))
+    val aroundMount = aroundPoint.map(materialAmount(_, player)).sum
+    baseAmount + aroundMount
   }
 
   def calculateScore(player: Player): Int = tiles.values.foldLeft(0)(_ + _.score(player))
