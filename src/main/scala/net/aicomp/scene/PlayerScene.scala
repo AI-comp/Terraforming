@@ -1,12 +1,10 @@
 package net.aicomp.scene
 
-import net.aicomp.entity.Field
 import net.aicomp.entity.Game
 import net.aicomp.entity.GameEnvironment
 import net.aicomp.entity.GameSetting
 import net.aicomp.entity.Player
 import net.exkazuu.gameaiarena.gui.Scene
-import net.aicomp.entity.input.Manipulator
 
 abstract class PlayerScene(nextScene: Scene[GameEnvironment], setting: GameSetting = GameSetting())
   extends AbstractScene {

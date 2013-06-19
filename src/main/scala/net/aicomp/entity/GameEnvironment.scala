@@ -2,7 +2,6 @@ package net.aicomp.entity
 
 import net.exkazuu.gameaiarena.gui.Environment
 import net.exkazuu.gameaiarena.gui.GamePanel
-import net.aicomp.entity.input.Manipulator
 
 class GameEnvironment(panel: GamePanel) extends Environment(panel) {
   var game: Game = null

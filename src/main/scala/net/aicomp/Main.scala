@@ -9,9 +9,12 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.Scanner
 
+import scala.Array.canBuildFrom
+
 import org.apache.commons.cli.BasicParser
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.HelpFormatter
+import org.apache.commons.cli.OptionBuilder
 import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
 
@@ -26,9 +29,11 @@ import net.aicomp.entity.Game
 import net.aicomp.entity.GameEnvironment
 import net.aicomp.entity.OrthogonalPoint
 import net.aicomp.entity.Player
-import net.aicomp.entity.input.ConsoleUserInput
-import net.aicomp.entity.input.GraphicalUserInput
-import net.aicomp.entity.input.Manipulator
+import net.aicomp.input.ConsoleUserInput
+import net.aicomp.input.ExternalProgramInput
+import net.aicomp.input.GraphicalUserInput
+import net.aicomp.input.Input
+import net.aicomp.input.Manipulator
 import net.aicomp.scene.MainScene
 import net.aicomp.scene.PlayerScene
 import net.aicomp.scene.console.ConsoleScene
@@ -37,14 +42,16 @@ import net.aicomp.scene.graphic.TitleScene
 import net.aicomp.scene.graphic.WhiteScene
 import net.aicomp.util.misc.ImageLoader
 import net.aicomp.util.settings.Defaults
-import net.exkazuu.gameaiarena.gui.GamePanels
+import net.exkazuu.gameaiarena.gui.JGamePanel
+import net.exkazuu.gameaiarena.gui.builder.GameGuiBuilder
+import net.exkazuu.gameaiarena.gui.builder.WindowCreator
 import net.exkazuu.gameaiarena.key.AwtKeyMemorizer
 
 object Main {
 
   val HELP = "h"
   val CUI_MODE = "c"
-  val LARGE_MODE = "l"
+  val AI_PROGRAM = "a"
   var logFunction: String => Unit = null
 
   def log(text: String) = logFunction(text)
@@ -57,10 +64,14 @@ object Main {
   }
 
   def main(args: Array[String]) {
+    OptionBuilder.hasArgs(3)
+    OptionBuilder.withDescription("Set three AI programs.")
+    val opt = OptionBuilder.create(AI_PROGRAM)
     val options = new Options()
       .addOption(HELP, false, "Print this help.")
-      .addOption(CUI_MODE, false, "Enable CUI mode instead of GUI mode.")
-      .addOption(LARGE_MODE, false, "Enable GUI mode with large images.")
+      .addOption(CUI_MODE, false, "Enable CUI mode.")
+      .addOption(opt)
+
     try {
       val parser = new BasicParser();
       val cl = parser.parse(options, args);
@@ -78,106 +89,102 @@ object Main {
     }
   }
 
-  def startConsoleGame() = {
-    val env = GameEnvironment()
-
-    val scanner = new Scanner(System.in)
-    val players = Range(0, 3).map(new Player(_, new Manipulator(new ConsoleUserInput(scanner)))).toList
-    val field = Field(7, players)
-    env.game = new Game(field, players, 2 * 3)
-    env.getSceneManager().setFps(1000)
-
-    val mainScene = new MainScene(null) with ConsoleScene
-    val playerScene = new PlayerScene(mainScene) with ConsoleScene
-    env.start(playerScene)
-  }
-
   def startGame(options: Options, cl: CommandLine) {
-    if (cl.hasOption(CUI_MODE)) {
-      startConsoleGame()
-    } else {
-      val (window, env) = initializeComponents(cl.hasOption(LARGE_MODE))
-
-      val players = Range(0, 3).map(new Player(_, new Manipulator(new GraphicalUserInput()))).toList
+    def initializeEnvironment(env: GameEnvironment, createInput: () => Input) = {
+      val cmds = cl.getOptionValues(AI_PROGRAM)
+      val inputs = if (cl.hasOption(AI_PROGRAM) && cmds.length == 3) {
+        cmds.map(cmd => new ExternalProgramInput(cmd))
+      } else {
+        Range(0, 3).map(_ => createInput()).toArray
+      }
+      val players = inputs.zipWithIndex.map { case (input, i) => new Player(i, new Manipulator(input)) }.toList
       val field = Field(7, players)
       env.game = new Game(field, players, 2 * 3)
+    }
+
+    if (cl.hasOption(CUI_MODE)) {
+      val env = GameEnvironment()
       env.getSceneManager().setFps(1000)
+      val scanner = new Scanner(System.in)
+
+      initializeEnvironment(env, () => new ConsoleUserInput(scanner))
+
+      val mainScene = new MainScene(null) with ConsoleScene
+      val playerScene = new PlayerScene(mainScene) with ConsoleScene
+      env.start(playerScene)
+    } else {
+      val (window, env) = initializeComponents()
+
+      initializeEnvironment(env, () => new GraphicalUserInput())
 
       val mainScene = new MainScene(null) with WhiteScene with TextBoxScene
       val playerScene = new PlayerScene(mainScene) with TitleScene with TextBoxScene
       val f: Function1[String, Unit] = mainScene.displayCore(_)
       env.start(playerScene)
 
-      window.dispose()
+      window.dispose();
     }
   }
 
-  def initializeComponents(isLargeMode: Boolean) = {
-    // TODO: Use scala.swing package instead of javax.swing package
-
-    // Initialize layout components
+  def initializeComponents() = {
+    val builder = new GameGuiBuilder()
+    val window = new JFrame()
     val mainPanel = new JPanel()
     val layout = new SpringLayout();
-    mainPanel.setLayout(layout)
-
-    // Initialize each component
-    val window = new JFrame()
-    window.setTitle("JavaChallenge2012")
-    val gamePanel = GamePanels.newWithDefaultImage()
-    if (isLargeMode) {
-      window.setSize(1280, 1000)
-      gamePanel.setPreferredSize(new Dimension(1280, 720))
-    } else {
-      window.setSize(1024, 740)
-      gamePanel.setPreferredSize(new Dimension(1024, 495))
-    }
-    mainPanel.add(gamePanel);
     val logArea = new JTextArea();
     val logScrollPane = new JScrollPane(logArea)
-    logScrollPane.setPreferredSize(new Dimension(0, 0))
-    mainPanel.add(logScrollPane);
-    logArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-    logArea.setEditable(false)
     val commandField = new JTextField();
-    commandField.setPreferredSize(new Dimension(0, 20))
-    commandField.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-    commandField.addActionListener(new ActionListener() {
-      def actionPerformed(e: ActionEvent) = {
-        val command = commandField.getText()
-        commandField.setText("")
-        TextBoxScene.addCommand(command)
-      }
-    })
-    TextBoxScene.display = (text) => {
-      logArea.append(text)
-      logArea.setCaretPosition(logArea.getText().length())
-    }
-    mainPanel.add(commandField);
 
-    // Layout compo6nents
-    layout.putConstraint(SpringLayout.NORTH, gamePanel, 0, SpringLayout.NORTH, mainPanel);
-    layout.putConstraint(SpringLayout.NORTH, logScrollPane, 0, SpringLayout.SOUTH, gamePanel);
-    layout.putConstraint(SpringLayout.SOUTH, logScrollPane, 0, SpringLayout.NORTH, commandField);
-    layout.putConstraint(SpringLayout.SOUTH, commandField, 0, SpringLayout.SOUTH, mainPanel);
-    layout.putConstraint(SpringLayout.WEST, logScrollPane, 0, SpringLayout.WEST, mainPanel);
-    layout.putConstraint(SpringLayout.WEST, commandField, 0, SpringLayout.WEST, mainPanel);
-    layout.putConstraint(SpringLayout.EAST, logScrollPane, 0, SpringLayout.EAST, mainPanel);
-    layout.putConstraint(SpringLayout.EAST, commandField, 0, SpringLayout.EAST, mainPanel);
+    val ret = builder.setTitle("Terraforming")
+      .setWindowSize(1024, 740)
+      .setPanelSize(1024, 495)
+      .setFps(5)
+      .setWindowCreator(new WindowCreator() {
+        override def createWindow(gamePanel: JGamePanel) = {
+          logArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+          logArea.setEditable(false)
+          TextBoxScene.display = (text) => {
+            logArea.append(text)
+            logArea.setCaretPosition(logArea.getText().length())
+          }
 
-    window.getContentPane().add(mainPanel)
-    //window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+          logScrollPane.setPreferredSize(new Dimension(0, 0))
 
-    // Show the window
-    window.setVisible(true);
-    gamePanel.initializeAfterShowing()
+          commandField.setPreferredSize(new Dimension(0, 20))
+          commandField.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+          commandField.addActionListener(new ActionListener() {
+            def actionPerformed(e: ActionEvent) = {
+              val command = commandField.getText()
+              commandField.setText("")
+              TextBoxScene.addCommand(command)
+            }
+          })
 
-    val env = GameEnvironment(gamePanel)
+          mainPanel.setLayout(layout)
+          mainPanel.add(gamePanel);
+          mainPanel.add(logScrollPane);
+          mainPanel.add(commandField);
+
+          // Layout components
+          layout.putConstraint(SpringLayout.NORTH, gamePanel, 0, SpringLayout.NORTH, mainPanel);
+          layout.putConstraint(SpringLayout.NORTH, logScrollPane, 0, SpringLayout.SOUTH, gamePanel);
+          layout.putConstraint(SpringLayout.SOUTH, logScrollPane, 0, SpringLayout.NORTH, commandField);
+          layout.putConstraint(SpringLayout.SOUTH, commandField, 0, SpringLayout.SOUTH, mainPanel);
+          layout.putConstraint(SpringLayout.WEST, logScrollPane, 0, SpringLayout.WEST, mainPanel);
+          layout.putConstraint(SpringLayout.WEST, commandField, 0, SpringLayout.WEST, mainPanel);
+          layout.putConstraint(SpringLayout.EAST, logScrollPane, 0, SpringLayout.EAST, mainPanel);
+          layout.putConstraint(SpringLayout.EAST, commandField, 0, SpringLayout.EAST, mainPanel);
+
+          window.getContentPane().add(mainPanel)
+          window
+        }
+      })
+      .buildForGui(classOf[GameEnvironment])
+
+    val env = ret.getEnvironment()
+    val gamePanel = ret.getPanel()
     ImageLoader.prefetch(env.getRenderer)
-    env.getSceneManager.addWindowListenerForTerminating(window);
-    env.getSceneManager().setFps(5)
-      .addWindowListenerForTerminating(window)
     initializeListener(gamePanel, env, commandField, logArea)
-
     commandField.requestFocus()
 
     (window, env)

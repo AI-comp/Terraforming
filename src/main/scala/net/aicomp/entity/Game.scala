@@ -57,5 +57,5 @@ class Game(val field: Field, val players: List[Player], val maxTurn: Int) {
   }
 
   def stringify: String = "turn " + currentTurn + "\n" +
-    players.map(_.stringify + "\n").mkString + field.stringify
+    players.map(_.stringify + "\n").mkString + field.stringify + "EOS"
 }
