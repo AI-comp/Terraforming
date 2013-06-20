@@ -56,6 +56,6 @@ class Game(val field: Field, val players: List[Player], val maxTurn: Int) {
     if (_isBuilding) throw new CommandException("Only one installations can be built in one turn")
   }
 
-  def stringify: String = "START\n" + currentTurn + "\n" +
-    players.map(_.stringify + "\n").mkString + field.stringify + "EOS"
+  def stringify: String = "START\n" + currentTurn + "\n" + field.stringify +
+    "EOS"
 }
