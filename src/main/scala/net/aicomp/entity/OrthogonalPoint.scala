@@ -31,7 +31,7 @@ object OrthogonalPoint {
   def orthogonalPointToPoints(orthP: OrthogonalPoint, field: Field): Set[Point] = {
     field.points.filter(p => {
       val op = pointToOrthogonalPoint(p)
-      op.x <= orthP.x && orthP.x < op.x + pointSize.x && op.y <= orthP.y && orthP.y < op.y + pointSize.y
+      (orthP.x >= op.x) && (orthP.x < op.x + pointSize.x) && (orthP.y >= -(orthP.x / 2) + (op.x / 2) + op.y + (pointSize.x / 4)) && (orthP.y > (orthP.x / 2) - (op.x / 2) + op.y - (pointSize.x / 4)) && (orthP.y < -(orthP.x / 2) + (op.x / 2) + op.y + (5 * pointSize.x / 4)) && (orthP.y <= (orthP.x / 2) - (op.x / 2) + op.y + (3 * pointSize.x / 4))
     })
   }
 }
