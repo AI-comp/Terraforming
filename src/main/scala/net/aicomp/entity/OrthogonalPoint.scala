@@ -37,7 +37,7 @@ object OrthogonalPoint {
 
   // judge whether target point is in a specific Tile 
   def isInthePoint(target: OrthogonalPoint, op: OrthogonalPoint): Boolean = {
-    // six linear equations which compose each regular hexagon(let its image position (op.x, op.y)) are as follows:
+    // six linear equations which compose each regular hexagon(let the upper left of its image be (op.x, op.y)) are as follows:
     // x                      = op.x
     // x                      = op.x + pointSize.x
     // y - op.y               = -(1/2){x - (op.x + (1/2)pointSize)}
