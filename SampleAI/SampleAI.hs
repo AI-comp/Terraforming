@@ -12,32 +12,37 @@ data Game = Game Int Field -- turn * field
 
 
 -- runtime
-parsePT :: String -> (Point, Tile)
-parsePT s = ((x, y), Tile n i b)
+parsePointAndTile :: String -> (Point, Tile)
+parsePointAndTile s = ((x, y), Tile n i b)
   where ([x, y, n, i], [b]) = map read `first` splitAt 4 (words s)
 
 parseField :: [String] -> (Field, [String])
 parseField (h:ls) = (Field r ts, rs)
   where [r, n] = map read $ words h
-        (ts, rs) = map parsePT `first` splitAt n ls
+        (ts, rs) = map parsePointAndTile `first` splitAt n ls
 
 parseGame :: [String] -> (Game, [String])
 parseGame (start:t:ls) = eos `seq` (Game (read t) f, rs)
   where (f, (eos:rs)) = parseField ls
 
+writeCommands cs = mapM_ putStrLn cs >> putStrLn ""
 
 main = do
     hSetBuffering stdin LineBuffering
+    hSetBuffering stdout LineBuffering
     (g, next) <- parseGame . lines <$> getContents
-    g `seq` putStrLn "haskell"
+    g `seq` writeCommands [name]
     run next
   where run [] = return ()
         run ls = do
             let (g, next) = parseGame ls
-            g `seq` putStrLn (command g)
+            g `seq` writeCommands (command g)
             run next
 
 
+-- put your player name here
+name = "haskell"
+
 -- put your command-decision algorithm here
-command :: Game -> String
-command g = "finish"
+command :: Game -> [String]
+command g = ["finish"]
