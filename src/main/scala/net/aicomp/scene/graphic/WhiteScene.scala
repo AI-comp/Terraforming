@@ -66,8 +66,7 @@ trait WhiteScene extends AbstractScene {
     value.toString.reverse.foreach { d =>
       x -= roundNumberSize.x
       renderer.drawImage(roundNumbers(d.toInt - '0'.toInt), x, numY)
-    }
-    
+    }   
   }
 
   // draw robot and num of them on a point
