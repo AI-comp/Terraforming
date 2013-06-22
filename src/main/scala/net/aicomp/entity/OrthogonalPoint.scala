@@ -31,7 +31,19 @@ object OrthogonalPoint {
   def orthogonalPointToPoints(orthP: OrthogonalPoint, field: Field): Set[Point] = {
     field.points.filter(p => {
       val op = pointToOrthogonalPoint(p)
-      op.x <= orthP.x && orthP.x < op.x + pointSize.x && op.y <= orthP.y && orthP.y < op.y + pointSize.y
+      isInthePoint(orthP, op)
     })
+  }
+
+  // judge whether target point is in a specific Tile 
+  def isInthePoint(target: OrthogonalPoint, op: OrthogonalPoint): Boolean = {
+    // six linear equations which compose each regular hexagon(let the upper left of its image be (op.x, op.y)) are as follows:
+    // x                      = op.x
+    // x                      = op.x + pointSize.x
+    // y - op.y               = -(1/2){x - (op.x + (1/2)pointSize)}
+    // y - op.y               =  (1/2){x - (op.x + (1/2)pointSize)}
+    // y - (op.y - pointSize) = -(1/2){x - (op.x + (1/2)pointSize)}
+    // y - (op.y - pointSize) =  (1/2){x - (op.x + (1/2)pointSize)}
+    (target.x >= op.x) && (target.x < op.x + pointSize.x) && (target.y >= -(target.x / 2) + (op.x / 2) + op.y + (pointSize.x / 4)) && (target.y > (target.x / 2) - (op.x / 2) + op.y - (pointSize.x / 4)) && (target.y < -(target.x / 2) + (op.x / 2) + op.y + (5 * pointSize.x / 4)) && (target.y <= (target.x / 2) - (op.x / 2) + op.y + (3 * pointSize.x / 4))
   }
 }
