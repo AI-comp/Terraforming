@@ -12,6 +12,8 @@ object OrthogonalPoint {
   val pointSize = Size(32, 32)
   val robotSize = Size(10, 9)
   val numSize = Size(6, 9)
+  val roundSlashSize = Size(32, 32)
+  val roundNumberSize = Size(24, 32)
 
   case class Size(val x: Int, val y: Int)
 
