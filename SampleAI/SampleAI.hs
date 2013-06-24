@@ -8,7 +8,7 @@ import System.IO
 type Point = (Int, Int) -- x * y
 data Tile = Tile Int Int String -- player_id * num_robots * building
 data Field = Field Int [(Point, Tile)] -- radius * tiles
-data Game = Game Int Field -- turn * field
+data Game = Game Int Int Int Field -- turn * maxTurn * myId * field
 
 
 -- runtime
@@ -22,8 +22,9 @@ parseField (h:ls) = (Field r ts, rs)
         (ts, rs) = map parsePointAndTile `first` splitAt n ls
 
 parseGame :: [String] -> (Game, [String])
-parseGame (start:t:ls) = eos `seq` (Game (read t) f, rs)
-  where (f, (eos:rs)) = parseField ls
+parseGame (start:l:ls) = eos `seq` (Game t mt mi f, rs)
+  where [t, mt, mi] = map read $ words l
+        (f, (eos:rs)) = parseField ls
 
 writeCommands cs = mapM_ putStrLn cs >> putStrLn ""
 
