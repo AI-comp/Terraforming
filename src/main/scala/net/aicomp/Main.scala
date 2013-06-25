@@ -93,7 +93,7 @@ object Main {
     def initializeEnvironment(env: GameEnvironment, createInput: () => Input) = {
       val cmds = cl.getOptionValues(AI_PROGRAM)
       val inputs = if (cl.hasOption(AI_PROGRAM) && cmds.length == 3) {
-        cmds.map(cmd => new ExternalProgramInput(cmd))
+        Range(0, 3).map(i => new ExternalProgramInput(cmds(i), i)).toArray
       } else {
         Range(0, 3).map(_ => createInput()).toArray
       }

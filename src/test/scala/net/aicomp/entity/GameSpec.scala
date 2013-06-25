@@ -5,7 +5,7 @@ import org.specs2.specification.Scope
 
 class GameSpec extends SpecificationWithJUnit {
   class games(val turn: Int = 12) extends Scope {
-    val players = Vector(new Player(1), new Player(2), new Player(3))
+    val players = Vector(new Player(0), new Player(1), new Player(2))
     val radius = 7
     val field = Field(radius, players.toList)
     val game = new Game(field, players.toList, turn)
@@ -108,9 +108,9 @@ class GameSpec extends SpecificationWithJUnit {
       game.acceptCommand(BuildCommand(Point(0, 1), Installation.park)) must
         throwA[CommandException]
     }
-    "stringify itself" in new games {
-      game.stringify must_== "START\n" +
-        "0\n" +
+    "stringify itself" in new games(12) {
+      game.stringify(1) must_== "START\n" +
+        "0 12 1\n" +
         field.stringify +
         "EOS"
     }
