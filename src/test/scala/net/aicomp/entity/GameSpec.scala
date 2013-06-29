@@ -10,6 +10,7 @@ class GameSpec extends SpecificationWithJUnit {
     val field = Field(radius, players.toList)
     val game = new Game(field, players.toList, turn)
     val initRobots = 50
+    game.startTurn()
 
     def initTile(field: Field, p: Point, player: Player) {
       field(p).owner = Some(player)

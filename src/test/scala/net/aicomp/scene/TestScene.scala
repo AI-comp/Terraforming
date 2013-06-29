@@ -12,27 +12,23 @@ import net.aicomp.entity.Player
 trait TestScene extends ConsoleScene {
   val output = Queue[String]()
   private val input = Queue[String]()
-  private var lastScene: Scene[GameEnvironment] = this
 
   override def run() = {
-    lastScene = runWithCommand(input.dequeue().split(" ").toList)
-    null
+    runWithCommand(input.dequeue().split(" ").toList)
   }
   override def nextCommandStrings = throw new Exception()
   override def displayCore(text: String) { output += text }
 
   def accept(env: GameEnvironment, command: String) = {
     input += command
-    env.start(this)
-    lastScene
+    env.getSceneManager().runOneStep(env, this)
   }
 
-  def acceptAll(env: GameEnvironment, commands: Seq[String]) = {
-    commands.foreach { command =>
+  def acceptAll(env: GameEnvironment, commands: Iterable[String]) = {
+    commands.map { command =>
       input += command
-      env.start(this)
-    }
-    lastScene
+      env.getSceneManager().runOneStep(env, this)
+    }.last
   }
 }
 
@@ -45,4 +41,5 @@ trait TestSceneInitializer extends Scope {
   val mainScene = new MainScene(null) with TestScene
   val playerScene = new PlayerScene(mainScene) with TestScene
   def g = env.game
+  env.getSceneManager().initialize(env, playerScene)
 }

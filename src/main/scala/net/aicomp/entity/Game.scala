@@ -11,8 +11,6 @@ class Game(val field: Field, val players: List[Player], val maxTurn: Int) {
   def currentPlayer = players(_currentPlayerIndex)
   def isFinished = currentTurn == maxTurn
 
-  startTurn
-
   def acceptCommand(command: Command) {
     command match {
       case MoveCommand(p, dir, amount) => {
@@ -34,8 +32,9 @@ class Game(val field: Field, val players: List[Player], val maxTurn: Int) {
     _currentPlayerIndex
   }
 
-  private def startTurn() {
+  def startTurn() {
     field.produceRobot(currentPlayer)
+    println(field.robotAmount(currentPlayer))
     field.clearMovedRobots()
     _isMoving = false
     _isBuilding = false

@@ -6,6 +6,10 @@ import net.aicomp.entity.GameEnvironment
 import net.exkazuu.gameaiarena.gui.Scene
 
 abstract class MainScene(nextScene: Scene[GameEnvironment]) extends AbstractScene {
+  override def initialize() {
+	game.startTurn()
+  }
+  
   override def runWithCommand(commandString: List[String]) = {
     require(commandString != null)
     require(!commandString.isEmpty)
