@@ -34,7 +34,6 @@ class Game(val field: Field, val players: List[Player], val maxTurn: Int) {
 
   def startTurn() {
     field.produceRobot(currentPlayer)
-    println(field.robotAmount(currentPlayer))
     field.clearMovedRobots()
     _isMoving = false
     _isBuilding = false
