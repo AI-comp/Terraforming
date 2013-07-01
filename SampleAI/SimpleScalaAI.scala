@@ -44,7 +44,7 @@ object SimpleScalaAI {
     var first = false
 
     while ({ line = readLine(); line ne null }) {
-      Iterator.continually(readLine()).takeWhile(_ != "START")
+      if (line != "START") Iterator.continually(readLine()).takeWhile(_ != "START")
       val commands = Iterator.continually(readLine()).takeWhile(_ != "EOS").toList
       val informations = StringifyParser.parse(commands.mkString("\n"))
 
