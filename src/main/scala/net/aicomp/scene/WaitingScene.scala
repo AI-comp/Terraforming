@@ -13,5 +13,5 @@ abstract class WaitingScene(nextScene: Scene[GameEnvironment]) extends AbstractS
 
   final override def runManipulator = throw new Exception()
 
-  final override def runWithCommand(commandString: List[String]) = throw new Exception()
+  final override def runWithCommandString(commandString: String) = throw new Exception()
 }

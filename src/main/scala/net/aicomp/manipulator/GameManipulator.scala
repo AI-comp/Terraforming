@@ -1,58 +1,54 @@
 package net.aicomp.manipulator
 
-import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
 import java.util.Scanner
-import net.aicomp.scene.graphic.TextBoxScene
-import net.exkazuu.gameaiarena.runner.AbstractRunner
-import net.aicomp.entity.Game
+
 import scala.collection.mutable.Queue
 
+import net.aicomp.entity.Game
+import net.aicomp.scene.graphic.TextBoxScene
+import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
+import net.exkazuu.gameaiarena.runner.AbstractRunner
+
 abstract class GameManipulator extends AbstractRunner[Game, Array[String], String] {
-  protected var _commands: Queue[String] = Queue()
-  protected var _game: Game = null
   override def getComputerPlayer = null
-  override def runPreProcessing(game: Game) {
-    _commands = Queue()
-    _game = game
-  }
-  override def runPostProcessing() = {
-    val commands = _commands.takeWhile(_ == "finish")
-    commands += "finish"
-    commands.toArray
-  }
-  protected def isFinished() = _commands.lastOption.exists(_ == "finish")
 }
 
 class ConsoleUserGameManipulator(scanner: Scanner) extends GameManipulator {
+  private var _commandString: String = null
+
+  override def runPreProcessing(game: Game) {}
   override def runProcessing() {
-    def readLine() = {
-      val line = scanner.nextLine()
-      if (line == null) {
-        "finish"
-      } else {
-        line.trim
-      }
-    }
-    do {
-      Thread.sleep(10)
-      _commands.enqueue(readLine())
-    } while (!isFinished)
+    _commandString = scanner.nextLine()
+  }
+  override def runPostProcessing() = {
+    Array(_commandString)
   }
 }
 
 class GraphicalUserGameManipulator() extends GameManipulator {
+  private var _commandString: String = null
+
+  override def runPreProcessing(game: Game) {}
   override def runProcessing() {
-    do {
-      Thread.sleep(10)
-      TextBoxScene.inputCommandLists() match {
-        case Some(cmd) => _commands.enqueue(cmd.trim)
-        case None => ()
-      }
-    } while (!isFinished)
+    TextBoxScene.inputCommandLists() match {
+      case Some(cmd) => _commandString = cmd
+      case None => _commandString = null
+    }
+  }
+  override def runPostProcessing() = {
+    Array(_commandString)
   }
 }
 
 class AIPlayerGameManipulator(playerId: Int, com: ExternalComputerPlayer) extends GameManipulator {
+  protected var _commands: Queue[String] = Queue()
+  protected var _game: Game = null
+
+  override def runPreProcessing(game: Game) {
+    _commands = Queue()
+    _game = game
+  }
+
   override def runProcessing() {
     com.writeLine(_game.stringify(playerId))
     def readLine() = {
@@ -67,4 +63,12 @@ class AIPlayerGameManipulator(playerId: Int, com: ExternalComputerPlayer) extend
       _commands.enqueue(readLine())
     } while (!isFinished)
   }
+
+  override def runPostProcessing() = {
+    val commands = _commands.takeWhile(_ == "finish")
+    commands += "finish"
+    commands.toArray
+  }
+
+  protected def isFinished() = _commands.lastOption.exists(_ == "finish")
 }

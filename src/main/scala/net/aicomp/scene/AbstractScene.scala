@@ -13,7 +13,7 @@ abstract class AbstractScene extends DefaultScene[GameEnvironment] {
   def inputer = env.getInputer
   def game = env.game
 
-  private val _input = Queue[List[String]]()
+  private val _commandStringQueue = Queue[String]()
   private val _thread = new Thread {
     private var _commandStrings: Option[Array[String]] = None
     private var _enabled = false
@@ -29,7 +29,7 @@ abstract class AbstractScene extends DefaultScene[GameEnvironment] {
             _commandStrings = None
             commandStrings
           }
-          case None => Array("")
+          case None => Array[String]()
         }
       }
     }
@@ -49,20 +49,15 @@ abstract class AbstractScene extends DefaultScene[GameEnvironment] {
   }
 
   override def run() = {
-    if (_input.isEmpty) {
-      val commandStrings = _thread.nextCommandStrings
-        .filter(_ != null)
-        .map(_.split(" "))
-        .map(_.filter(_.length > 0).toList)
-        .filter(_.length > 0)
-      for (commandString <- commandStrings) {
-        _input.enqueue(commandString)
+    if (_commandStringQueue.isEmpty) {
+      for (commandString <- _thread.nextCommandStrings.filter(_ != null)) {
+        _commandStringQueue.enqueue(commandString)
       }
     }
-    if (!_input.isEmpty) {
-      val commandString = _input.dequeue()
-      displayLine("> " + commandString.mkString(" "))
-      runWithCommand(commandString)
+    if (!_commandStringQueue.isEmpty) {
+      val commandString = _commandStringQueue.dequeue()
+      displayLine("> " + commandString)
+      runWithCommandString(commandString)
     } else {
       AbstractScene.this
     }
@@ -70,7 +65,7 @@ abstract class AbstractScene extends DefaultScene[GameEnvironment] {
 
   protected def runManipulator = game.currentPlayer.gameManipulator.run(game)
 
-  protected def runWithCommand(commandString: List[String]): Scene[GameEnvironment]
+  protected def runWithCommandString(commandString: String): Scene[GameEnvironment]
 
   protected def displayCore(text: String)
 

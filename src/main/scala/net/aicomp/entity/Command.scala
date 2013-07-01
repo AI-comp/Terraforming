@@ -14,8 +14,6 @@ case class FinishCommand() extends Command
  * Game.acceptCommand must validate the semantics of commands.
  */
 object Command extends FormatValidation {
-  // TODO: def parse(string: String): Command
-  // TODO: def parse(elems: List[String]): Command
   def moveCommand = mkCommand("move") { c =>
     for {
       _ <- c.validateLength(c.args, 4)
@@ -26,7 +24,6 @@ object Command extends FormatValidation {
     } yield MoveCommand(new Point(x, y), d, amount)
   }
 
-  //TODO
   def buildCommand = mkCommand("build") { c =>
     for {
       _ <- c.validateLength(c.args, 3)

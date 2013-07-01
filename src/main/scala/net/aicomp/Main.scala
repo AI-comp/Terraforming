@@ -8,13 +8,16 @@ import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.Scanner
+
 import scala.Array.canBuildFrom
+
 import org.apache.commons.cli.BasicParser
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.OptionBuilder
 import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
+
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.JScrollPane
@@ -26,6 +29,14 @@ import net.aicomp.entity.Game
 import net.aicomp.entity.GameEnvironment
 import net.aicomp.entity.OrthogonalPoint
 import net.aicomp.entity.Player
+import net.aicomp.manipulator.AIPlayerGameManipulator
+import net.aicomp.manipulator.AIPlayerStartManipulator
+import net.aicomp.manipulator.ConsoleUserGameManipulator
+import net.aicomp.manipulator.ConsoleUserStartManipulator
+import net.aicomp.manipulator.GameManipulator
+import net.aicomp.manipulator.GraphicalUserGameManipulator
+import net.aicomp.manipulator.GraphicalUserStartManipulator
+import net.aicomp.manipulator.StartManipulator
 import net.aicomp.scene.MainScene
 import net.aicomp.scene.PlayerScene
 import net.aicomp.scene.console.ConsoleScene
@@ -39,14 +50,6 @@ import net.exkazuu.gameaiarena.gui.builder.GameGuiBuilder
 import net.exkazuu.gameaiarena.gui.builder.WindowCreator
 import net.exkazuu.gameaiarena.key.AwtKeyMemorizer
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
-import net.aicomp.manipulator.AIPlayerStartManipulator
-import net.aicomp.manipulator.GraphicalUserStartManipulator
-import net.aicomp.manipulator.StartManipulator
-import net.aicomp.manipulator.AIPlayerGameManipulator
-import net.aicomp.manipulator.ConsoleUserGameManipulator
-import net.aicomp.manipulator.GameManipulator
-import net.aicomp.manipulator.ConsoleUserStartManipulator
-import net.aicomp.manipulator.GraphicalUserGameManipulator
 
 object Main {
 
@@ -101,6 +104,7 @@ object Main {
         None
       }
 
+      // Must not apply limittingTime/limittingSumTime to user manipulators
       val startManipulators = (coms match {
         case Some(coms) => nums.map(i => new AIPlayerStartManipulator(i, coms(i)))
           .map(_.limittingTime(10000))
@@ -209,11 +213,17 @@ object Main {
         if (env.game != null) {
           val cp = new OrthogonalPoint(e.getPoint().x, e.getPoint().y)
           val square = OrthogonalPoint.orthogonalPointToPoints(cp, env.game.field)
-          if (square.nonEmpty) {
-            TextBoxScene.display("Your clicked location is ( " + square.head.x + ", " + square.head.y + " )")
-            TextBoxScene.display(Defaults.NEW_LINE)
+          square.headOption match {
+            case Some(p) =>
+              TextBoxScene.display("Your clicked location is ( " + p.x + ", " + p.y + " )")
+              TextBoxScene.display(Defaults.NEW_LINE)
+              if (e.getButton() == MouseEvent.BUTTON3) { // BUTTON3 indicates the right button
+                commandField.setText(commandField.getText + " " + p.x + " " + p.y + " ")
+              }
+            case None =>
           }
         }
+        commandField.requestFocus()
       }
     });
     val memorizer = new AwtKeyMemorizer()

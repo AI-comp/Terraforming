@@ -10,5 +10,5 @@ abstract class EmptyScene(nextScene: Scene[GameEnvironment]) extends AbstractSce
 
   final override def runManipulator = throw new Exception()
 
-  final override def runWithCommand(commandString: List[String]) = throw new Exception()
+  final override def runWithCommandString(commandString: String) = throw new Exception()
 }

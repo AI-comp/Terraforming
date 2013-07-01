@@ -23,25 +23,16 @@ abstract class StartManipulator extends AbstractRunner[Game, String, String] {
 
 class ConsoleUserStartManipulator(scanner: Scanner) extends StartManipulator {
   override def runProcessing() {
-    do {
-      Thread.sleep(10)
-      val name = scanner.nextLine()
-      if (name != null) {
-        _name = name.trim
-      }
-    } while (_name == "")
+    _name = scanner.nextLine()
   }
 }
 
 class GraphicalUserStartManipulator() extends StartManipulator {
   override def runProcessing() {
-    do {
-      Thread.sleep(10)
-      TextBoxScene.inputCommandLists() match {
-        case Some(name) => _name = name.trim
-        case None => _name = ""
-      }
-    } while (_name == "")
+    TextBoxScene.inputCommandLists() match {
+      case Some(name) => _name = name
+      case None => _name = null
+    }
   }
 }
 
@@ -51,7 +42,7 @@ class AIPlayerStartManipulator(playerId: Int, com: ExternalComputerPlayer) exten
     val line = com.readLine
     if (line != null) {
       val name = line.trim
-      if (name != "") {
+      if (!name.isEmpty) {
         _name = name
       }
     }
