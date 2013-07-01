@@ -11,7 +11,7 @@ abstract class PlayerScene(nextScene: Scene[GameEnvironment], setting: GameSetti
 
   override def initialize() {
     describe("Enter player names")
-    displayLine("Please enter player names with space delimiters.")
+    displayLine("Please enter three player names without spaces.")
   }
 
   override def runWithCommand(commandString: List[String]) = {
@@ -28,4 +28,6 @@ abstract class PlayerScene(nextScene: Scene[GameEnvironment], setting: GameSetti
       } else this
     }
   }
+  
+  override def runManipulator = Array(game.currentPlayer.startManipulator.run(game))
 }

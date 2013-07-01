@@ -12,20 +12,55 @@ abstract class AbstractScene extends DefaultScene[GameEnvironment] {
   def renderer = env.getRenderer
   def inputer = env.getInputer
   def game = env.game
-  private val input = Queue[List[String]]()
+
+  private val _input = Queue[List[String]]()
+  private val _thread = new Thread {
+    private var _commandStrings: Option[Array[String]] = None
+    private var _enabled = false
+
+    def nextCommandStrings = {
+      _enabled = true
+      if (!this.isAlive()) {
+        this.start
+      }
+      synchronized {
+        _commandStrings match {
+          case Some(commandStrings) => {
+            _commandStrings = None
+            commandStrings
+          }
+          case None => Array("")
+        }
+      }
+    }
+
+    override def run() {
+      while (true) {
+        Thread.sleep(10)
+        if (_enabled) {
+          val commandStrings = runManipulator
+          synchronized {
+            _commandStrings = Some(commandStrings)
+            _enabled = false
+          }
+        }
+      }
+    }
+  }
 
   override def run() = {
-    if (input.isEmpty) {
-      val commandStrings = nextCommandStrings
+    if (_input.isEmpty) {
+      val commandStrings = _thread.nextCommandStrings
         .filter(_ != null)
+        .map(_.split(" "))
         .map(_.filter(_.length > 0).toList)
         .filter(_.length > 0)
       for (commandString <- commandStrings) {
-        input.enqueue(commandString)
+        _input.enqueue(commandString)
       }
     }
-    if (!input.isEmpty) {
-      val commandString = input.dequeue()
+    if (!_input.isEmpty) {
+      val commandString = _input.dequeue()
       displayLine("> " + commandString.mkString(" "))
       runWithCommand(commandString)
     } else {
@@ -33,7 +68,7 @@ abstract class AbstractScene extends DefaultScene[GameEnvironment] {
     }
   }
 
-  protected def nextCommandStrings = game.currentPlayer.manipulator.run(game)
+  protected def runManipulator = game.currentPlayer.gameManipulator.run(game)
 
   protected def runWithCommand(commandString: List[String]): Scene[GameEnvironment]
 

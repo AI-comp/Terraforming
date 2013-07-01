@@ -8,16 +8,13 @@ import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.Scanner
-
 import scala.Array.canBuildFrom
-
 import org.apache.commons.cli.BasicParser
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.OptionBuilder
 import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
-
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.JScrollPane
@@ -29,23 +26,27 @@ import net.aicomp.entity.Game
 import net.aicomp.entity.GameEnvironment
 import net.aicomp.entity.OrthogonalPoint
 import net.aicomp.entity.Player
-import net.aicomp.input.ConsoleUserInput
-import net.aicomp.input.ExternalProgramInput
-import net.aicomp.input.GraphicalUserInput
-import net.aicomp.input.Input
-import net.aicomp.input.Manipulator
 import net.aicomp.scene.MainScene
 import net.aicomp.scene.PlayerScene
 import net.aicomp.scene.console.ConsoleScene
+import net.aicomp.scene.graphic.GraphicalScene
 import net.aicomp.scene.graphic.TextBoxScene
 import net.aicomp.scene.graphic.TitleScene
-import net.aicomp.scene.graphic.WhiteScene
 import net.aicomp.util.misc.ImageLoader
 import net.aicomp.util.settings.Defaults
 import net.exkazuu.gameaiarena.gui.JGamePanel
 import net.exkazuu.gameaiarena.gui.builder.GameGuiBuilder
 import net.exkazuu.gameaiarena.gui.builder.WindowCreator
 import net.exkazuu.gameaiarena.key.AwtKeyMemorizer
+import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
+import net.aicomp.manipulator.AIPlayerStartManipulator
+import net.aicomp.manipulator.GraphicalUserStartManipulator
+import net.aicomp.manipulator.StartManipulator
+import net.aicomp.manipulator.AIPlayerGameManipulator
+import net.aicomp.manipulator.ConsoleUserGameManipulator
+import net.aicomp.manipulator.GameManipulator
+import net.aicomp.manipulator.ConsoleUserStartManipulator
+import net.aicomp.manipulator.GraphicalUserGameManipulator
 
 object Main {
 
@@ -59,7 +60,7 @@ object Main {
   def printHelp(options: Options) {
     val help = new HelpFormatter();
     help.printHelp(
-      "java -jar JavaChallenge2012-X.X.X.jar [OPTIONS]\n"
+      "java -jar Terraforming-1.0.0.jar [OPTIONS]\n"
         + "[OPTIONS]: ", "", options, "", true);
   }
 
@@ -67,6 +68,7 @@ object Main {
     OptionBuilder.hasArgs(3)
     OptionBuilder.withDescription("Set three AI programs.")
     val opt = OptionBuilder.create(AI_PROGRAM)
+
     val options = new Options()
       .addOption(HELP, false, "Print this help.")
       .addOption(CUI_MODE, false, "Enable CUI mode.")
@@ -90,14 +92,27 @@ object Main {
   }
 
   def startGame(options: Options, cl: CommandLine) {
-    def initializeEnvironment(env: GameEnvironment, createInput: () => Input) = {
+    def initializeEnvironment(env: GameEnvironment, userStartManipulator: StartManipulator, userGameManipulator: GameManipulator) = {
       val cmds = cl.getOptionValues(AI_PROGRAM)
-      val inputs = if (cl.hasOption(AI_PROGRAM) && cmds.length == 3) {
-        Range(0, 3).map(i => new ExternalProgramInput(cmds(i), i)).toArray
+      val nums = Range(0, 3).toArray
+      val coms = if (cl.hasOption(AI_PROGRAM) && cmds.length == 3) {
+        Some(nums.map(i => new ExternalComputerPlayer(cmds(i).split(" "))))
       } else {
-        Range(0, 3).map(_ => createInput()).toArray
+        None
       }
-      val players = inputs.zipWithIndex.map { case (input, i) => new Player(i, new Manipulator(input)) }.toList
+
+      val startManipulators = (coms match {
+        case Some(coms) => nums.map(i => new AIPlayerStartManipulator(i, coms(i)))
+          .map(_.limittingTime(10000))
+        case None => nums.map(_ => userStartManipulator)
+      })
+      val gameManipulators = (coms match {
+        case Some(coms) => nums.map(i => new AIPlayerGameManipulator(i, coms(i)))
+          .map(_.limittingSumTime(1000, 5000))
+        case None => nums.map(_ => userGameManipulator)
+      })
+
+      val players = Vector(nums.map(i => new Player(i, startManipulators(i), gameManipulators(i))): _*)
       val field = Field(7, players)
       env.game = new Game(field, players, 2 * 3)
     }
@@ -106,20 +121,17 @@ object Main {
       val env = GameEnvironment()
       env.getSceneManager().setFps(1000)
       val scanner = new Scanner(System.in)
-
-      initializeEnvironment(env, () => new ConsoleUserInput(scanner))
+      initializeEnvironment(env, new ConsoleUserStartManipulator(scanner), new ConsoleUserGameManipulator(scanner))
 
       val mainScene = new MainScene(null) with ConsoleScene
       val playerScene = new PlayerScene(mainScene) with ConsoleScene
       env.start(playerScene)
     } else {
       val (window, env) = initializeComponents()
+      initializeEnvironment(env, new GraphicalUserStartManipulator(), new GraphicalUserGameManipulator())
 
-      initializeEnvironment(env, () => new GraphicalUserInput())
-
-      val mainScene = new MainScene(null) with WhiteScene with TextBoxScene
+      val mainScene = new MainScene(null) with GraphicalScene with TextBoxScene
       val playerScene = new PlayerScene(mainScene) with TitleScene with TextBoxScene
-      val f: Function1[String, Unit] = mainScene.displayCore(_)
       env.start(playerScene)
 
       window.dispose();
@@ -139,6 +151,7 @@ object Main {
       .setWindowSize(1024, 740)
       .setPanelSize(1024, 495)
       .setFps(5)
+      .setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
       .setWindowCreator(new WindowCreator() {
         override def createWindow(gamePanel: JGamePanel) = {
           logArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));

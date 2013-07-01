@@ -8,7 +8,7 @@ class InstallationSpec extends SpecificationWithJUnit {
     val players = Vector(new Player(1), new Player(2), new Player(3))
     val origin = Point(0, 0)
     val radius = 7
-    val field = Field(radius, players.toList)
+    val field = Field(radius, players)
     val tiles = field.tiles
     def apply(x: Int, y: Int): Tile = tiles(new Point(x, y))
     def apply(p: Point): Tile = tiles(p)

@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class SimpleJavaAI {
+public class HeavyJavaAI {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		boolean first = true;
@@ -14,6 +14,10 @@ public class SimpleJavaAI {
 			}
 			else {
 				System.out.println("finish");
+			}
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
 			}
 		}
 		scanner.close();

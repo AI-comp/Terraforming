@@ -189,7 +189,7 @@ object Field {
   }
 
   /** Generates field at random */
-  def apply(radius: Int, players: List[Player]): Field = {
+  def apply(radius: Int, players: IndexedSeq[Player]): Field = {
     require(players.length == 3)
 
     // first, generate 1/3 pattern

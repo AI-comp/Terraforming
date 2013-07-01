@@ -18,7 +18,7 @@ trait TestScene extends ConsoleScene {
     lastScene = runWithCommand(input.dequeue().split(" ").toList)
     null
   }
-  override def nextCommandStrings = throw new Exception()
+  override def runManipulator = throw new Exception()
   override def displayCore(text: String) { output += text }
 
   def accept(env: GameEnvironment, command: String) = {
@@ -38,7 +38,7 @@ trait TestScene extends ConsoleScene {
 
 trait TestSceneInitializer extends Scope {
   val env = GameEnvironment()
-  val players = Range(0, 3).map(new Player(_)).toList
+  val players = Vector(new Player(0), new Player(1), new Player(2))
   val field = Field(7, players)
   env.game = new Game(field, players, 2 * 3)
   env.getSceneManager().setFps(1000)

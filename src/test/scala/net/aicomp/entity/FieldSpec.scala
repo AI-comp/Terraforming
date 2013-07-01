@@ -7,7 +7,7 @@ class FieldSpec extends SpecificationWithJUnit {
   trait fields extends Scope {
     val players = Vector(new Player(1), new Player(2), new Player(3))
     val radius = 7
-    val field = Field(radius, players.toList)
+    val field = Field(radius, players)
 
     def initTile(field: Field, p: Point) {
       field(p).owner = None
@@ -326,7 +326,7 @@ class FieldSpec extends SpecificationWithJUnit {
     }
     "stringify itself" in {
       val players = Vector(new Player(1), new Player(2), new Player(3))
-      val field = Field(1, players.toList)
+      val field = Field(1, players)
       field.stringify must_==
         "1 7\n" +
         "-1 0 " + field(-1, 0).stringify + "\n" +

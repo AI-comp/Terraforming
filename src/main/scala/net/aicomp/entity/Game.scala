@@ -1,6 +1,6 @@
 package net.aicomp.entity
 
-class Game(val field: Field, val players: List[Player], val maxTurn: Int) {
+class Game(val field: Field, val players: IndexedSeq[Player], val maxTurn: Int) {
   private var _currentPlayerIndex = 0
   private var _currentTurn = 0
   private var _isMoving = false

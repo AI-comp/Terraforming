@@ -12,7 +12,7 @@ import net.aicomp.entity.Tile
 import net.aicomp.scene.AbstractScene
 import net.aicomp.util.misc.ImageLoader
 
-trait WhiteScene extends AbstractScene {
+trait GraphicalScene extends AbstractScene {
 
   override def draw() = {
 

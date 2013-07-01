@@ -26,7 +26,7 @@ parseGame (start:l:ls) = eos `seq` (Game t mt mi f, rs)
   where [t, mt, mi] = map read $ words l
         (f, (eos:rs)) = parseField ls
 
-writeCommands cs = mapM_ putStrLn cs >> putStrLn ""
+writeCommands cs = mapM_ putStrLn cs
 
 main = do
     hSetBuffering stdin LineBuffering
