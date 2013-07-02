@@ -37,11 +37,11 @@ class Game(val field: Field, val players: List[Player], val maxTurn: Int) {
     field.clearMovedRobots()
     _isMoving = false
     _isBuilding = false
+    _currentTurn += 1
   }
 
   private def finishTurn() {
     changePlayerIndex()
-    _currentTurn += 1
     if (!isFinished) startTurn
   }
 
