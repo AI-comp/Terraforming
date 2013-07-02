@@ -99,7 +99,7 @@ object Main {
   def startGame(options: Options, cl: CommandLine) {
     def initializeEnvironment(env: GameEnvironment, userStartManipulator: StartManipulator, userGameManipulator: GameManipulator) = {
       val cmds = cl.getOptionValues(AI_PROGRAM)
-      val nums = Range(0, 3).toArray
+      val nums = (0 to 2).toArray
       val coms = if (cl.hasOption(AI_PROGRAM) && cmds.length == 3) {
         Some(nums.map(i => new ExternalComputerPlayer(cmds(i).split(" "))))
       } else {
