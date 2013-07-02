@@ -14,6 +14,11 @@ abstract class AbstractScene extends DefaultScene[GameEnvironment] {
   def game = env.game
 
   private val _commandStringQueue = Queue[String]()
+
+  /**
+   * This thread is used to avoid blocking when waiting the command decision of AI programs.
+   * It is also useful for adding time limitations for user playing.
+   */
   private val _thread = new Thread {
     private var _commandStrings: Option[Array[String]] = None
     private var _enabled = false
