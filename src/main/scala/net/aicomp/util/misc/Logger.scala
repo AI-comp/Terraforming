@@ -7,7 +7,7 @@ import com.google.common.io.Files
 
 object Logger {
   val logDirectory = new File("log")
-  val logFile = new File("log/log_" + DateUtils.dateStringForFileName + ".txt")
+  val logFile = new File("log/log_" + DateUtils.dateStringForFileName() + ".txt")
 
   logDirectory.mkdir()
   val writer = Files.newWriter(logFile, Charset.defaultCharset)

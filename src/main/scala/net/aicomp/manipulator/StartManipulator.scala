@@ -1,13 +1,12 @@
 package net.aicomp.manipulator
 
 import java.util.Scanner
-
 import net.aicomp.entity.Game
 import net.aicomp.scene.graphic.TextBoxScene
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
-import net.exkazuu.gameaiarena.runner.AbstractRunner
+import net.exkazuu.gameaiarena.manipulator.Manipulator
 
-abstract class StartManipulator extends AbstractRunner[Game, String, String] {
+abstract class StartManipulator extends Manipulator[Game, String, String] {
   protected var _name = ""
   protected var _game: Game = null
 

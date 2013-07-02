@@ -7,6 +7,8 @@ import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.util.Calendar
+import java.util.Random
 import java.util.Scanner
 
 import scala.Array.canBuildFrom
@@ -61,10 +63,10 @@ object Main {
   def log(text: String) = logFunction(text)
 
   def printHelp(options: Options) {
-    val help = new HelpFormatter();
+    val help = new HelpFormatter()
     help.printHelp(
       "java -jar Terraforming-1.0.0.jar [OPTIONS]\n"
-        + "[OPTIONS]: ", "", options, "", true);
+        + "[OPTIONS]: ", "", options, "", true)
   }
 
   def main(args: Array[String]) {
@@ -78,18 +80,18 @@ object Main {
       .addOption(opt)
 
     try {
-      val parser = new BasicParser();
-      val cl = parser.parse(options, args);
+      val parser = new BasicParser()
+      val cl = parser.parse(options, args)
       if (cl.hasOption(HELP)) {
-        printHelp(options);
+        printHelp(options)
       } else {
-        startGame(options, cl);
+        startGame(options, cl)
       }
     } catch {
       case e: ParseException => {
-        System.err.println("Error: " + e.getMessage());
-        printHelp(options);
-        System.exit(-1);
+        System.err.println("Error: " + e.getMessage())
+        printHelp(options)
+        System.exit(-1)
       }
     }
   }
@@ -105,20 +107,26 @@ object Main {
       }
 
       // Must not apply limittingTime/limittingSumTime to user manipulators
+      val random = new Random()
+      val calendar = Calendar.getInstance
+      val oos = ReplayUtil.openStreamForJava(calendar, random)
       val startManipulators = (coms match {
         case Some(coms) => nums.map(i => new AIPlayerStartManipulator(i, coms(i)))
           .map(_.limittingTime(10000))
         case None => nums.map(_ => userStartManipulator)
-      })
+      }).map(_.recordingStream(oos))
       val gameManipulators = (coms match {
         case Some(coms) => nums.map(i => new AIPlayerGameManipulator(i, coms(i)))
           .map(_.limittingSumTime(1000, 5000))
         case None => nums.map(_ => userGameManipulator)
-      })
+      }).map(_.recordingStream(oos))
 
       val players = Vector(nums.map(i => new Player(i, startManipulators(i), gameManipulators(i))): _*)
-      val field = Field(7, players)
+      val field = Field(7, players, random)
       env.game = new Game(field, players, 2 * 3)
+      if (env.getRenderer() != null) {
+        env.getRenderer().startLogging(ReplayUtil.openStreamForJavaScript(calendar))
+      }
     }
 
     if (cl.hasOption(CUI_MODE)) {
@@ -138,7 +146,8 @@ object Main {
       val playerScene = new PlayerScene(mainScene) with TitleScene with TextBoxScene
       env.start(playerScene)
 
-      window.dispose();
+      env.getRenderer().finishLogging()
+      window.dispose()
     }
   }
 
@@ -146,10 +155,10 @@ object Main {
     val builder = new GameGuiBuilder()
     val window = new JFrame()
     val mainPanel = new JPanel()
-    val layout = new SpringLayout();
-    val logArea = new JTextArea();
+    val layout = new SpringLayout()
+    val logArea = new JTextArea()
     val logScrollPane = new JScrollPane(logArea)
-    val commandField = new JTextField();
+    val commandField = new JTextField()
 
     val ret = builder.setTitle("Terraforming")
       .setWindowSize(1024, 740)
@@ -158,7 +167,7 @@ object Main {
       .setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
       .setWindowCreator(new WindowCreator() {
         override def createWindow(gamePanel: JGamePanel) = {
-          logArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+          logArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12))
           logArea.setEditable(false)
           TextBoxScene.display = (text) => {
             logArea.append(text)
@@ -168,7 +177,7 @@ object Main {
           logScrollPane.setPreferredSize(new Dimension(0, 0))
 
           commandField.setPreferredSize(new Dimension(0, 20))
-          commandField.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+          commandField.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12))
           commandField.addActionListener(new ActionListener() {
             def actionPerformed(e: ActionEvent) = {
               val command = commandField.getText()
@@ -178,19 +187,19 @@ object Main {
           })
 
           mainPanel.setLayout(layout)
-          mainPanel.add(gamePanel);
-          mainPanel.add(logScrollPane);
-          mainPanel.add(commandField);
+          mainPanel.add(gamePanel)
+          mainPanel.add(logScrollPane)
+          mainPanel.add(commandField)
 
           // Layout components
-          layout.putConstraint(SpringLayout.NORTH, gamePanel, 0, SpringLayout.NORTH, mainPanel);
-          layout.putConstraint(SpringLayout.NORTH, logScrollPane, 0, SpringLayout.SOUTH, gamePanel);
-          layout.putConstraint(SpringLayout.SOUTH, logScrollPane, 0, SpringLayout.NORTH, commandField);
-          layout.putConstraint(SpringLayout.SOUTH, commandField, 0, SpringLayout.SOUTH, mainPanel);
-          layout.putConstraint(SpringLayout.WEST, logScrollPane, 0, SpringLayout.WEST, mainPanel);
-          layout.putConstraint(SpringLayout.WEST, commandField, 0, SpringLayout.WEST, mainPanel);
-          layout.putConstraint(SpringLayout.EAST, logScrollPane, 0, SpringLayout.EAST, mainPanel);
-          layout.putConstraint(SpringLayout.EAST, commandField, 0, SpringLayout.EAST, mainPanel);
+          layout.putConstraint(SpringLayout.NORTH, gamePanel, 0, SpringLayout.NORTH, mainPanel)
+          layout.putConstraint(SpringLayout.NORTH, logScrollPane, 0, SpringLayout.SOUTH, gamePanel)
+          layout.putConstraint(SpringLayout.SOUTH, logScrollPane, 0, SpringLayout.NORTH, commandField)
+          layout.putConstraint(SpringLayout.SOUTH, commandField, 0, SpringLayout.SOUTH, mainPanel)
+          layout.putConstraint(SpringLayout.WEST, logScrollPane, 0, SpringLayout.WEST, mainPanel)
+          layout.putConstraint(SpringLayout.WEST, commandField, 0, SpringLayout.WEST, mainPanel)
+          layout.putConstraint(SpringLayout.EAST, logScrollPane, 0, SpringLayout.EAST, mainPanel)
+          layout.putConstraint(SpringLayout.EAST, commandField, 0, SpringLayout.EAST, mainPanel)
 
           window.getContentPane().add(mainPanel)
           window
@@ -225,10 +234,10 @@ object Main {
         }
         commandField.requestFocus()
       }
-    });
+    })
     val memorizer = new AwtKeyMemorizer()
     gamePanel.addKeyListener(memorizer)
-    logArea.addKeyListener(memorizer);
+    logArea.addKeyListener(memorizer)
     commandField.addKeyListener(memorizer)
     env.getInputer().add(0, memorizer.getKeyPressChecker(KeyEvent.VK_ENTER))
   }

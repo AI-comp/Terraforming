@@ -1,15 +1,13 @@
 package net.aicomp.manipulator
 
 import java.util.Scanner
-
 import scala.collection.mutable.Queue
-
 import net.aicomp.entity.Game
 import net.aicomp.scene.graphic.TextBoxScene
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
-import net.exkazuu.gameaiarena.runner.AbstractRunner
+import net.exkazuu.gameaiarena.manipulator.Manipulator
 
-abstract class GameManipulator extends AbstractRunner[Game, Array[String], String] {
+abstract class GameManipulator extends Manipulator[Game, Array[String], String] {
   override def getComputerPlayer = null
 }
 

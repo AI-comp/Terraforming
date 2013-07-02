@@ -3,8 +3,7 @@ package net.aicomp.util.misc
 import java.util.Calendar
 
 object DateUtils {
-  def dateStringForFileName = {
-    val calendar = Calendar.getInstance();
+  def dateStringForFileName(calendar: Calendar = Calendar.getInstance) = {
     val year = calendar.get(Calendar.YEAR)
     val month = calendar.get(Calendar.MONTH) + 1
     val day = calendar.get(Calendar.DAY_OF_MONTH)

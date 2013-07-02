@@ -55,6 +55,7 @@ download
 # project specific
 *.zip
 *.rep
-log/
 *.csv
 *.jar
+log/
+replay/

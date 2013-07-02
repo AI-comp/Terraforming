@@ -48,25 +48,25 @@ trait GraphicalScene extends AbstractScene {
 
     renderer.drawImage(pointImages.get(imgKey).get, op.x, op.y)
   }
-  
+
   // draw round(current turn / max turn)
   def drawRound() = {
     val roundSlash = ImageLoader.loadRoundSlash(renderer)
-    val roundPosition = new OrthogonalPoint(84,10)
-    
+    val roundPosition = new OrthogonalPoint(84, 10)
+
     renderer.drawImage(roundSlash, roundPosition.x, roundPosition.y)
     drawRoundNumber(game.currentTurn, roundPosition.x, roundPosition.y)
     drawRoundNumber(game.maxTurn, roundPosition.x + roundSlashSize.x + 3 * roundNumberSize.x, roundPosition.y)
   }
-  
+
   def drawRoundNumber(value: Int, numX: Int, numY: Int) = {
     val roundNumbers = ImageLoader.loadRoundNumber(renderer)
     var x = numX
-    
+
     value.toString.reverse.foreach { d =>
       x -= roundNumberSize.x
       renderer.drawImage(roundNumbers(d.toInt - '0'.toInt), x, numY)
-    }   
+    }
   }
 
   // draw robot and num of them on a point

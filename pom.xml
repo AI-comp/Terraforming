@@ -68,14 +68,14 @@
       <version>1.2</version>
     </dependency>
     <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>14.0.1</version>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>14.0.1</version>
     </dependency>
     <dependency>
       <groupId>jp.ac.waseda</groupId>
       <artifactId>GameAIArena</artifactId>
-      <version>1.5.6</version>
+      <version>1.6.0</version>
     </dependency>
 
     <!-- Test -->
