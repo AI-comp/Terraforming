@@ -28,5 +28,5 @@ abstract class PlayerScene(nextScene: Scene[GameEnvironment], setting: GameSetti
     }
   }
 
-  override def runManipulator = Array(game.currentPlayer.startManipulator.run(game))
+  override def runManipulator = game.currentPlayer.startManipulator.run(game)
 }

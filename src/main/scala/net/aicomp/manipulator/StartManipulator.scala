@@ -6,7 +6,7 @@ import net.aicomp.scene.graphic.TextBoxScene
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
 import net.exkazuu.gameaiarena.manipulator.Manipulator
 
-abstract class StartManipulator extends Manipulator[Game, String, String] {
+abstract class StartManipulator extends Manipulator[Game, Array[String], String] {
   protected var _name = ""
   protected var _game: Game = null
 
@@ -16,7 +16,7 @@ abstract class StartManipulator extends Manipulator[Game, String, String] {
     _game = game
   }
   override def runPostProcessing() = {
-    _name
+    Array(_name)
   }
 }
 

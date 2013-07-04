@@ -22,18 +22,8 @@
   
   <repositories>
     <repository>
-      <id>jp.ac.waseda.cs.washi</id>
-      <url>http://oss.sonatype.org/content/groups/public/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <repository>
       <id>oss.sonatype.org</id>
-      <url>http://oss.sonatype.org/content/repositories/</url>
+      <url>https://oss.sonatype.org/content/groups/public/</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -45,8 +35,8 @@
 
   <pluginRepositories>
     <pluginRepository>
-      <id>net.alchim31.maven</id>
-      <url>http://oss.sonatype.org/content/groups/public/</url>
+      <id>oss.sonatype.org</id>
+      <url>https://oss.sonatype.org/content/groups/public/</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -75,7 +65,7 @@
     <dependency>
       <groupId>jp.ac.waseda</groupId>
       <artifactId>GameAIArena</artifactId>
-      <version>1.6.0</version>
+      <version>1.6.2</version>
     </dependency>
 
     <!-- Test -->
@@ -168,16 +158,7 @@
           <launchers>
             <launcher>
               <id>main</id>
-              <mainClass>net.javachallenge.Main</mainClass>
-              <!--
-              <args>
-                <arg>arg1</arg>
-              </args>
-              <jvmArgs>
-                <jvmArg>-Xmx128m</jvmArg>
-                <jvmArg>-Djava.library.path=...</jvmArg>
-              </jvmArgs>
-              -->
+              <mainClass>net.aicomp.Main</mainClass>
             </launcher>
           </launchers>
         </configuration>

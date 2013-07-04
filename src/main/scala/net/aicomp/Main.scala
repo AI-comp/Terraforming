@@ -115,11 +115,13 @@ object Main {
           .map(_.limittingTime(10000))
         case None => nums.map(_ => userStartManipulator)
       }).map(_.recordingStream(oos))
+        .map(_.threading())
       val gameManipulators = (coms match {
         case Some(coms) => nums.map(i => new AIPlayerGameManipulator(i, coms(i)))
           .map(_.limittingSumTime(1000, 5000))
         case None => nums.map(_ => userGameManipulator)
       }).map(_.recordingStream(oos))
+        .map(_.threading())
 
       val players = Vector(nums.map(i => new Player(i, startManipulators(i), gameManipulators(i))): _*)
       val field = Field(7, players, random)

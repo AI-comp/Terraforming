@@ -1,11 +1,13 @@
 package net.aicomp.scene
 
+import scala.collection.mutable.Queue
+
 import net.aicomp.entity.GameEnvironment
 import net.aicomp.util.misc.Logger
 import net.aicomp.util.settings.Defaults
 import net.exkazuu.gameaiarena.gui.DefaultScene
 import net.exkazuu.gameaiarena.gui.Scene
-import scala.collection.mutable.Queue
+import net.exkazuu.gameaiarena.manipulator.ManipulatorResult
 
 abstract class AbstractScene extends DefaultScene[GameEnvironment] {
   def env = getEnvironment
@@ -14,49 +16,20 @@ abstract class AbstractScene extends DefaultScene[GameEnvironment] {
   def game = env.game
 
   private val _commandStringQueue = Queue[String]()
-
-  /**
-   * This thread is used to avoid blocking when waiting the command decision of AI programs.
-   * It is also useful for adding time limitations for user playing.
-   */
-  private val _thread = new Thread {
-    private var _commandStrings: Option[Array[String]] = None
-    private var _enabled = false
-
-    def nextCommandStrings = {
-      _enabled = true
-      if (!this.isAlive()) {
-        this.start
-      }
-      synchronized {
-        _commandStrings match {
-          case Some(commandStrings) => {
-            _commandStrings = None
-            commandStrings
-          }
-          case None => Array[String]()
-        }
-      }
-    }
-
-    override def run() {
-      while (true) {
-        Thread.sleep(10)
-        if (_enabled) {
-          val commandStrings = runManipulator
-          synchronized {
-            _commandStrings = Some(commandStrings)
-            _enabled = false
-          }
-        }
-      }
-    }
-  }
+  private var _result: Option[ManipulatorResult[Array[String]]] = None
 
   override def run() = {
     if (_commandStringQueue.isEmpty) {
-      for (commandString <- _thread.nextCommandStrings.filter(_ != null)) {
-        _commandStringQueue.enqueue(commandString)
+      _result match {
+        case Some(result) =>
+          if (result.isFinished()) {
+            for (commandString <- result.getResult().filter(_ != null)) {
+              _commandStringQueue.enqueue(commandString)
+            }
+            _result = None
+          }
+        case None =>
+          _result = Some(runManipulator)
       }
     }
     if (!_commandStringQueue.isEmpty) {
