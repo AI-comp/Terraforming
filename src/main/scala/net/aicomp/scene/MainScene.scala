@@ -6,6 +6,10 @@ import net.aicomp.entity.GameEnvironment
 import net.exkazuu.gameaiarena.gui.Scene
 
 abstract class MainScene(nextScene: Scene[GameEnvironment]) extends AbstractScene {
+  override def initialize() {
+    game.startTurn()
+  }
+
   override def runWithCommandString(commandString: String) = {
     require(commandString != null)
 
@@ -50,4 +54,6 @@ abstract class MainScene(nextScene: Scene[GameEnvironment]) extends AbstractScen
     else
       nextScene
   }
+
+  override protected def runManipulator = game.currentPlayer.gameManipulator.run(game)
 }

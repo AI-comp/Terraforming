@@ -1,38 +1,35 @@
 package net.aicomp.scene
 
-import net.aicomp.scene.console.ConsoleScene
 import scala.collection.mutable.Queue
-import net.exkazuu.gameaiarena.gui.Scene
-import net.aicomp.entity.GameEnvironment
+
 import org.specs2.specification.Scope
-import net.aicomp.entity.Game
+
 import net.aicomp.entity.Field
+import net.aicomp.entity.Game
+import net.aicomp.entity.GameEnvironment
 import net.aicomp.entity.Player
+import net.aicomp.scene.console.ConsoleScene
 
 trait TestScene extends ConsoleScene {
   val output = Queue[String]()
   private val input = Queue[String]()
-  private var lastScene: Scene[GameEnvironment] = this
 
   override def run() = {
-    lastScene = runWithCommandString(input.dequeue())
-    null
+    runWithCommandString(input.dequeue())
   }
   override def runManipulator = throw new Exception()
   override def displayCore(text: String) { output += text }
 
   def accept(env: GameEnvironment, command: String) = {
     input += command
-    env.start(this)
-    lastScene
+    env.getSceneManager().runOneStep(env, this)
   }
 
-  def acceptAll(env: GameEnvironment, commands: Seq[String]) = {
-    commands.foreach { command =>
+  def acceptAll(env: GameEnvironment, commands: Iterable[String]) = {
+    commands.map { command =>
       input += command
-      env.start(this)
-    }
-    lastScene
+      env.getSceneManager().runOneStep(env, this)
+    }.last
   }
 }
 
@@ -45,4 +42,5 @@ trait TestSceneInitializer extends Scope {
   val mainScene = new MainScene(null) with TestScene
   val playerScene = new PlayerScene(mainScene) with TestScene
   def g = env.game
+  env.getSceneManager().initialize(env, playerScene)
 }

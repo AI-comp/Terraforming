@@ -10,6 +10,7 @@ class GameSpec extends SpecificationWithJUnit {
     val field = Field(radius, players)
     val game = new Game(field, players, turn)
     val initRobots = 50
+    game.startTurn()
 
     def initTile(field: Field, p: Point, player: Player) {
       field(p).owner = Some(player)
@@ -22,23 +23,23 @@ class GameSpec extends SpecificationWithJUnit {
 
   "Game" should {
     "change turn after FinishCommand" in new games {
-      game.currentTurn must_== 0
+      game.currentTurn must_== 1
       game.currentPlayerIndex must_== 0
       game.acceptCommand(FinishCommand())
-      game.currentTurn must_== 1
+      game.currentTurn must_== 2
       game.currentPlayerIndex must_== 1
       game.acceptCommand(FinishCommand())
-      game.currentTurn must_== 2
+      game.currentTurn must_== 3
       game.currentPlayerIndex must_== 2
       game.acceptCommand(FinishCommand())
-      game.currentTurn must_== 3
+      game.currentTurn must_== 4
       game.currentPlayerIndex must_== 0
     }
     "robot number in initial at first 12 turn" in new games {
       game.acceptCommand(FinishCommand())
       game.acceptCommand(FinishCommand())
 
-      //player3's turn 
+      // player3's turn 
       (1 to 4).foreach { turn =>
         field.points.filter(
           p => field(p).installation == Some(Installation.initial)).foreach(
@@ -110,7 +111,7 @@ class GameSpec extends SpecificationWithJUnit {
     }
     "stringify itself" in new games(12) {
       game.stringify(1) must_== "START\n" +
-        "0 12 1\n" +
+        "1 12 1\n" +
         field.stringify +
         "EOS"
     }

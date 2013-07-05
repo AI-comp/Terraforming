@@ -41,7 +41,7 @@ abstract class AbstractScene extends DefaultScene[GameEnvironment] {
     }
   }
 
-  protected def runManipulator = game.currentPlayer.gameManipulator.run(game)
+  protected def runManipulator: ManipulatorResult[Array[String]] 
 
   protected def runWithCommandString(commandString: String): Scene[GameEnvironment]
 
