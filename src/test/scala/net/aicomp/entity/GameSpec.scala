@@ -7,8 +7,8 @@ class GameSpec extends SpecificationWithJUnit {
   class games(val turn: Int = 12) extends Scope {
     val players = Vector(new Player(0), new Player(1), new Player(2))
     val radius = 7
-    val field = Field(radius, players.toList)
-    val game = new Game(field, players.toList, turn)
+    val field = Field(radius, players)
+    val game = new Game(field, players, turn)
     val initRobots = 50
     game.startTurn()
 

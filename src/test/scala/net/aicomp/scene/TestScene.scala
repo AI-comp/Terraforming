@@ -1,22 +1,23 @@
 package net.aicomp.scene
 
-import net.aicomp.scene.console.ConsoleScene
 import scala.collection.mutable.Queue
-import net.exkazuu.gameaiarena.gui.Scene
-import net.aicomp.entity.GameEnvironment
+
 import org.specs2.specification.Scope
-import net.aicomp.entity.Game
+
 import net.aicomp.entity.Field
+import net.aicomp.entity.Game
+import net.aicomp.entity.GameEnvironment
 import net.aicomp.entity.Player
+import net.aicomp.scene.console.ConsoleScene
 
 trait TestScene extends ConsoleScene {
   val output = Queue[String]()
   private val input = Queue[String]()
 
   override def run() = {
-    runWithCommand(input.dequeue().split(" ").toList)
+    runWithCommandString(input.dequeue())
   }
-  override def nextCommandStrings = throw new Exception()
+  override def runManipulator = throw new Exception()
   override def displayCore(text: String) { output += text }
 
   def accept(env: GameEnvironment, command: String) = {
@@ -34,7 +35,7 @@ trait TestScene extends ConsoleScene {
 
 trait TestSceneInitializer extends Scope {
   val env = GameEnvironment()
-  val players = Range(0, 3).map(new Player(_)).toList
+  val players = Vector(new Player(0), new Player(1), new Player(2))
   val field = Field(7, players)
   env.game = new Game(field, players, 2 * 3)
   env.getSceneManager().setFps(1000)

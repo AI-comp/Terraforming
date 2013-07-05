@@ -12,7 +12,7 @@ package net.aicomp.entity
   def ownedBy(p: Player) = owner.exists(_ == p)
 
   def existBaseMaterialOf(p: Player) = owner.exists(_ == p) && installation.isEmpty && !isHole
-  
+
   def isMovable(player: Player) = ownedBy(player) || installation.isEmpty
 
   def checkLeave(player: Player, amount: Int) {
@@ -44,14 +44,12 @@ package net.aicomp.entity
       // developed land of the player
       robots += amount
       movedRobots += amount
-    }
-    else {
+    } else {
       // battle (with waste land's robots or enemy robots)
       if (amount <= robots) {
         // losing or draw
         robots -= amount
-      }
-      else {
+      } else {
         // winning
         owner = Some(player)
         robots = amount - robots
@@ -59,20 +57,19 @@ package net.aicomp.entity
       }
     }
   }
-  
+
   def score(player: Player): Int = {
-    val wasteLand       = 0
+    val wasteLand = 0
     val undevelopedLand = 1
-    val developedLand   = 3
-    val hole            = 0
+    val developedLand = 3
+    val hole = 0
     if (ownedBy(player)) {
       if (isHole) hole
       else installation match {
-        case Some(ins)  => developedLand + ins.score
-        case None       => undevelopedLand
+        case Some(ins) => developedLand + ins.score
+        case None => undevelopedLand
       }
-    }
-    else wasteLand
+    } else wasteLand
   }
 
   def stringify: String = {

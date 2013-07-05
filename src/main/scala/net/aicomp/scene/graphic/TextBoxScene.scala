@@ -17,8 +17,8 @@ object TextBoxScene {
 
   def inputCommandLists() = {
     if (commands.size > 0)
-      Array(commands.dequeue.split(" ").toArray)
+      Some(commands.dequeue)
     else
-      Array(Array[String]())
+      None
   }
 }

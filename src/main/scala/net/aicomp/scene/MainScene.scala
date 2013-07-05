@@ -7,12 +7,11 @@ import net.exkazuu.gameaiarena.gui.Scene
 
 abstract class MainScene(nextScene: Scene[GameEnvironment]) extends AbstractScene {
   override def initialize() {
-	game.startTurn()
+    game.startTurn()
   }
-  
-  override def runWithCommand(commandString: List[String]) = {
+
+  override def runWithCommandString(commandString: String) = {
     require(commandString != null)
-    require(!commandString.isEmpty)
 
     val commands = Map(
       "move" -> Command.moveCommand,
@@ -25,20 +24,29 @@ abstract class MainScene(nextScene: Scene[GameEnvironment]) extends AbstractScen
       displayLine("  finish")
     }
 
-    val cmd :: args = commandString.toList
-    commands.get(cmd) match {
-      case Some(c) => {
-        try {
-          game.acceptCommand(c(args))
-          displayLine(game.field.toString)
-        } catch {
-          case CommandException(msg) => {
-            displayLine(msg)
-            help
+    val commandWithArgs = commandString
+      .split(" ")
+      .filter(_.length > 0)
+      .toList
+
+    commandWithArgs match {
+      case cmd :: args => {
+        commands.get(cmd) match {
+          case Some(c) => {
+            try {
+              game.acceptCommand(c(args))
+              displayLine(game.field.toString)
+            } catch {
+              case CommandException(msg) => {
+                displayLine(msg)
+                help
+              }
+            }
           }
+          case None => help
         }
       }
-      case None => help
+      case _ => help
     }
 
     if (!game.isFinished)
@@ -46,4 +54,6 @@ abstract class MainScene(nextScene: Scene[GameEnvironment]) extends AbstractScen
     else
       nextScene
   }
+
+  override protected def runManipulator = game.currentPlayer.gameManipulator.run(game)
 }

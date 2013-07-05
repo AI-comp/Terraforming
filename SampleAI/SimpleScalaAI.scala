@@ -4,8 +4,8 @@ case class GameInformation(currentTurn: Int, maxTurn: Int, playerId: Int)
 case class FieldInformation(radius: Int, tileSize: Int)
 case class TileInformation(x: Int, y: Int, ownerId: Int, robots: Int, obj: String)
 
-case class Informations(gameInformation: GameInformation, 
-                        fieldInformation: FieldInformation, 
+case class Informations(gameInformation: GameInformation,
+                        fieldInformation: FieldInformation,
                         tileInformations: List[TileInformation])
 
 object StringifyParser extends RegexParsers {
@@ -13,27 +13,27 @@ object StringifyParser extends RegexParsers {
   val str = "[a-zA-Z]+".r
   val eol = "\n"
 
-  val tileStringify  = num ~ num ~ num ~ num ~ str ^^ { 
-    case x ~ y ~ ownerId ~ robots ~ obj => 
-    new TileInformation(x, y, ownerId, robots, obj) 
+  val tileStringify = num ~ num ~ num ~ num ~ str ^^ {
+    case x ~ y ~ ownerId ~ robots ~ obj =>
+      new TileInformation(x, y, ownerId, robots, obj)
   }
 
-  val gameStringify  = num ~ num ~ num ^^ {
+  val gameStringify = num ~ num ~ num ^^ {
     case currentTurn ~ maxTurn ~ playerId =>
-    new GameInformation(currentTurn, maxTurn, playerId)
+      new GameInformation(currentTurn, maxTurn, playerId)
   }
 
   val fieldStringify = num ~ num ^^ {
     case radius ~ tileSize =>
-    new FieldInformation(radius, tileSize)
+      new FieldInformation(radius, tileSize)
   }
 
-  val commands = gameStringify ~ 
-                 fieldStringify ~ 
+  val commands = gameStringify ~
+                 fieldStringify ~
                  rep(tileStringify) ^^ {
-                   case game ~ field ~ tiles => 
-                   new Informations(game, field, tiles)
-                 }
+    case game ~ field ~ tiles =>
+      new Informations(game, field, tiles)
+  }
 
   def parse(input: String) = parseAll(commands, input)
 }
@@ -41,7 +41,7 @@ object StringifyParser extends RegexParsers {
 object SimpleScalaAI {
   def main(args: Array[String]) {
     var line = ""
-    var first = false
+    var first = true
 
     while ({ line = readLine(); line ne null }) {
       if (line != "START") Iterator.continually(readLine()).takeWhile(_ != "START")
@@ -51,11 +51,9 @@ object SimpleScalaAI {
       if (!first) {
         first = true
         System.out.println("SimpleScalaAI")
-      }
-      else {
+      } else {
         System.out.println("finish")
       }
-      System.out.println("")
     }
   }
 }

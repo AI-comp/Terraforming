@@ -1,41 +1,49 @@
 package net.aicomp.scene
 
+import scala.collection.mutable.Queue
+
 import net.aicomp.entity.GameEnvironment
 import net.aicomp.util.misc.Logger
 import net.aicomp.util.settings.Defaults
 import net.exkazuu.gameaiarena.gui.DefaultScene
 import net.exkazuu.gameaiarena.gui.Scene
-import scala.collection.mutable.Queue
+import net.exkazuu.gameaiarena.manipulator.ManipulatorResult
 
 abstract class AbstractScene extends DefaultScene[GameEnvironment] {
   def env = getEnvironment
   def renderer = env.getRenderer
   def inputer = env.getInputer
   def game = env.game
-  private val input = Queue[List[String]]()
+
+  private val _commandStringQueue = Queue[String]()
+  private var _result: Option[ManipulatorResult[Array[String]]] = None
 
   override def run() = {
-    if (input.isEmpty) {
-      val commandStrings = nextCommandStrings
-        .filter(_ != null)
-        .map(_.filter(_.length > 0).toList)
-        .filter(_.length > 0)
-      for (commandString <- commandStrings) {
-        input.enqueue(commandString)
+    if (_commandStringQueue.isEmpty) {
+      _result match {
+        case Some(result) =>
+          if (result.isFinished()) {
+            for (commandString <- result.getResult().filter(_ != null)) {
+              _commandStringQueue.enqueue(commandString)
+            }
+            _result = None
+          }
+        case None =>
+          _result = Some(runManipulator)
       }
     }
-    if (!input.isEmpty) {
-      val commandString = input.dequeue()
-      displayLine("> " + commandString.mkString(" "))
-      runWithCommand(commandString)
+    if (!_commandStringQueue.isEmpty) {
+      val commandString = _commandStringQueue.dequeue()
+      displayLine("> " + commandString)
+      runWithCommandString(commandString)
     } else {
       AbstractScene.this
     }
   }
 
-  protected def nextCommandStrings = game.currentPlayer.manipulator.run(game)
+  protected def runManipulator: ManipulatorResult[Array[String]] 
 
-  protected def runWithCommand(commandString: List[String]): Scene[GameEnvironment]
+  protected def runWithCommandString(commandString: String): Scene[GameEnvironment]
 
   protected def displayCore(text: String)
 

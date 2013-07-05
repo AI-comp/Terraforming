@@ -1,7 +1,9 @@
 package net.aicomp.entity
 
+import java.util.Random
+
+import scala.annotation.migration
 import scala.collection.mutable
-import scala.util.Random
 
 /*
  ***********************************
@@ -118,7 +120,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
       1 + aroundTiles.count(tile => tile.ownedBy(player) && tile.installation.exists(_ == Installation.pit))
     } else {
       0
-    }    
+    }
   }
 
   def aroundMaterialAmount(p: Point, player: Player) = {
@@ -189,12 +191,11 @@ object Field {
   }
 
   /** Generates field at random */
-  def apply(radius: Int, players: List[Player]): Field = {
+  def apply(radius: Int, players: IndexedSeq[Player], random: Random = new Random(0)): Field = {
     require(players.length == 3)
 
     // first, generate 1/3 pattern
     // region: (x, y) such that y >= 0 && x + y >= 1
-    val random = new Random(0)
     val field = mutable.Map(Field(radius).tiles.toSeq: _*)
     for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
       // TODO: hole frequency
