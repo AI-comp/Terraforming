@@ -128,7 +128,7 @@ object Main {
 
       val players = Vector(nums.map(new Player(_)): _*)
       val field = Field(7, players, random)
-      env.game = new Game(field, players, 1)
+      env.game = new Game(field, players, 200)
       if (env.getRenderer() != null) {
         env.getRenderer().startLogging(ReplayUtil.openStreamForJavaScript(calendar))
       }
