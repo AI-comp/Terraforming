@@ -1,10 +1,6 @@
 package net.aicomp.terraforming.entity
 
-import net.aicomp.terraforming.entity.Installation;
-import net.aicomp.terraforming.entity.Player;
-import net.aicomp.terraforming.entity.Tile;
-
-import org.specs2.mutable._
+import org.specs2.mutable.SpecificationWithJUnit
 
 class TileSpec extends SpecificationWithJUnit {
   "Tile" should {
@@ -47,14 +43,14 @@ class TileSpec extends SpecificationWithJUnit {
       tile.installation = Some(Installation.attack)
       tile.score(player) must_== developedLandScore
     }
-    "score a developed land in which a public facility built" in {
+    "score a developed land in which a city facility built" in {
       val developedLandScore = 3
-      val publicFacilityScore = 10
+      val cityFacilityScore = 10
       val player = new Player(1)
       val tile = new Tile
       tile.owner = Some(player)
-      tile.installation = Some(Installation.public)
-      tile.score(player) must_== developedLandScore + publicFacilityScore
+      tile.installation = Some(Installation.city)
+      tile.score(player) must_== developedLandScore + cityFacilityScore
     }
     "stringify wasteland" in {
       val tile = new Tile

@@ -1,11 +1,9 @@
 package net.aicomp.terraforming.entity
 
-import net.aicomp.terraforming.entity.Player;
-
-import org.scalacheck.Properties
-import org.scalacheck.Prop._
-import org.scalacheck.Arbitrary
 import org.scalacheck.Gen
+import org.scalacheck.Prop.forAll
+import org.scalacheck.Prop.propBoolean
+import org.scalacheck.Properties
 
 object PointProp extends Properties("Point") {
   val field = Field(7)

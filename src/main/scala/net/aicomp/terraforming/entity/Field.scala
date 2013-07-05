@@ -2,6 +2,7 @@ package net.aicomp.terraforming.entity
 
 import java.util.Random
 
+import scala.annotation.migration
 import scala.collection.mutable
 
 /*
@@ -85,22 +86,69 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     if (tile.robots < ins.robotCost) {
       throw new CommandException("The number of robots is not enough.")
     }
-    val aroundMaterialAmount = this.aroundMaterialAmount(p, player)
-    if (aroundMaterialAmount < ins.materialCost) {
-      throw new CommandException("Although it is " + ins.materialCost + " material cost necessity for building " + ins.name + ", only " + aroundMaterialAmount + " costs are obtained from this tile.")
+    val aroundMaterial = aroundMaterialAmount(p, player)
+    if (aroundMaterial < ins.materialCost) {
+      throw new CommandException("Although it is " + ins.materialCost + " material cost necessity for building " + ins.name + ", only " + aroundMaterial + " costs are obtained from this tile.")
     }
 
     tile.isHole = false
     tile.robots -= ins.robotCost
     tile.installation = Some(ins)
+    ins match {
+      case Installation.town =>
+        aroundTiles(p).foreach { _.installation = Some(Installation.house) }
+      case Installation.city =>
+        aroundTiles(p, 2).foreach { _.installation = Some(Installation.house) }
+      case _ =>
+    }
   }
 
   def produceRobot(player: Player) = {
-    for (tile <- tiles.values.filter(_.ownedBy(player))) {
-      if (tile.installation.exists(_ == Installation.initial)) {
-        tile.enter(player, 5)
-      } else if (tile.installation.exists(_ == Installation.factory)) {
-        tile.enter(player, 1)
+    for ((p, tile) <- tiles) {
+      if (tile.ownedBy(player)) {
+        tile.installation match {
+          case Some(Installation.initial) =>
+            tile.enter(player, 5)
+          case Some(Installation.factory) =>
+            tile.enter(player, 1)
+          case _ =>
+        }
+      }
+    }
+  }
+
+  def attack(player: Player) = {
+    for ((p, tile) <- tiles) {
+      if (tile.ownedBy(player)) {
+        tile.installation match {
+          case Some(Installation.attack) =>
+            lineTiles(p).foreach { _.robots /= 2 }
+          case _ =>
+        }
+      }
+    }
+  }
+
+  def startDefense(player: Player) = {
+    for ((p, tile) <- tiles) {
+      if (tile.ownedBy(player)) {
+        tile.installation match {
+          case Some(Installation.shield) =>
+            aroundTiles(p).foreach { _.robots *= 2 }
+          case _ =>
+        }
+      }
+    }
+  }
+
+  def finishDefense(player: Player) = {
+    for ((p, tile) <- tiles) {
+      if (tile.ownedBy(player)) {
+        tile.installation match {
+          case Some(Installation.shield) =>
+            aroundTiles(p).foreach { _.robots /= 2 }
+          case _ =>
+        }
       }
     }
   }
@@ -113,10 +161,13 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     tiles.values.filter(_.ownedBy(player)).map(_.robots).sum
   }
 
+  def aroundTiles(p: Point, count: Int = 1) = p.aroundPoints(count).filter(_.within(radius)).map(apply)
+
+  def lineTiles(p: Point, count: Int = 1) = p.linePoints(count).filter(_.within(radius)).map(apply)
+
   def materialAmount(p: Point, player: Player) = {
     if (this(p) existBaseMaterialOf player) {
-      val aroundTiles = Direction.all.map(_.p + p).filter(_.within(radius)).map(apply)
-      1 + aroundTiles.count(tile => tile.ownedBy(player) && tile.installation.exists(_ == Installation.pit))
+      1 + aroundTiles(p).count(tile => tile.ownedBy(player) && tile.installation.exists(_ == Installation.pit))
     } else {
       0
     }
@@ -124,8 +175,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
   def aroundMaterialAmount(p: Point, player: Player) = {
     val baseAmount = materialAmount(p, player)
-    val aroundPoint = Direction.all.map(_.p + p).filter(_.within(radius))
-    val aroundMount = aroundPoint.map(materialAmount(_, player)).sum
+    val aroundMount = p.aroundPoints().map(materialAmount(_, player)).sum
     baseAmount + aroundMount
   }
 

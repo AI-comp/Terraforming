@@ -1,11 +1,6 @@
 package net.aicomp.terraforming.entity
 
-import net.aicomp.terraforming.entity.Direction;
-import net.aicomp.terraforming.entity.Installation;
-import net.aicomp.terraforming.entity.Player;
-import net.aicomp.terraforming.entity.Point;
-
-import org.specs2.mutable._
+import org.specs2.mutable.SpecificationWithJUnit
 import org.specs2.specification.Scope
 
 class InstallationSpec extends SpecificationWithJUnit {
@@ -32,14 +27,14 @@ class InstallationSpec extends SpecificationWithJUnit {
 
   "Installation" should {
 
-    "decline to accept building a \"inisial\"" in new installations {
+    "decline to accept building a 'inisial'" in new installations {
       initTile(field, origin, players(0))
       val aroundPoints = Direction.all.map(_.p + origin).filter(_.within(radius))
       aroundPoints(origin).foreach(initTile(field, _, players(0)))
 
       field.build(players(0), origin, Installation.initial) must throwA[CommandException]
     }
-    "allow to accept building a \"factory\"" in new installations {
+    "allow to accept building a 'factory'" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 50
 
@@ -47,7 +42,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.factory) must_== ()
     }
-    "decline to accept building a \"factory\" in hole" in new installations {
+    "decline to accept building a 'factory' in hole" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 50
       field(origin).isHole = true
@@ -56,7 +51,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.factory) must throwA[CommandException]
     }
-    "decline to accept building a \"factory\" in settlement of few robots" in new installations {
+    "decline to accept building a 'factory' in settlement of few robots" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 1
 
@@ -64,7 +59,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.factory) must throwA[CommandException]
     }
-    "decline to accept building a \"factory\" in settlement of no robots" in new installations {
+    "decline to accept building a 'factory' in settlement of no robots" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 0
 
@@ -72,7 +67,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.factory) must throwA[CommandException]
     }
-    "decline to accept building a \"factory\" in not own settlement" in new installations {
+    "decline to accept building a 'factory' in not own settlement" in new installations {
       initTile(field, origin, players(1))
       field(origin).robots = 1
 
@@ -80,7 +75,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.factory) must throwA[CommandException]
     }
-    "decline to accept building a \"factory\" in wasteland" in new installations {
+    "decline to accept building a 'factory' in wasteland" in new installations {
       initTile(field, origin, null)
       field(origin).robots = 1
 
@@ -88,7 +83,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.factory) must throwA[CommandException]
     }
-    "allow to accept building a \"bridge\"" in new installations {
+    "allow to accept building a 'bridge'" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 50
       field(origin).isHole = true
@@ -97,7 +92,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.bridge) must_== ()
     }
-    "decline to accept build a \"bridge\" in settlement" in new installations {
+    "decline to accept build a 'bridge' in settlement" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 50
       field(origin).isHole = false
@@ -106,7 +101,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.bridge) must throwA[CommandException]
     }
-    "allow to accept building a \"shield\"" in new installations {
+    "allow to accept building a 'shield'" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 50
 
@@ -114,7 +109,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.shield) must_== ()
     }
-    "decline to accept building a \"shield\" in hole" in new installations {
+    "decline to accept building a 'shield' in hole" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 50
       field(origin).isHole = true
@@ -123,7 +118,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.shield) must throwA[CommandException]
     }
-    "decline to accept building a \"shield\" in settlment of few robots" in new installations {
+    "decline to accept building a 'shield' in settlment of few robots" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 1
 
@@ -131,7 +126,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.shield) must throwA[CommandException]
     }
-    "allow to accept building a \"attack\"" in new installations {
+    "allow to accept building a 'attack'" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 50
 
@@ -142,7 +137,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.attack) must_== ()
     }
-    "decline to accept building a \"attack\" in hole" in new installations {
+    "decline to accept building a 'attack' in hole" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 50
       field(origin).isHole = true
@@ -154,7 +149,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.attack) must throwA[CommandException]
     }
-    "decline to accept building a \"attack\" in settlment of few robots" in new installations {
+    "decline to accept building a 'attack' in settlment of few robots" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 1
 
@@ -165,7 +160,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.attack) must throwA[CommandException]
     }
-    "allow to accept building a \"pit\"" in new installations {
+    "allow to accept building a 'pit'" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 50
 
@@ -173,7 +168,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.pit) must_== ()
     }
-    "decline to accept building a \"pit\" in hole" in new installations {
+    "decline to accept building a 'pit' in hole" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 50
       field(origin).isHole = true
@@ -181,46 +176,46 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.pit) must throwA[CommandException]
     }
-    "decline to accept building a \"pit\" in settlment of few robots" in new installations {
+    "decline to accept building a 'pit' in settlment of few robots" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 1
       aroundPoints(origin).foreach(initTile(field, _, players(0)))
 
       field.build(players(0), origin, Installation.pit) must throwA[CommandException]
     }
-    "allow to accept building a \"park\"" in new installations {
+    "allow to accept building a 'house'" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 1
 
       aroundPoints(origin).foreach(initTile(field, _, players(0)))
 
-      field.build(players(0), origin, Installation.park) must_== ()
+      field.build(players(0), origin, Installation.house) must_== ()
     }
-    "decline to accept building a \"park\" in hole" in new installations {
+    "decline to accept building a 'house' in hole" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 1
       field(origin).isHole = true
 
       aroundPoints(origin).foreach(initTile(field, _, players(0)))
 
-      field.build(players(0), origin, Installation.park) must throwA[CommandException]
+      field.build(players(0), origin, Installation.house) must throwA[CommandException]
     }
-    "decline to accept building a \"park\" in settlment of no robots" in new installations {
+    "decline to accept building a 'house' in settlment of no robots" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 0
 
       aroundPoints(origin).foreach(initTile(field, _, players(0)))
 
-      field.build(players(0), origin, Installation.park) must throwA[CommandException]
+      field.build(players(0), origin, Installation.house) must throwA[CommandException]
     }
-    "decline to accept building a \"park\" in city" in new installations {
+    "decline to accept building a 'house' in city" in new installations {
       initTile(field, origin, players(0))
       field(origin).robots = 10
 
       aroundPoints(origin).foreach(initTile(field, _, players(0)))
 
-      field.build(players(0), origin, Installation.park) must_== ()
-      field.build(players(0), origin, Installation.park) must throwA[CommandException]
+      field.build(players(0), origin, Installation.house) must_== ()
+      field.build(players(0), origin, Installation.house) must throwA[CommandException]
     }
     /*
  ***********************************
@@ -255,24 +250,24 @@ class InstallationSpec extends SpecificationWithJUnit {
       field(pitPlace).robots = 20
     }
 
-    "allow to accept building a \"square\"" in new installations with originAndPit {
+    "allow to accept building a 'town'" in new installations with originAndPit {
       field.build(players(0), pitPlace, Installation.pit) must_== ()
-      field.build(players(0), origin, Installation.square) must_== ()
+      field.build(players(0), origin, Installation.town) must_== ()
     }
 
-    "decline to accept building a \"square\" in hole" in new installations with originAndPit {
+    "decline to accept building a 'town' in hole" in new installations with originAndPit {
       field(origin).isHole = true
 
       field.build(players(0), pitPlace, Installation.pit) must_== ()
-      field.build(players(0), origin, Installation.square) must throwA[CommandException]
+      field.build(players(0), origin, Installation.town) must throwA[CommandException]
     }
 
-    "decline to accept building a \"square\" in settlement which is not enough material" in new installations {
+    "decline to accept building a 'town' in settlement which is not enough material" in new installations {
       initTile(field, origin, players(0))
       aroundPoints(origin).foreach(initTile(field, _, players(0)))
       field(origin).robots = 1
 
-      field.build(players(0), origin, Installation.square) must throwA[CommandException]
+      field.build(players(0), origin, Installation.town) must throwA[CommandException]
     }
     /*
  ***********************************
@@ -310,21 +305,21 @@ class InstallationSpec extends SpecificationWithJUnit {
       pitPlaces.foreach(_p => field(_p).robots = 20)
     }
 
-    "allow to accept building a \"public\"" in new installations with originAndPits {
+    "allow to accept building a 'city'" in new installations with originAndPits {
       pitPlaces.foreach(_p =>
         field.build(players(0), _p, Installation.pit) must_== ())
-      field.build(players(0), origin, Installation.public) must_== ()
+      field.build(players(0), origin, Installation.city) must_== ()
     }
 
-    "decline to accept building a \"public\" in hole" in new installations with originAndPits {
+    "decline to accept building a 'city' in hole" in new installations with originAndPits {
       field(origin).isHole = true
 
       pitPlaces.foreach(_p =>
         field.build(players(0), _p, Installation.pit) must_== ())
-      field.build(players(0), origin, Installation.public) must throwA[CommandException]
+      field.build(players(0), origin, Installation.city) must throwA[CommandException]
     }
 
-    "decline to accept building a \"public\" in settlement which is not enough material" in new installations {
+    "decline to accept building a 'city' in settlement which is not enough material" in new installations {
       val pitPlaces = List(Point(1, 1), Point(2, -1), Point(1, -2), Point(-1, -1), Point(-2, 1))
 
       initTile(field, origin, players(0))
@@ -339,7 +334,7 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       pitPlaces.foreach(_p =>
         field.build(players(0), _p, Installation.pit) must_== ())
-      field.build(players(0), origin, Installation.public) must throwA[CommandException]
+      field.build(players(0), origin, Installation.city) must throwA[CommandException]
     }
   }
 

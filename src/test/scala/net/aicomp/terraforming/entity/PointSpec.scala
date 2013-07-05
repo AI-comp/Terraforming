@@ -1,13 +1,6 @@
 package net.aicomp.terraforming.entity
 
-import net.aicomp.terraforming.entity.Direction;
-import net.aicomp.terraforming.entity.Installation;
-import net.aicomp.terraforming.entity.Player;
-import net.aicomp.terraforming.entity.Point;
-
-import org.specs2.mutable._
-import org.scalacheck.Properties
-import org.scalacheck.Prop.forAll
+import org.specs2.mutable.SpecificationWithJUnit
 
 class PointSpec extends SpecificationWithJUnit {
   "Point" should {
