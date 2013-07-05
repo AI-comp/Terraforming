@@ -128,7 +128,7 @@ object Main {
 
       val players = Vector(nums.map(new Player(_)): _*)
       val field = Field(7, players, random)
-      env.game = new Game(field, players, 200)
+      env.game = new Game(field, players, 1)
       if (env.getRenderer() != null) {
         env.getRenderer().startLogging(ReplayUtil.openStreamForJavaScript(calendar))
       }
@@ -153,12 +153,9 @@ object Main {
 
       val waitScene = new WaitingScene(null) with GraphicalScene with TextBoxScene
       val resultScene = new ResultScene(waitScene) with GraphicalScene with TextBoxScene
-      val mainScene = new MainScene(null, gameManipulators) with GraphicalScene with TextBoxScene
+      val mainScene = new MainScene(resultScene, gameManipulators) with GraphicalScene with TextBoxScene
       val playerScene = new PlayerScene(mainScene, startManipulators) with TitleScene with TextBoxScene
       env.start(playerScene)
-
-      env.getRenderer().finishLogging()
-      window.dispose()
     }
   }
 
