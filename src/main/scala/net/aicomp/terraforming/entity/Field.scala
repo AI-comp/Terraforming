@@ -96,17 +96,11 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     tile.installation = Some(ins)
     ins match {
       case Installation.town =>
-        availableAroundTiles(p).filter(_.installation.isEmpty)
-          .foreach { tile =>
-            tile.installation = Some(Installation.house)
-            tile.owner = Some(player)
-          }
+        availableAroundTiles(p).filter(_.ownedBy(player)).filter(_.installation.isEmpty)
+          .foreach { tile => tile.installation = Some(Installation.house) }
       case Installation.city =>
-        availableAroundTiles(p, 2).filter(_.installation.isEmpty)
-          .foreach { tile =>
-            tile.installation = Some(Installation.house)
-            tile.owner = Some(player)
-          }
+        availableAroundTiles(p, 2).filter(_.ownedBy(player)).filter(_.installation.isEmpty)
+          .foreach { tile => tile.installation = Some(Installation.house) }
       case _ =>
     }
   }
