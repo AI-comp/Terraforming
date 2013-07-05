@@ -85,5 +85,62 @@ class PointSpec extends SpecificationWithJUnit {
         Point(1, 0))
       Point.pointsWithin(-1) must_== Nil
     }
+    "return around points with 1 radius" in {
+      Point(0, 0).aroundPoints().size must_== 6
+      Point(0, 0).aroundPoints() must contain(Point(-1, 1))
+      Point(0, 0).aroundPoints() must contain(Point(1, -1))
+      Point(0, 0).aroundPoints() must contain(Point(0, -1))
+      Point(0, 0).aroundPoints() must contain(Point(0, 1))
+      Point(0, 0).aroundPoints() must contain(Point(-1, 0))
+      Point(0, 0).aroundPoints() must contain(Point(1, 0))
+    }
+    "return around points with 2 radius" in {
+      Point(0, 0).aroundPoints(2).size must_== 18
+      Point(0, 0).aroundPoints(2) must contain(Point(-1, 1))
+      Point(0, 0).aroundPoints(2) must contain(Point(1, -1))
+      Point(0, 0).aroundPoints(2) must contain(Point(0, -1))
+      Point(0, 0).aroundPoints(2) must contain(Point(0, 1))
+      Point(0, 0).aroundPoints(2) must contain(Point(-1, 0))
+      Point(0, 0).aroundPoints(2) must contain(Point(1, 0))
+      
+      Point(0, 0).aroundPoints(2) must contain(Point(-2, 2))
+      Point(0, 0).aroundPoints(2) must contain(Point(2, -2))
+      Point(0, 0).aroundPoints(2) must contain(Point(0, -2))
+      Point(0, 0).aroundPoints(2) must contain(Point(0, 2))
+      Point(0, 0).aroundPoints(2) must contain(Point(-2, 0))
+      Point(0, 0).aroundPoints(2) must contain(Point(2, 0))
+      
+      Point(0, 0).aroundPoints(2) must contain(Point(2, -1))
+      Point(0, 0).aroundPoints(2) must contain(Point(1, 1))
+      Point(0, 0).aroundPoints(2) must contain(Point(-1, 2))
+      Point(0, 0).aroundPoints(2) must contain(Point(-2, 1))
+      Point(0, 0).aroundPoints(2) must contain(Point(-1, -1))
+      Point(0, 0).aroundPoints(2) must contain(Point(1, -2))
+    }
+    "return line points with 1 radius" in {
+      Point(0, 0).linePoints().size must_== 6
+      Point(0, 0).linePoints() must contain(Point(-1, 1))
+      Point(0, 0).linePoints() must contain(Point(1, -1))
+      Point(0, 0).linePoints() must contain(Point(0, -1))
+      Point(0, 0).linePoints() must contain(Point(0, 1))
+      Point(0, 0).linePoints() must contain(Point(-1, 0))
+      Point(0, 0).linePoints() must contain(Point(1, 0))
+    }
+    "return line points with 2 radius" in {
+      Point(0, 0).linePoints(2).size must_== 12
+      Point(0, 0).linePoints(2) must contain(Point(-1, 1))
+      Point(0, 0).linePoints(2) must contain(Point(1, -1))
+      Point(0, 0).linePoints(2) must contain(Point(0, -1))
+      Point(0, 0).linePoints(2) must contain(Point(0, 1))
+      Point(0, 0).linePoints(2) must contain(Point(-1, 0))
+      Point(0, 0).linePoints(2) must contain(Point(1, 0))
+      
+      Point(0, 0).linePoints(2) must contain(Point(-2, 2))
+      Point(0, 0).linePoints(2) must contain(Point(2, -2))
+      Point(0, 0).linePoints(2) must contain(Point(0, -2))
+      Point(0, 0).linePoints(2) must contain(Point(0, 2))
+      Point(0, 0).linePoints(2) must contain(Point(-2, 0))
+      Point(0, 0).linePoints(2) must contain(Point(2, 0))
+    }
   }
 }

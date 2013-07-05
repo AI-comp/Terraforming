@@ -82,22 +82,24 @@ case class Point(val x: Int, val y: Int) extends Ordered[Point] {
     // not found
     return None
   }
-  def aroundPoints(count: Int = 1) = {
+  def aroundPoints(length: Int = 1) = {
     def aroundPoints(p: Point) = {
       Direction.all.map(_.p + p)
     }
     var set = Set(this)
-    for (i <- 0 to count) {
+    for (i <- 1 to length) {
       set = set.map(aroundPoints(_)).flatten
     }
-    set - this
+    (set - this).toList
   }
-  def linePoints(count: Int = 1) = {
-    var set = ListBuffer[Point]()
-    for (i <- 0 to count) {
-      set ++= Direction.all.map(_.p + this)
+  def linePoints(length: Int = 1) = {
+    var buf = ListBuffer[Point]()
+    for (i <- 1 to length) {
+      buf ++= Direction.all.map { d =>
+        (1 to i).foldLeft(this) { (p, _) => p + d }
+      }
     }
-    Set(set: _*)
+    buf.toList
   }
 
   def stringify() = x + " " + y

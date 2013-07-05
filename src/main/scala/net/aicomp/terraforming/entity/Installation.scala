@@ -11,7 +11,6 @@ object Installation {
   val house = new Installation("house", 1, 4)
   val town = new Installation("town", 1, 9)
   val city = new Installation("city", 1, 19, 10)
-  val base = new Installation("base", 0, 0, 1)
 
   val buildables = List(factory, bridge, shield, attack, pit, house, town, city)
 }
