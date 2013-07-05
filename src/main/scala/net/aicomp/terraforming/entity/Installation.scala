@@ -8,11 +8,11 @@ object Installation {
   val shield = new Installation("shield", 25, 6)
   val attack = new Installation("attack", 25, 5)
   val pit = new Installation("pit", 20, 4)
-  val park = new Installation("park", 1, 4)
-  val square = new Installation("square", 1, 9)
-  val public = new Installation("public", 1, 19, 10)
+  val house = new Installation("house", 1, 4)
+  val town = new Installation("town", 1, 9)
+  val city = new Installation("city", 1, 19, 10)
 
-  val buildables = List(factory, bridge, shield, attack, pit, park, square, public)
+  val buildables = List(factory, bridge, shield, attack, pit, house, town, city)
 }
 
 class Installation(val name: String, val robotCost: Int, val materialCost: Int, val score: Int = 0) {

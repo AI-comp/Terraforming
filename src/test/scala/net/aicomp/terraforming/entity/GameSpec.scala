@@ -1,11 +1,6 @@
 package net.aicomp.terraforming.entity
 
-import net.aicomp.terraforming.entity.Direction;
-import net.aicomp.terraforming.entity.Game;
-import net.aicomp.terraforming.entity.Installation;
-import net.aicomp.terraforming.entity.Player;
-
-import org.specs2.mutable._
+import org.specs2.mutable.SpecificationWithJUnit
 import org.specs2.specification.Scope
 
 class GameSpec extends SpecificationWithJUnit {
@@ -86,7 +81,7 @@ class GameSpec extends SpecificationWithJUnit {
       initTile(field, Point(1, 0), players(0))
       initTile(field, Point(0, 1), players(0))
 
-      game.acceptCommand(BuildCommand(Point(0, 0), Installation.park)) must_== ()
+      game.acceptCommand(BuildCommand(Point(0, 0), Installation.house)) must_== ()
       game.acceptCommand(MoveCommand(Point(0, 0), Direction.r, 1)) must
         throwA[CommandException]
     }
@@ -110,8 +105,8 @@ class GameSpec extends SpecificationWithJUnit {
       initTile(field, Point(1, 2), players(0))
       initTile(field, Point(2, 2), players(0))
       field(0, 0).robots = 25
-      game.acceptCommand(BuildCommand(Point(0, 0), Installation.park)) must_== ()
-      game.acceptCommand(BuildCommand(Point(0, 1), Installation.park)) must
+      game.acceptCommand(BuildCommand(Point(0, 0), Installation.house)) must_== ()
+      game.acceptCommand(BuildCommand(Point(0, 1), Installation.house)) must
         throwA[CommandException]
     }
     "stringify itself" in new games(12) {

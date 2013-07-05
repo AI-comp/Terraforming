@@ -1,11 +1,6 @@
 package net.aicomp.terraforming.entity
 
-import net.aicomp.terraforming.entity.OrthogonalPoint;
-
-import org.specs2.specification.Fragments
 import org.specs2.mutable.SpecificationWithJUnit
-import org.specs2.main.ArgProperty
-import scala.collection.Seq
 
 class OrthogonalPointSpec extends SpecificationWithJUnit {
 

@@ -1,10 +1,6 @@
 package net.aicomp.terraforming.entity
 
-import net.aicomp.terraforming.entity.Direction;
-import net.aicomp.terraforming.entity.Installation;
-import net.aicomp.terraforming.entity.Player;
-
-import org.specs2.mutable._
+import org.specs2.mutable.SpecificationWithJUnit
 import org.specs2.specification.Scope
 
 class FieldSpec extends SpecificationWithJUnit {
@@ -199,7 +195,7 @@ class FieldSpec extends SpecificationWithJUnit {
     "decline to choose an outer tile of the field" in new fields {
       field.moveSquad(players(0), Point(99, 99), Direction.r, 10) must
         throwA[CommandException]
-      field.build(players(0), Point(99, 99), Installation.park) must
+      field.build(players(0), Point(99, 99), Installation.house) must
         throwA[CommandException]
     }
     "decline to move robots onto outside of the field" in new fields {
@@ -257,7 +253,7 @@ class FieldSpec extends SpecificationWithJUnit {
       for (p <- aroundPoints) {
         field(p).owner = player
         field(p).robots = 1
-        field.build(player.get, p, Installation.park)
+        field.build(player.get, p, Installation.house)
       }
       field.aroundMaterialAmount(origin, players(0)) must_== 1
     }
@@ -301,7 +297,7 @@ class FieldSpec extends SpecificationWithJUnit {
       for (p <- aroundPoints) {
         field(p).owner = player
         field(p).robots = 1
-        field.build(player.get, p, Installation.park)
+        field.build(player.get, p, Installation.house)
       }
       field.aroundMaterialAmount(origin, players(0)) must_== 1
     }
@@ -325,7 +321,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field.calculateScore(players(0)) must_== initialScore + developedLandScore
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
-      field(0, 0).installation = Some(Installation.public)
+      field(0, 0).installation = Some(Installation.city)
       field.calculateScore(players(0)) must_== initialScore + developedLandScore + publicFacilityScore
     }
     "stringify itself" in {

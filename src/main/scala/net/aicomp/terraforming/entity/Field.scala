@@ -2,6 +2,7 @@ package net.aicomp.terraforming.entity
 
 import java.util.Random
 
+import scala.annotation.migration
 import scala.collection.mutable
 
 /*
@@ -85,22 +86,77 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     if (tile.robots < ins.robotCost) {
       throw new CommandException("The number of robots is not enough.")
     }
-    val aroundMaterialAmount = this.aroundMaterialAmount(p, player)
-    if (aroundMaterialAmount < ins.materialCost) {
-      throw new CommandException("Although it is " + ins.materialCost + " material cost necessity for building " + ins.name + ", only " + aroundMaterialAmount + " costs are obtained from this tile.")
+    val aroundMaterial = aroundMaterialAmount(p, player)
+    if (aroundMaterial < ins.materialCost) {
+      throw new CommandException("Although it is " + ins.materialCost + " material cost necessity for building " + ins.name + ", only " + aroundMaterial + " costs are obtained from this tile.")
     }
 
     tile.isHole = false
     tile.robots -= ins.robotCost
     tile.installation = Some(ins)
+    ins match {
+      case Installation.town =>
+        availableAroundTiles(p).filter(_.installation.isEmpty)
+          .foreach { tile =>
+            tile.installation = Some(Installation.house)
+            tile.owner = Some(player)
+          }
+      case Installation.city =>
+        availableAroundTiles(p, 2).filter(_.installation.isEmpty)
+          .foreach { tile =>
+            tile.installation = Some(Installation.house)
+            tile.owner = Some(player)
+          }
+      case _ =>
+    }
   }
 
   def produceRobot(player: Player) = {
-    for (tile <- tiles.values.filter(_.ownedBy(player))) {
-      if (tile.installation.exists(_ == Installation.initial)) {
-        tile.enter(player, 5)
-      } else if (tile.installation.exists(_ == Installation.factory)) {
-        tile.enter(player, 1)
+    for ((p, tile) <- tiles) {
+      if (tile.ownedBy(player)) {
+        tile.installation match {
+          case Some(Installation.initial) =>
+            tile.enter(player, 5)
+          case Some(Installation.factory) =>
+            tile.enter(player, 1)
+          case _ =>
+        }
+      }
+    }
+  }
+
+  def attack(player: Player) = {
+    for ((p, tile) <- tiles) {
+      if (tile.ownedBy(player)) {
+        tile.installation match {
+          case Some(Installation.attack) =>
+            availableLineTiles(p).foreach { _.robots -= 2 }
+          case _ =>
+        }
+      }
+    }
+  }
+
+  def startDefense(player: Player) = {
+    for ((p, tile) <- tiles) {
+      if (tile.ownedBy(player)) {
+        tile.installation match {
+          case Some(Installation.shield) =>
+            availableAroundTiles(p).foreach { _.robots *= 2 }
+          case _ =>
+        }
+      }
+    }
+  }
+
+  def finishDefense(player: Player) = {
+    for ((p, tile) <- tiles) {
+      if (tile.ownedBy(player)) {
+        tile.installation match {
+          case Some(Installation.shield) =>
+            availableAroundTiles(p).foreach { _.robots /= 2 }
+          case _ =>
+        }
       }
     }
   }
@@ -113,10 +169,17 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     tiles.values.filter(_.ownedBy(player)).map(_.robots).sum
   }
 
+  def availableAroundPoints(p: Point, length: Int = 1) = p.aroundPoints(length).filter(_.within(radius))
+
+  def availableLinePoints(p: Point, length: Int = 1) = p.linePoints(length).filter(_.within(radius))
+
+  def availableAroundTiles(p: Point, length: Int = 1) = availableAroundPoints(p, length).map(apply)
+
+  def availableLineTiles(p: Point, length: Int = 1) = availableLinePoints(p, length).map(apply)
+
   def materialAmount(p: Point, player: Player) = {
     if (this(p) existBaseMaterialOf player) {
-      val aroundTiles = Direction.all.map(_.p + p).filter(_.within(radius)).map(apply)
-      1 + aroundTiles.count(tile => tile.ownedBy(player) && tile.installation.exists(_ == Installation.pit))
+      1 + availableAroundTiles(p).count(tile => tile.ownedBy(player) && tile.installation.exists(_ == Installation.pit))
     } else {
       0
     }
@@ -124,8 +187,15 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
   def aroundMaterialAmount(p: Point, player: Player) = {
     val baseAmount = materialAmount(p, player)
-    val aroundPoint = Direction.all.map(_.p + p).filter(_.within(radius))
-    val aroundMount = aroundPoint.map(materialAmount(_, player)).sum
+    var a = 0
+    val aroundMount34 = availableAroundPoints(p).map(materialAmount(_, player)).toList
+    val aroundMount3 = availableAroundPoints(p).map(materialAmount(_, player)).sum
+    for (p2 <- availableAroundPoints(p)) {
+      println(p2 + ": " + materialAmount(p2, player) + ", " + this(p2).stringify)
+      a += materialAmount(p2, player)
+    }
+    val aroundMount = availableAroundPoints(p).map(materialAmount(_, player)).sum
+    val aroundMount2 = availableAroundPoints(p).map { p2 => materialAmount(p2, player) }.sum
     baseAmount + aroundMount
   }
 

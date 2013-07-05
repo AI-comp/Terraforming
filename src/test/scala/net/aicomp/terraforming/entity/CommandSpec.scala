@@ -1,9 +1,6 @@
 package net.aicomp.terraforming.entity
 
-import net.aicomp.terraforming.entity.Direction;
-import net.aicomp.terraforming.entity.Installation;
-
-import org.specs2.mutable._
+import org.specs2.mutable.SpecificationWithJUnit
 
 class CommandSpec extends SpecificationWithJUnit {
   "Command" should {

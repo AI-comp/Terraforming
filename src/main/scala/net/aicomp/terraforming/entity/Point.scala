@@ -1,5 +1,7 @@
 package net.aicomp.terraforming.entity
 
+import scala.annotation.migration
+import scala.collection.mutable.ListBuffer
 import scala.math.abs
 import scala.math.max
 import scala.math.min
@@ -79,6 +81,25 @@ case class Point(val x: Int, val y: Int) extends Ordered[Point] {
     }
     // not found
     return None
+  }
+  def aroundPoints(length: Int = 1) = {
+    def aroundPoints(p: Point) = {
+      Direction.all.map(_.p + p)
+    }
+    var set = Set(this)
+    for (i <- 1 to length) {
+      set = set.map(aroundPoints(_)).flatten
+    }
+    (set - this).toList
+  }
+  def linePoints(length: Int = 1) = {
+    var buf = ListBuffer[Point]()
+    for (i <- 1 to length) {
+      buf ++= Direction.all.map { d =>
+        (1 to i).foldLeft(this) { (p, _) => p + d }
+      }
+    }
+    buf.toList
   }
 
   def stringify() = x + " " + y
