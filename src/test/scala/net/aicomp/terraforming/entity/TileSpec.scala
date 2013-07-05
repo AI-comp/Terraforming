@@ -4,6 +4,12 @@ import org.specs2.mutable.SpecificationWithJUnit
 
 class TileSpec extends SpecificationWithJUnit {
   "Tile" should {
+    val holeScore = 0
+    val wasteLandScore = 0
+    val undevelopedLandScore = 1
+    val developedLandScore = 2
+    val houseFacilityScore = 3
+    val cityFacilityScore = 10
     "equals another tile which has same values" in {
       new Tile().equals(new Tile()) must_== true
     }
@@ -16,12 +22,10 @@ class TileSpec extends SpecificationWithJUnit {
       new Tile().equals(new Object()) must_== false
     }
     "score a waste land" in {
-      val wasteLandScore = 0
       val player = new Player(1)
       new Tile().score(player) must_== wasteLandScore
     }
     "score a hole" in {
-      val holeScore = 0
       val player = new Player(1)
       val tile = new Tile
       tile.owner = Some(player)
@@ -29,14 +33,12 @@ class TileSpec extends SpecificationWithJUnit {
       tile.score(player) must_== holeScore
     }
     "score a undeveloped land" in {
-      val undevelopedLandScore = 1
       val player = new Player(1)
       val tile = new Tile
       tile.owner = Some(player)
       tile.score(player) must_== undevelopedLandScore
     }
     "score a developed land" in {
-      val developedLandScore = 3
       val player = new Player(1)
       val tile = new Tile
       tile.owner = Some(player)
@@ -44,8 +46,6 @@ class TileSpec extends SpecificationWithJUnit {
       tile.score(player) must_== developedLandScore
     }
     "score a developed land in which a city facility built" in {
-      val developedLandScore = 3
-      val cityFacilityScore = 10
       val player = new Player(1)
       val tile = new Tile
       tile.owner = Some(player)

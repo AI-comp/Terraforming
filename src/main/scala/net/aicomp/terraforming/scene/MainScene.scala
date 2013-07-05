@@ -1,13 +1,18 @@
 package net.aicomp.terraforming.scene
 
-import net.exkazuu.gameaiarena.gui.Scene
-import net.aicomp.terraforming.entity.CommandException
-import net.aicomp.terraforming.entity.GameEnvironment
 import net.aicomp.terraforming.entity.Command
+import net.aicomp.terraforming.entity.CommandException
+import net.aicomp.terraforming.entity.Game
+import net.aicomp.terraforming.entity.GameEnvironment
+import net.aicomp.terraforming.entity.GameSetting
+import net.exkazuu.gameaiarena.gui.Scene
+import net.exkazuu.gameaiarena.manipulator.ThreadManipulator
 
-abstract class MainScene(nextScene: Scene[GameEnvironment]) extends AbstractScene {
+abstract class MainScene(nextScene: Scene[GameEnvironment],
+  manipulators: Vector[ThreadManipulator[Game, Array[String], String]] = Vector())
+  extends ManipultorScene(manipulators) {
   override def initialize() {
-    game.startTurn()
+    displayLine(game.startTurn())
   }
 
   override def runWithCommandString(commandString: String) = {
@@ -34,8 +39,10 @@ abstract class MainScene(nextScene: Scene[GameEnvironment]) extends AbstractScen
         commands.get(cmd) match {
           case Some(c) => {
             try {
-              game.acceptCommand(c(args))
-              displayLine(game.field.toString)
+              val ret = game.acceptCommand(c(args))
+              if (ret.isInstanceOf[String]) {
+                displayLine(ret.toString())
+              }
             } catch {
               case CommandException(msg) => {
                 displayLine(msg)
@@ -54,6 +61,4 @@ abstract class MainScene(nextScene: Scene[GameEnvironment]) extends AbstractScen
     else
       nextScene
   }
-
-  override protected def runManipulator = game.currentPlayer.gameManipulator.run(game)
 }

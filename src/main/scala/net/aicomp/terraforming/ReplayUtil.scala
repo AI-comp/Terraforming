@@ -9,8 +9,9 @@ import java.io.ObjectOutputStream
 import java.io.PrintStream
 import java.util.Calendar
 import java.util.Random
-import net.exkazuu.gameaiarena.io.InputStreams
+
 import net.aicomp.terraforming.util.misc.DateUtils
+import net.exkazuu.gameaiarena.io.InputStreams
 
 object ReplayUtil {
   def initializeReplay(filePath: String) = {

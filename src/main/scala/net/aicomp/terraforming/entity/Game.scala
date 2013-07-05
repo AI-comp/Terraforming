@@ -1,17 +1,19 @@
 package net.aicomp.terraforming.entity
 
-class Game(val field: Field, val players: IndexedSeq[Player], val maxTurn: Int) {
+class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTurn: Int) {
   private var _currentPlayerIndex = 0
   private var _currentTurn = 0
   private var _isMoving = false
   private var _isBuilding = false
+  private var _isFinished = false
 
-  def currentTurn = _currentTurn
+  def currentTurn = (_currentTurn + 2) / players.size
+  def maxTurn = _maxTurn
   def currentPlayerIndex = _currentPlayerIndex
   def currentPlayer = players(_currentPlayerIndex)
-  def isFinished = currentTurn == maxTurn
+  def isFinished = _isFinished
 
-  def acceptCommand(command: Command) {
+  def acceptCommand(command: Command) = {
     command match {
       case MoveCommand(p, dir, amount) => {
         checkCanMove
@@ -32,7 +34,7 @@ class Game(val field: Field, val players: IndexedSeq[Player], val maxTurn: Int) 
     _currentPlayerIndex
   }
 
-  def startTurn() {
+  def startTurn() = {
     field.produceRobot(currentPlayer)
     field.attack(currentPlayer)
     field.finishDefense(currentPlayer)
@@ -40,13 +42,16 @@ class Game(val field: Field, val players: IndexedSeq[Player], val maxTurn: Int) 
     _isMoving = false
     _isBuilding = false
     _currentTurn += 1
+    "----------------- Start " + currentPlayer.name + "'s turn -----------------"
   }
 
-  private def finishTurn() {
+  private def finishTurn() = {
     field.startDefense(currentPlayer)
     changePlayerIndex()
-    if (!isFinished) {
+    if (_currentTurn < _maxTurn * 3) {
       startTurn()
+    } else {
+      _isFinished = true
     }
   }
 

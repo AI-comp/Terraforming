@@ -2,7 +2,6 @@ package net.aicomp.terraforming.entity
 
 import java.util.Random
 
-import scala.annotation.migration
 import scala.collection.mutable
 
 /*
@@ -181,15 +180,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
   def aroundMaterialAmount(p: Point, player: Player) = {
     val baseAmount = materialAmount(p, player)
-    var a = 0
-    val aroundMount34 = availableAroundPoints(p).map(materialAmount(_, player)).toList
-    val aroundMount3 = availableAroundPoints(p).map(materialAmount(_, player)).sum
-    for (p2 <- availableAroundPoints(p)) {
-      println(p2 + ": " + materialAmount(p2, player) + ", " + this(p2).stringify)
-      a += materialAmount(p2, player)
-    }
     val aroundMount = availableAroundPoints(p).map(materialAmount(_, player)).sum
-    val aroundMount2 = availableAroundPoints(p).map { p2 => materialAmount(p2, player) }.sum
     baseAmount + aroundMount
   }
 

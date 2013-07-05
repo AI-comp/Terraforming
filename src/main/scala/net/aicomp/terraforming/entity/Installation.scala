@@ -8,8 +8,8 @@ object Installation {
   val shield = new Installation("shield", 25, 6)
   val attack = new Installation("attack", 25, 5)
   val pit = new Installation("pit", 20, 4)
-  val house = new Installation("house", 1, 4)
-  val town = new Installation("town", 1, 9)
+  val house = new Installation("house", 1, 4, 1)
+  val town = new Installation("town", 1, 9, 1)
   val city = new Installation("city", 1, 19, 10)
 
   val buildables = List(factory, bridge, shield, attack, pit, house, town, city)

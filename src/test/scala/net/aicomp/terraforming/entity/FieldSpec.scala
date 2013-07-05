@@ -302,16 +302,16 @@ class FieldSpec extends SpecificationWithJUnit {
       field.aroundMaterialAmount(origin, players(0)) must_== 1
     }
     "calculate the one's own score of the initilized field" in new fields {
-      val initialScore = 3
+      val initialScore = 2
       field.calculateScore(players(0)) must_== initialScore
       field.calculateScore(players(1)) must_== initialScore
       field.calculateScore(players(2)) must_== initialScore
     }
     "calculate the one's own score of the field" in new fields {
-      val initialScore = 3
+      val initialScore = 2
       val undevelopedLandScore = 1
-      val developedLandScore = 3
-      val publicFacilityScore = 10
+      val developedLandScore = 2
+      val cityFacilityScore = 10
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
       field.calculateScore(players(0)) must_== initialScore + undevelopedLandScore
@@ -322,7 +322,7 @@ class FieldSpec extends SpecificationWithJUnit {
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
       field(0, 0).installation = Some(Installation.city)
-      field.calculateScore(players(0)) must_== initialScore + developedLandScore + publicFacilityScore
+      field.calculateScore(players(0)) must_== initialScore + developedLandScore + cityFacilityScore
     }
     "stringify itself" in {
       val players = Vector(new Player(1), new Player(2), new Player(3))

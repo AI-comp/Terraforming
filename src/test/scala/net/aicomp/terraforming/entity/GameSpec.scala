@@ -26,13 +26,13 @@ class GameSpec extends SpecificationWithJUnit {
       game.currentTurn must_== 1
       game.currentPlayerIndex must_== 0
       game.acceptCommand(FinishCommand())
-      game.currentTurn must_== 2
+      game.currentTurn must_== 1
       game.currentPlayerIndex must_== 1
       game.acceptCommand(FinishCommand())
-      game.currentTurn must_== 3
+      game.currentTurn must_== 1
       game.currentPlayerIndex must_== 2
       game.acceptCommand(FinishCommand())
-      game.currentTurn must_== 4
+      game.currentTurn must_== 2
       game.currentPlayerIndex must_== 0
     }
     "robot number in initial at first 12 turn" in new games {
@@ -65,6 +65,8 @@ class GameSpec extends SpecificationWithJUnit {
       }
     }
     "be finished after maxTurn" in new games(1) {
+      game.acceptCommand(FinishCommand())
+      game.acceptCommand(FinishCommand())
       game.acceptCommand(FinishCommand())
       game.isFinished must_== true
     }

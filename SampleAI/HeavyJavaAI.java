@@ -3,20 +3,14 @@ import java.util.Scanner;
 public class HeavyJavaAI {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
-		boolean first = true;
+		System.out.println("HeavyJava");
 		while (scanner.hasNext()) {
 			while (!scanner.nextLine().equals("EOS")) {
 				// do nothing
 			}
-			if (first) {
-				first = false;
-				System.out.println("SampleJavaAI");
-			}
-			else {
-				System.out.println("finish");
-			}
+			System.out.println("finish");
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(4000);
 			} catch (InterruptedException e) {
 			}
 		}

@@ -38,22 +38,17 @@ object StringifyParser extends RegexParsers {
   def parse(input: String) = parseAll(commands, input)
 }
 
-object SimpleScalaAI {
+object SampleScalaAI {
   def main(args: Array[String]) {
     var line = ""
-    var first = true
 
+    System.out.println("Scala")
     while ({ line = readLine(); line ne null }) {
       if (line != "START") Iterator.continually(readLine()).takeWhile(_ != "START")
       val commands = Iterator.continually(readLine()).takeWhile(_ != "EOS").toList
       val informations = StringifyParser.parse(commands.mkString("\n"))
 
-      if (!first) {
-        first = true
-        System.out.println("SimpleScalaAI")
-      } else {
-        System.out.println("finish")
-      }
+      System.out.println("finish")
     }
   }
 }

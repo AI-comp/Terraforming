@@ -42,7 +42,7 @@ main = do
 
 
 -- put your player name here
-name = "haskell"
+name = "Haskell"
 
 -- put your command-decision algorithm here
 command :: Game -> [String]

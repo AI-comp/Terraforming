@@ -4,51 +4,56 @@ import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.Calendar
 import java.util.Random
 import java.util.Scanner
+
 import scala.Array.canBuildFrom
+
 import org.apache.commons.cli.BasicParser
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.OptionBuilder
 import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
+
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTextArea
 import javax.swing.JTextField
 import javax.swing.SpringLayout
+import net.aicomp.terraforming.entity.Field
+import net.aicomp.terraforming.entity.Game
+import net.aicomp.terraforming.entity.GameEnvironment
+import net.aicomp.terraforming.entity.OrthogonalPoint
+import net.aicomp.terraforming.entity.Player
+import net.aicomp.terraforming.manipulator.AIPlayerGameManipulator
+import net.aicomp.terraforming.manipulator.AIPlayerStartManipulator
+import net.aicomp.terraforming.manipulator.ConsoleUserGameManipulator
+import net.aicomp.terraforming.manipulator.ConsoleUserStartManipulator
+import net.aicomp.terraforming.manipulator.GameManipulator
+import net.aicomp.terraforming.manipulator.GraphicalUserGameManipulator
+import net.aicomp.terraforming.manipulator.GraphicalUserStartManipulator
+import net.aicomp.terraforming.manipulator.StartManipulator
+import net.aicomp.terraforming.scene.MainScene
+import net.aicomp.terraforming.scene.PlayerScene
+import net.aicomp.terraforming.scene.ResultScene
+import net.aicomp.terraforming.scene.WaitingScene
+import net.aicomp.terraforming.scene.console.ConsoleScene
+import net.aicomp.terraforming.scene.graphic.GraphicalScene
+import net.aicomp.terraforming.scene.graphic.TextBoxScene
+import net.aicomp.terraforming.scene.graphic.TitleScene
+import net.aicomp.terraforming.util.misc.ImageLoader
+import net.aicomp.terraforming.util.settings.Defaults
 import net.exkazuu.gameaiarena.gui.JGamePanel
 import net.exkazuu.gameaiarena.gui.builder.GameGuiBuilder
 import net.exkazuu.gameaiarena.gui.builder.WindowCreator
 import net.exkazuu.gameaiarena.key.AwtKeyMemorizer
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
-import net.aicomp.terraforming.entity.GameEnvironment
-import net.aicomp.terraforming.manipulator.GraphicalUserGameManipulator
-import net.aicomp.terraforming.manipulator.AIPlayerStartManipulator
-import net.aicomp.terraforming.manipulator.GraphicalUserStartManipulator
-import net.aicomp.terraforming.manipulator.StartManipulator
-import net.aicomp.terraforming.scene.graphic.TextBoxScene
-import net.aicomp.terraforming.scene.console.ConsoleScene
-import net.aicomp.terraforming.manipulator.AIPlayerGameManipulator
-import net.aicomp.terraforming.util.misc.ImageLoader
-import net.aicomp.terraforming.manipulator.ConsoleUserGameManipulator
-import net.aicomp.terraforming.entity.Game
-import net.aicomp.terraforming.scene.PlayerScene
-import net.aicomp.terraforming.entity.OrthogonalPoint
-import net.aicomp.terraforming.manipulator.GameManipulator
-import net.aicomp.terraforming.scene.graphic.GraphicalScene
-import net.aicomp.terraforming.scene.MainScene
-import net.aicomp.terraforming.manipulator.ConsoleUserStartManipulator
-import net.aicomp.terraforming.scene.graphic.TitleScene
-import net.aicomp.terraforming.entity.Player
-import net.aicomp.terraforming.util.settings.Defaults
-import java.awt.event.KeyEvent
-import net.aicomp.terraforming.entity.Field
 
 object Main {
 
@@ -62,7 +67,7 @@ object Main {
   def printHelp(options: Options) {
     val help = new HelpFormatter()
     help.printHelp(
-      "java -jar Terraforming-1.0.0.jar [OPTIONS]\n"
+      "java -jar Terraforming-0.5.0.jar [OPTIONS]\n"
         + "[OPTIONS]: ", "", options, "", true)
   }
 
@@ -94,19 +99,20 @@ object Main {
   }
 
   def startGame(options: Options, cl: CommandLine) {
-    def initializeEnvironment(env: GameEnvironment, userStartManipulator: StartManipulator, userGameManipulator: GameManipulator) = {
-      val cmds = cl.getOptionValues(AI_PROGRAM)
-      val nums = (0 to 2).toArray
-      val coms = if (cl.hasOption(AI_PROGRAM) && cmds.length == 3) {
-        Some(nums.map(i => new ExternalComputerPlayer(cmds(i).split(" "))))
-      } else {
-        None
-      }
+    val cmds = cl.getOptionValues(AI_PROGRAM)
+    val nums = Vector((0 to 2): _*)
+    val coms = if (cl.hasOption(AI_PROGRAM) && cmds.length == 3) {
+      Some(nums.map(i => new ExternalComputerPlayer(cmds(i).split(" "))))
+    } else {
+      None
+    }
 
-      // Must not apply limittingTime/limittingSumTime to user manipulators
-      val random = new Random()
-      val calendar = Calendar.getInstance
-      val oos = ReplayUtil.openStreamForJava(calendar, random)
+    // Must not apply limittingTime/limittingSumTime to user manipulators
+    val random = new Random()
+    val calendar = Calendar.getInstance
+    val oos = ReplayUtil.openStreamForJava(calendar, random)
+
+    def initializeEnvironment(env: GameEnvironment, userStartManipulator: StartManipulator, userGameManipulator: GameManipulator) = {
       val startManipulators = (coms match {
         case Some(coms) => nums.map(i => new AIPlayerStartManipulator(i, coms(i)))
           .map(_.limittingTime(10000))
@@ -120,29 +126,35 @@ object Main {
       }).map(_.recordingStream(oos))
         .map(_.threading())
 
-      val players = Vector(nums.map(i => new Player(i, startManipulators(i), gameManipulators(i))): _*)
+      val players = Vector(nums.map(new Player(_)): _*)
       val field = Field(7, players, random)
-      env.game = new Game(field, players, 2 * 3)
+      env.game = new Game(field, players, 200)
       if (env.getRenderer() != null) {
         env.getRenderer().startLogging(ReplayUtil.openStreamForJavaScript(calendar))
       }
+      (startManipulators, gameManipulators)
     }
 
     if (cl.hasOption(CUI_MODE)) {
       val env = GameEnvironment()
       env.getSceneManager().setFps(1000)
       val scanner = new Scanner(System.in)
-      initializeEnvironment(env, new ConsoleUserStartManipulator(scanner), new ConsoleUserGameManipulator(scanner))
+      val (startManipulators, gameManipulators) =
+        initializeEnvironment(env, new ConsoleUserStartManipulator(scanner), new ConsoleUserGameManipulator(scanner))
 
-      val mainScene = new MainScene(null) with ConsoleScene
-      val playerScene = new PlayerScene(mainScene) with ConsoleScene
+      val resultScene = new ResultScene(null) with ConsoleScene
+      val mainScene = new MainScene(resultScene, gameManipulators) with ConsoleScene
+      val playerScene = new PlayerScene(mainScene, startManipulators) with ConsoleScene
       env.start(playerScene)
     } else {
       val (window, env) = initializeComponents()
-      initializeEnvironment(env, new GraphicalUserStartManipulator(), new GraphicalUserGameManipulator())
+      val (startManipulators, gameManipulators) =
+        initializeEnvironment(env, new GraphicalUserStartManipulator(), new GraphicalUserGameManipulator())
 
-      val mainScene = new MainScene(null) with GraphicalScene with TextBoxScene
-      val playerScene = new PlayerScene(mainScene) with TitleScene with TextBoxScene
+      val waitScene = new WaitingScene(null) with GraphicalScene with TextBoxScene
+      val resultScene = new ResultScene(waitScene) with GraphicalScene with TextBoxScene
+      val mainScene = new MainScene(null, gameManipulators) with GraphicalScene with TextBoxScene
+      val playerScene = new PlayerScene(mainScene, startManipulators) with TitleScene with TextBoxScene
       env.start(playerScene)
 
       env.getRenderer().finishLogging()

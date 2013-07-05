@@ -92,15 +92,6 @@ int main() {
     std::cin.rdbuf()->pubsetbuf(0, 0);
     Game *initial = readGame();
     std::cout << name() << std::endl;
-    std::cout << std::endl;
-    std::cout.flush();
-    for (;;) {
-        std::cout << "finish" << std::endl;
-        std::cout << std::endl;
-        std::cout.flush();
-    }
-    std::cout << name() << std::endl;
-    std::cout << std::endl;
     std::cout.flush();
     delete initial;
     for (;;) {
@@ -110,7 +101,6 @@ int main() {
         for (size_t i = 0; i < cmds.size(); i++) {
             std::cout << cmds[i] << std::endl;
         }
-        std::cout << std::endl;
         std::cout.flush();
         delete game;
     }
@@ -121,7 +111,7 @@ int main() {
 ////////////////////////////////////////
 // put your player name here
 std::string name() {
-    return "cpp";
+    return "C++";
 }
 
 ////////////////////////////////////////
