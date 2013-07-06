@@ -88,3 +88,9 @@ https://github.com/AI-comp/JavaChallenge2012/blob/master/src/main/scala/net/java
 - __Developers of Sample AI Programs__
   - __C++, Haskell__: Kosuke Yatoh (University of Tokyo)
   - __Scala__: Ryu Yasuda (Waseda University)
+- __Graphic Designers__
+  - Masayuki Asakura (Waseda University)
+  - Masahiko Wada
+- __Web Masters__
+  - Kimiyasu Morikawa (Waseda University)
+  - Hiroaki Hosono (Tokyo Institute of Technology)
