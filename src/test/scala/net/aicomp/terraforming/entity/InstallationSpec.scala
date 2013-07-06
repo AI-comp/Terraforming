@@ -32,13 +32,6 @@ class InstallationSpec extends SpecificationWithJUnit {
     "allow to accept building a 'factory'" in new installations {
       field(origin).robots = 50
 
-      println(field(Point(-1, 0)).stringify)
-      println(field(Point(1, 0)).stringify)
-      println(field(Point(0, -1)).stringify)
-      println(field(Point(0, 1)).stringify)
-      println(field(Point(-1, 1)).stringify)
-      println(field(Point(1, -1)).stringify)
-
       field.build(players(0), origin, Installation.factory) must_== ()
     }
     "decline to accept building a 'factory' in hole" in new installations {

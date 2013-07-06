@@ -72,7 +72,7 @@ package net.aicomp.terraforming.entity
     } else wasteLand
   }
 
-  def stringify: String = {
+  def stringify(materialAmount: Int) = {
     // "owner_id robots object"
     val owner_id = owner match {
       case Some(player) => player.id
@@ -82,7 +82,7 @@ package net.aicomp.terraforming.entity
       case Some(b) => b.toString
       case None => "none"
     }
-    owner_id + " " + robots + " " + obj
+    owner_id + " " + robots + " " + materialAmount + " " + obj
   }
 
   override def clone() = super.clone().asInstanceOf[Tile]

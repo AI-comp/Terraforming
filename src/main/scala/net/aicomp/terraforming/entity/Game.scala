@@ -67,8 +67,8 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
     if (_isBuilding) throw new CommandException("Only one installations can be built in one turn")
   }
 
-  def stringify(playerId: Int): String = "START\n" +
-    currentTurn + " " + maxTurn + " " + playerId + "\n" +
-    field.stringify +
+  def stringify(player: Player): String = "START\n" +
+    currentTurn + " " + maxTurn + " " + player.id + "\n" +
+    field.stringify(player) +
     "EOS"
 }

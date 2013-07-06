@@ -99,39 +99,48 @@ object Main {
   }
 
   def startGame(options: Options, cl: CommandLine) {
-    val cmds = cl.getOptionValues(AI_PROGRAM)
-    val nums = Vector((0 to 2): _*)
-    val coms = if (cl.hasOption(AI_PROGRAM) && cmds.length == 3) {
-      Some(nums.map(i => new ExternalComputerPlayer(cmds(i).split(" "))))
-    } else {
-      None
-    }
-
     // Must not apply limittingTime/limittingSumTime to user manipulators
     val random = new Random()
     val calendar = Calendar.getInstance
     val oos = ReplayUtil.openStreamForJava(calendar, random)
 
+    val nums = Vector((0 to 2): _*)
+    val players = nums.map(new Player(_))
+    val cmds = cl.getOptionValues(AI_PROGRAM)
+    val coms = if (cl.hasOption(AI_PROGRAM) && cmds.length == 3) {
+      Some(nums.map(i => {
+        val com = new ExternalComputerPlayer(cmds(i).split(" "))
+        //com.setStdoutLogStream(System.out)
+        com.setErrorLogStream(System.err)
+        com
+      }))
+    } else {
+      None
+    }
+
     def initializeEnvironment(env: GameEnvironment, userStartManipulator: StartManipulator, userGameManipulator: GameManipulator) = {
       val startManipulators = (coms match {
-        case Some(coms) => nums.map(i => new AIPlayerStartManipulator(i, coms(i)))
+        case Some(coms) => nums.map(i => new AIPlayerStartManipulator(players(i), coms(i)))
           .map(_.limittingTime(10000))
         case None => nums.map(_ => userStartManipulator)
       }).map(_.recordingStream(oos))
         .map(_.threading())
       val gameManipulators = (coms match {
-        case Some(coms) => nums.map(i => new AIPlayerGameManipulator(i, coms(i)))
+        case Some(coms) => nums.map(i => new AIPlayerGameManipulator(players(i), coms(i)))
           .map(_.limittingSumTime(1000, 5000))
         case None => nums.map(_ => userGameManipulator)
       }).map(_.recordingStream(oos))
         .map(_.threading())
 
-      val players = Vector(nums.map(new Player(_)): _*)
       val field = Field(6, players, random)
       env.game = new Game(field, players, 200)
       if (env.getRenderer() != null) {
         env.getRenderer().startLogging(ReplayUtil.openStreamForJavaScript(calendar))
       }
+      if (coms.isDefined) {
+      env.getSceneManager().setFps(120)
+      }
+
       (startManipulators, gameManipulators)
     }
 

@@ -5,6 +5,7 @@ import net.aicomp.terraforming.entity.Game
 import net.exkazuu.gameaiarena.manipulator.Manipulator
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
 import net.aicomp.terraforming.scene.graphic.TextBoxScene
+import net.aicomp.terraforming.entity.Player
 
 abstract class StartManipulator extends Manipulator[Game, Array[String], String] {
   protected var _name = ""
@@ -35,9 +36,9 @@ class GraphicalUserStartManipulator() extends StartManipulator {
   }
 }
 
-class AIPlayerStartManipulator(playerId: Int, com: ExternalComputerPlayer) extends StartManipulator {
+class AIPlayerStartManipulator(player: Player, com: ExternalComputerPlayer) extends StartManipulator {
   override def runProcessing() {
-    com.writeLine(_game.stringify(playerId))
+    com.writeLine(_game.stringify(player))
     val line = com.readLine
     if (line != null) {
       val name = line.trim

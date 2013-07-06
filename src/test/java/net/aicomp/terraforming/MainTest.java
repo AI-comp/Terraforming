@@ -18,8 +18,20 @@ public class MainTest {
 	}
 
 	@Test
-	public void runThreeSimpleJavaAIPrograms() {
-		String command = "java -cp SampleAI SimpleJavaAI";
+	public void runThreeSampleJavaAIPrograms() {
+		String command = "java -cp SampleAI/Java Main";
+		Main.main(new String[] { "-c", "-a", command, command, command });
+	}
+
+	@Test
+	public void runThreeSampleScalaAIPrograms() {
+		String command = "java -cp SampleAI/Scala Main";
+		Main.main(new String[] { "-c", "-a", command, command, command });
+	}
+
+	@Test
+	public void runThreeSampleCppAIPrograms() {
+		String command = "Cpp/a.exe";
 		Main.main(new String[] { "-c", "-a", command, command, command });
 	}
 
@@ -31,19 +43,7 @@ public class MainTest {
 
 	@Test
 	public void runThreeHeavyAIPrograms() {
-		String command = "java -cp SampleAI HeavyJavaAI";
-		Main.main(new String[] { "-c", "-a", command, command, command });
-	}
-
-	@Test
-	public void runThreeSampleScalaAIPrograms() {
-		String command = "java -cp SampleAI SampleScalaAI";
-		Main.main(new String[] { "-c", "-a", command, command, command });
-	}
-
-	@Test
-	public void runThreeSampleCppAIPrograms() {
-		String command = "a.exe";
+		String command = "java -cp SampleAI/HeavyJava Main";
 		Main.main(new String[] { "-c", "-a", command, command, command });
 	}
 }

@@ -6,6 +6,7 @@ import net.aicomp.terraforming.entity.Game
 import net.exkazuu.gameaiarena.manipulator.Manipulator
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
 import net.aicomp.terraforming.scene.graphic.TextBoxScene
+import net.aicomp.terraforming.entity.Player
 
 abstract class GameManipulator extends Manipulator[Game, Array[String], String] {
   override def getComputerPlayer = null
@@ -38,7 +39,7 @@ class GraphicalUserGameManipulator() extends GameManipulator {
   }
 }
 
-class AIPlayerGameManipulator(playerId: Int, com: ExternalComputerPlayer) extends GameManipulator {
+class AIPlayerGameManipulator(player: Player, com: ExternalComputerPlayer) extends GameManipulator {
   protected var _commands: Queue[String] = Queue()
   protected var _game: Game = null
 
@@ -48,7 +49,7 @@ class AIPlayerGameManipulator(playerId: Int, com: ExternalComputerPlayer) extend
   }
 
   override def runProcessing() {
-    com.writeLine(_game.stringify(playerId))
+    com.writeLine(_game.stringify(player))
     def readLine() = {
       val line = com.readLine
       if (line == null) {
@@ -63,7 +64,7 @@ class AIPlayerGameManipulator(playerId: Int, com: ExternalComputerPlayer) extend
   }
 
   override def runPostProcessing() = {
-    val commands = _commands.takeWhile(_ == "finish")
+    val commands = _commands.takeWhile(_ != "finish")
     commands += "finish"
     commands.toArray
   }

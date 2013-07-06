@@ -326,16 +326,17 @@ class FieldSpec extends SpecificationWithJUnit {
     }
     "stringify itself" in {
       val players = Vector(new Player(1), new Player(2), new Player(3))
+      val p = players(0)
       val field = Field(1, players)
-      field.stringify must_==
+      field.stringify(p) must_==
         "2 7\n" +
-        "-1 0 " + field(-1, 0).stringify + "\n" +
-        "-1 1 " + field(-1, 1).stringify + "\n" +
-        "0 -1 " + field(0, -1).stringify + "\n" +
-        "0 0 " + field(0, 0).stringify + "\n" +
-        "0 1 " + field(0, 1).stringify + "\n" +
-        "1 -1 " + field(1, -1).stringify + "\n" +
-        "1 0 " + field(1, 0).stringify + "\n"
+        "-1 0 " + field(-1, 0).stringify(field.materialAmount(Point(-1, 0), p)) + "\n" +
+        "-1 1 " + field(-1, 1).stringify(field.materialAmount(Point(-1, 1), p)) + "\n" +
+        "0 -1 " + field(0, -1).stringify(field.materialAmount(Point(0, -1), p)) + "\n" +
+        "0 0 " + field(0, 0).stringify(field.materialAmount(Point(0, 0), p)) + "\n" +
+        "0 1 " + field(0, 1).stringify(field.materialAmount(Point(0, 1), p)) + "\n" +
+        "1 -1 " + field(1, -1).stringify(field.materialAmount(Point(1, -1), p)) + "\n" +
+        "1 0 " + field(1, 0).stringify(field.materialAmount(Point(1, 0), p)) + "\n"
     }
   }
 }

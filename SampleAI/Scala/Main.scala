@@ -38,7 +38,7 @@ object StringifyParser extends RegexParsers {
   def parse(input: String) = parseAll(commands, input)
 }
 
-object SampleScalaAI {
+object Main {
   def main(args: Array[String]) {
     var line = ""
 
