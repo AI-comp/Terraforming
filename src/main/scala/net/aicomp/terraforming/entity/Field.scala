@@ -162,6 +162,14 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     tiles.values.filter(_.ownedBy(player)).map(_.robots).sum
   }
 
+  def eachInstallationAmount(player: Player, installation: Installation) = {
+    tiles.values.filter(_.ownedBy(player)).count(_.installation.equals(installation))
+  }
+
+  def installationAmount(player: Player) = {
+    tiles.values.filter(_.ownedBy(player)).count(tile => Installation.buildables.contains(tile.installation))
+  }
+
   def availableAroundPoints(p: Point, length: Int = 1) = p.aroundPoints(length).filter(_.within(radius))
 
   def availableLinePoints(p: Point, length: Int = 1) = p.linePoints(length).filter(_.within(radius))
