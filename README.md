@@ -10,7 +10,7 @@ http://www.eclipse.org/downloads/
 1. Run Eclipse
 1. Install Scala IDE 3.0 (For Scala 2.9.x) on Eclipse Juno (4.2)  
   1. See the following web page: http://scala-ide.org/download/current.html
-  1. Copy a URL of suitable version (the *4th* URL) on the above site  
+  1. Copy a URL of suitable version (the __4th__ URL) on the above site  
   1. Menu > Help > Install new software
   1. Enter the copied URL on the textbox of "Enter with" then push enter key
 1. Install m2e-scala connector on Eclipse Juno (4.2)  
@@ -51,26 +51,48 @@ Conduct testing.
 1. mvn test  
 Conduct testing.
 
-## Dcouments
+## Documents
 - Rule book  
 https://docs.google.com/document/d/1bcgHpgDxDQbm94-BdOw0gEG08Wfums8nlGv-kNHlxmE/edit?usp=sharing
 - Sample code for rendering a game screen
 https://github.com/AI-comp/JavaChallenge2012/blob/master/src/main/scala/net/javachallenge/scene/graphic/GraphicalScene.scala
 
 ## Contributors
-- Kazunori Sakamoto (National Institute of Informatics)
-- Naoki Yaguchi (Waseda University)
-- Hiroaki Hosono (Tokyo Institute of Technology)
-- Kosuke Yatoh (University of Tokyo)
-- Seiji Sato (Waseda University)
-- Fumiya Kato (Waseda University)
-- Ryohei Takasawa (Waseda University)
-- Naohiko Tuda (Waseda University)
-- Genki Sugimoto (Waseda University)
-- Koji Tumura (Waseda University)
-- Junichi Kobayashi (Waseda University)
-- Ryu Yasuda (Waseda University)
-- Masataka Kido (Waseda University)
-- Daichi Ota (ACCESS CO., LTD.)
-- Dai Hamada (Waseda University)
-- Shogo Kishimoto (Tokyo Institute of Technology)
+- __Project Leader__
+  - Kazunori Sakamoto (National Institute of Informatics)
+- __Game Designers__
+  - Hiroaki Hosono (Tokyo Institute of Technology)
+  - Junichi Kobayashi (Waseda University)
+  - Seiji Sato (Waseda University)
+  - Kosuke Yatoh (University of Tokyo)
+  - Naoki Yaguchi (Waseda University)
+- __Developers of Game Platform__
+  - Kosuke Yatoh (University of Tokyo)
+  - Hiroaki Hosono (Tokyo Institute of Technology)
+  - Naoki Yaguchi (Waseda University)
+  - Koji Tumura (Waseda University)
+  - Ryu Yasuda (Waseda University)
+  - Daichi Ota (ACCESS CO., LTD.)
+  - Junichi Kobayashi (Waseda University)
+  - Masataka Kido (Waseda University)
+  - Fumiya Kato (Waseda University)
+  - Shogo Kishimoto (Tokyo Institute of Technology)
+- __Developers of AI Execution Server__
+  - Fumiya Kato (Waseda University)
+  - Genki Sugimoto (Waseda University)
+- __Developers of Web Server__
+  - Daniel Perez (Waseda University)
+  - Masataka Kido (Waseda University)
+- __Developers of JavaScript Replayer__
+  - Ryohei Takasawa (Waseda University)
+  - Naohiko Tuda (Waseda University)
+  - Dai Hamada (Waseda University)
+- __Developers of Sample AI Programs__
+  - __C++, Haskell__: Kosuke Yatoh (University of Tokyo)
+  - __Scala__: Ryu Yasuda (Waseda University)
+- __Graphic Designers__
+  - Masayuki Asakura (Waseda University)
+  - Masahiko Wada
+- __Web Masters__
+  - Kimiyasu Morikawa (Waseda University)
+  - Hiroaki Hosono (Tokyo Institute of Technology)
