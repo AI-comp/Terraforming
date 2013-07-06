@@ -328,7 +328,7 @@ class FieldSpec extends SpecificationWithJUnit {
       val players = Vector(new Player(1), new Player(2), new Player(3))
       val field = Field(1, players)
       field.stringify must_==
-        "1 7\n" +
+        "2 7\n" +
         "-1 0 " + field(-1, 0).stringify + "\n" +
         "-1 1 " + field(-1, 1).stringify + "\n" +
         "0 -1 " + field(0, -1).stringify + "\n" +

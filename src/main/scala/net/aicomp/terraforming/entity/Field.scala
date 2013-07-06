@@ -187,7 +187,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   def calculateScore(player: Player): Int = tiles.values.foldLeft(0)(_ + _.score(player))
 
   def stringify: String =
-    radius + " " + tiles.size + "\n" + points.toList.sorted.map(p =>
+    (radius + 1) + " " + tiles.size + "\n" + points.toList.sorted.map(p =>
       p.stringify + " " + tiles(p).stringify + "\n").mkString
 
   override def toString: String = {

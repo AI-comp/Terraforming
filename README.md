@@ -96,3 +96,7 @@ https://github.com/AI-comp/JavaChallenge2012/blob/master/src/main/scala/net/java
 - __Web Masters__
   - Kimiyasu Morikawa (Waseda University)
   - Hiroaki Hosono (Tokyo Institute of Technology)
+
+## License
+Apache License, Version 2.0
+http://www.apache.org/licenses/LICENSE-2.0.html
