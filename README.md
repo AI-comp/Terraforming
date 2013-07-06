@@ -58,9 +58,9 @@ https://docs.google.com/document/d/1bcgHpgDxDQbm94-BdOw0gEG08Wfums8nlGv-kNHlxmE/
 https://github.com/AI-comp/JavaChallenge2012/blob/master/src/main/scala/net/javachallenge/scene/graphic/GraphicalScene.scala
 
 ## Contributors
-- Project Leader
+- __Project Leader__
   - Kazunori Sakamoto (National Institute of Informatics)
-- Developers of Game Platform 
+- __Developers of Game Platform__
   - Kosuke Yatoh (University of Tokyo)
   - Hiroaki Hosono (Tokyo Institute of Technology)
   - Naoki Yaguchi (Waseda University)
@@ -71,22 +71,20 @@ https://github.com/AI-comp/JavaChallenge2012/blob/master/src/main/scala/net/java
   - Masataka Kido (Waseda University)
   - Fumiya Kato (Waseda University)
   - Shogo Kishimoto (Tokyo Institute of Technology)
-- Game Designers
+- __Game Designers__
   - Hiroaki Hosono (Tokyo Institute of Technology)
   - Junichi Kobayashi (Waseda University)
   - Seiji Sato (Waseda University)
-- Developers of Sample AI Programs
-  - C++, Haskell
-    - Kosuke Yatoh (University of Tokyo)
-  - Scala
-    - Ryu Yasuda (Waseda University)
-- Developers of AI Execution Server
+- __Developers of AI Execution Server__
   - Fumiya Kato (Waseda University)
   - Genki Sugimoto (Waseda University)
-- Developers of JavaScript Replayer
+- __Developers of Web Server__
+  - Daniel Perez (Waseda University)
+  - Masataka Kido (Waseda University)
+- __Developers of JavaScript Replayer__
   - Ryohei Takasawa (Waseda University)
   - Naohiko Tuda (Waseda University)
   - Dai Hamada (Waseda University)
-- Developers of Web Server
-  - Daniel Perez (Waseda University)
-  - Masataka Kido (Waseda University)
+- __Developers of Sample AI Programs__
+  - __C++, Haskell__: Kosuke Yatoh (University of Tokyo)
+  - __Scala__: Ryu Yasuda (Waseda University)
