@@ -3,7 +3,7 @@ package net.aicomp.terraforming.entity
 object Installation {
 
   val initial = new Installation("initial", 0, 0)
-  val factory = new Installation("factory", 50, 4)
+  val factory = new Installation("factory", 25, 4)
   val bridge = new Installation("bridge", 10, 4)
   val shield = new Installation("shield", 25, 6)
   val attack = new Installation("attack", 25, 5)

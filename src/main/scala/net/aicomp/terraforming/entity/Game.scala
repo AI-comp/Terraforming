@@ -48,12 +48,15 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
   private def finishTurn() = {
     field.startDefense(currentPlayer)
     changePlayerIndex()
-    if (_currentTurn < _maxTurn * 3) {
+    if (isContinued()) {
       startTurn()
     } else {
       _isFinished = true
     }
   }
+
+  private def isContinued() = _currentTurn < _maxTurn * 3 &&
+    players.map(field.calculateScore(_)).max < 100
 
   private def checkCanMove() {
     if (_isBuilding) throw new CommandException("Robots cannot move after build command")
