@@ -15,7 +15,7 @@
 フィールドは正六角形である。
 1辺が7個の小さい正六角形からなり、127マスの小さい正六角形で構成される。
 
-![Field_Axis](rulebook/Terraforming_field5.png)  
+![Field_Axis](rulebook/field_axis.png)  
 
 フィールドは4種類のマスから構成されており、ロボットの移動や建物の建造の可否が変わる。
 
