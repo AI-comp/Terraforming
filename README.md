@@ -58,19 +58,35 @@ https://docs.google.com/document/d/1bcgHpgDxDQbm94-BdOw0gEG08Wfums8nlGv-kNHlxmE/
 https://github.com/AI-comp/JavaChallenge2012/blob/master/src/main/scala/net/javachallenge/scene/graphic/GraphicalScene.scala
 
 ## Contributors
-- Kazunori Sakamoto (National Institute of Informatics)
-- Naoki Yaguchi (Waseda University)
-- Hiroaki Hosono (Tokyo Institute of Technology)
-- Kosuke Yatoh (University of Tokyo)
-- Seiji Sato (Waseda University)
-- Fumiya Kato (Waseda University)
-- Ryohei Takasawa (Waseda University)
-- Naohiko Tuda (Waseda University)
-- Genki Sugimoto (Waseda University)
-- Koji Tumura (Waseda University)
-- Junichi Kobayashi (Waseda University)
-- Ryu Yasuda (Waseda University)
-- Masataka Kido (Waseda University)
-- Daichi Ota (ACCESS CO., LTD.)
-- Dai Hamada (Waseda University)
-- Shogo Kishimoto (Tokyo Institute of Technology)
+- Project Leader
+  - Kazunori Sakamoto (National Institute of Informatics)
+- Developers of Game Platform 
+  - Kosuke Yatoh (University of Tokyo)
+  - Hiroaki Hosono (Tokyo Institute of Technology)
+  - Naoki Yaguchi (Waseda University)
+  - Koji Tumura (Waseda University)
+  - Ryu Yasuda (Waseda University)
+  - Daichi Ota (ACCESS CO., LTD.)
+  - Junichi Kobayashi (Waseda University)
+  - Masataka Kido (Waseda University)
+  - Fumiya Kato (Waseda University)
+  - Shogo Kishimoto (Tokyo Institute of Technology)
+- Game Designers
+  - Hiroaki Hosono (Tokyo Institute of Technology)
+  - Junichi Kobayashi (Waseda University)
+  - Seiji Sato (Waseda University)
+- Developers of Sample AI Programs
+  - C++, Haskell
+    - Kosuke Yatoh (University of Tokyo)
+  - Scala
+    - Ryu Yasuda (Waseda University)
+- Developers of AI Execution Server
+  - Fumiya Kato (Waseda University)
+  - Genki Sugimoto (Waseda University)
+- Developers of JavaScript Replayer
+  - Ryohei Takasawa (Waseda University)
+  - Naohiko Tuda (Waseda University)
+  - Dai Hamada (Waseda University)
+- Developers of Web Server
+  - Daniel Perez (Waseda University)
+  - Masataka Kido (Waseda University)
