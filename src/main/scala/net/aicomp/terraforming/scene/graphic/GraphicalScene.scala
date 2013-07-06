@@ -13,6 +13,9 @@ import java.awt.Color
 
 trait GraphicalScene extends AbstractScene {
 
+  // font
+  val font = new Font(Font.MONOSPACED, Font.PLAIN, 12);
+
   override def draw() = {
     drawMap()
   }
@@ -124,8 +127,6 @@ trait GraphicalScene extends AbstractScene {
   }
 
   def drawPlayers() {
-    // font
-    val font = new Font(Font.MONOSPACED, Font.PLAIN, 12);
     val scoreX = OrthogonalPoint.statusX + OrthogonalPoint.statusSize.x
     val robotAmountX = OrthogonalPoint.statusX + OrthogonalPoint.statusSize.x / 5
     val installationsAmountX = OrthogonalPoint.statusX + OrthogonalPoint.statusSize.x / 5
@@ -195,74 +196,15 @@ trait GraphicalScene extends AbstractScene {
     var drawX = x
     var drawY = y
 
-    // factory
-    // TODO render factory image.
-    game.field.eachInstallationAmount(player, Installation.buildables(0)).toString.reverse.foreach { n =>
-      renderer.drawImage(numImages.get(-1, n.toString.toInt).get, drawX, drawY)
-      drawX -= OrthogonalPoint.numSize.x
-    }
+    // draw each installation amount
+    Installation.buildables.iterator.zipWithIndex.foreach {
+      case (installation, index) =>
+        drawX = x + (index / 4) * 4 * OrthogonalPoint.statusSize.x / 10
+        drawY = y + (index % 4) * OrthogonalPoint.statusSize.y / 6
 
-    drawX = x
-    drawY += OrthogonalPoint.statusSize.y / 6
-    // bridge
-    // TODO render bridge image.
-    game.field.eachInstallationAmount(player, Installation.buildables(1)).toString.reverse.foreach { n =>
-      renderer.drawImage(numImages.get(-1, n.toString.toInt).get, drawX, drawY)
-      drawX -= OrthogonalPoint.numSize.x
-    }
-
-    drawX = x
-    drawY += OrthogonalPoint.statusSize.y / 6
-    // shield
-    // TODO render shield image.
-    game.field.eachInstallationAmount(player, Installation.buildables(2)).toString.reverse.foreach { n =>
-      renderer.drawImage(numImages.get(-1, n.toString.toInt).get, drawX, drawY)
-      drawX -= OrthogonalPoint.numSize.x
-    }
-
-    drawX = x
-    drawY += OrthogonalPoint.statusSize.y / 6
-    // attack
-    // TODO render attack image.
-    game.field.eachInstallationAmount(player, Installation.buildables(3)).toString.reverse.foreach { n =>
-      renderer.drawImage(numImages.get(-1, n.toString.toInt).get, drawX, drawY)
-      drawX -= OrthogonalPoint.numSize.x
-    }
-
-    drawX = x + 4 * OrthogonalPoint.statusSize.x / 10
-    drawY = y
-    // pit
-    // TODO render pit image.
-    game.field.eachInstallationAmount(player, Installation.buildables(4)).toString.reverse.foreach { n =>
-      renderer.drawImage(numImages.get(-1, n.toString.toInt).get, drawX, drawY)
-      drawX -= OrthogonalPoint.numSize.x
-    }
-
-    drawX = x + 4 * OrthogonalPoint.statusSize.x / 10
-    drawY += OrthogonalPoint.statusSize.y / 6
-    // house
-    // TODO render house image.
-    game.field.eachInstallationAmount(player, Installation.buildables(5)).toString.reverse.foreach { n =>
-      renderer.drawImage(numImages.get(-1, n.toString.toInt).get, drawX, drawY)
-      drawX -= OrthogonalPoint.numSize.x
-    }
-
-    drawX = x + 4 * OrthogonalPoint.statusSize.x / 10
-    drawY += OrthogonalPoint.statusSize.y / 6
-    // town
-    // TODO render town image.
-    game.field.eachInstallationAmount(player, Installation.buildables(6)).toString.reverse.foreach { n =>
-      renderer.drawImage(numImages.get(-1, n.toString.toInt).get, drawX, drawY)
-      drawX -= OrthogonalPoint.numSize.x
-    }
-
-    drawX = x + 4 * OrthogonalPoint.statusSize.x / 10
-    drawY += OrthogonalPoint.statusSize.y / 6
-    // city
-    // TODO render city image.
-    game.field.eachInstallationAmount(player, Installation.buildables(7)).toString.reverse.foreach { n =>
-      renderer.drawImage(numImages.get(-1, n.toString.toInt).get, drawX, drawY)
-      drawX -= OrthogonalPoint.numSize.x
+        game.field.eachInstallationAmount(player, installation).toString.reverse.foreach { n =>
+          renderer.drawImage(numImages.get(-1, n.toString.toInt).get, drawX, drawY)
+        }
     }
   }
 }
