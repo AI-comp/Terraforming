@@ -60,3 +60,4 @@ download
 log/
 replay/
 *.class
+*.exe
