@@ -51,7 +51,7 @@ Conduct testing.
 1. mvn test  
 Conduct testing.
 
-## Dcouments
+## Documents
 - Rule book  
 https://docs.google.com/document/d/1bcgHpgDxDQbm94-BdOw0gEG08Wfums8nlGv-kNHlxmE/edit?usp=sharing
 - Sample code for rendering a game screen
