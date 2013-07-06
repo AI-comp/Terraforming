@@ -6,8 +6,15 @@ import net.aicomp.terraforming.entity.Point
 import net.aicomp.terraforming.entity.Tile
 import net.aicomp.terraforming.scene.AbstractScene
 import net.aicomp.terraforming.util.misc.ImageLoader
+import net.aicomp.terraforming.entity.Player
+import net.aicomp.terraforming.entity.Installation
+import java.awt.Font
+import java.awt.Color
 
 trait GraphicalScene extends AbstractScene {
+
+  // font
+  val font = new Font(Font.MONOSPACED, Font.PLAIN, 12);
 
   override def draw() = {
     drawMap()
@@ -23,6 +30,7 @@ trait GraphicalScene extends AbstractScene {
     drawPoints(points)
     drawRound()
     drawRobotAndNumAndInstOnPoint(tiles)
+    drawPlayers()
   }
 
   // following methods must be another module.
@@ -116,5 +124,87 @@ trait GraphicalScene extends AbstractScene {
       drawX += OrthogonalPoint.numSize.x
       renderer.drawImage(numImages.get(ownerId, d.toString().toInt).get, drawX, drawY)
     })
+  }
+
+  def drawPlayers() {
+    val scoreX = OrthogonalPoint.statusX + OrthogonalPoint.statusSize.x
+    val robotAmountX = OrthogonalPoint.statusX + OrthogonalPoint.statusSize.x / 5
+    val installationsAmountX = OrthogonalPoint.statusX + OrthogonalPoint.statusSize.x / 5
+    val eachInstallationAmountX = OrthogonalPoint.statusX + 3 * OrthogonalPoint.statusSize.x / 5
+
+    game.players.foreach { player =>
+
+      // player name
+      val nameY = OrthogonalPoint.statusY + OrthogonalPoint.statusSize.y / 6 + OrthogonalPoint.statusSize.y * player.id
+      renderer.drawString(player.name, OrthogonalPoint.statusX, nameY, Color.WHITE, font)
+
+      // score
+      val scoreY = OrthogonalPoint.statusY + OrthogonalPoint.statusSize.y / 6 + OrthogonalPoint.statusSize.y * player.id
+      drawScore(player, scoreX, scoreY)
+
+      // robots
+      val robotAmountY = (OrthogonalPoint.statusY + 3 * OrthogonalPoint.statusSize.y / 6 - OrthogonalPoint.numSize.y) + OrthogonalPoint.statusSize.y * player.id
+      drawTotalRobotAmount(player, robotAmountX, robotAmountY)
+
+      // installations
+      val installationsAmountY = (OrthogonalPoint.statusY + 5 * OrthogonalPoint.statusSize.y / 6 - OrthogonalPoint.numSize.y) + OrthogonalPoint.statusSize.y * player.id
+      drawTotalBuildableInstallationAmount(player, installationsAmountX, installationsAmountY)
+
+      // each installation
+      val eachInstallationAmountY = (OrthogonalPoint.statusY + 2 * OrthogonalPoint.statusSize.y / 6) + OrthogonalPoint.statusSize.y * player.id
+      drawEachInstallationAmount(player, eachInstallationAmountX, eachInstallationAmountY)
+    }
+  }
+
+  def drawScore(player: Player, x: Int, y: Int) {
+    val numImages = ImageLoader.loadNumbers(renderer)
+    var drawX = x
+
+    game.field.calculateScore(player).toString().reverse.foreach { n =>
+      renderer.drawImage(numImages.get(-1, n.toString.toInt).get, drawX, y)
+      drawX -= OrthogonalPoint.numSize.x
+    }
+  }
+
+  def drawTotalRobotAmount(player: Player, x: Int, y: Int) {
+    val robotImages = ImageLoader.loadRobots(renderer)
+    val numImages = ImageLoader.loadNumbers(renderer)
+    var drawX = x
+
+    // TODO (x of robotImage) is assumed to be (x of numImage - 38)
+    renderer.drawImage(robotImages.get(player.id).get, x - 38, y)
+    game.field.robotAmount(player).toString().reverse.foreach { n =>
+      renderer.drawImage(numImages.get(-1, n.toString.toInt).get, drawX, y)
+      drawX -= OrthogonalPoint.numSize.x
+    }
+  }
+
+  def drawTotalBuildableInstallationAmount(player: Player, x: Int, y: Int) {
+    val numImages = ImageLoader.loadNumbers(renderer)
+    var drawX = x
+
+    game.field.installationAmount(player).toString.reverse.foreach { n =>
+      renderer.drawImage(numImages.get(-1, n.toString.toInt).get, drawX, y)
+      drawX -= OrthogonalPoint.numSize.x
+    }
+  }
+
+  def drawEachInstallationAmount(player: Player, x: Int, y: Int) {
+    val numImages = ImageLoader.loadNumbers(renderer)
+    // TODO load installations image.
+
+    var drawX = x
+    var drawY = y
+
+    // draw each installation amount
+    Installation.buildables.iterator.zipWithIndex.foreach {
+      case (installation, index) =>
+        drawX = x + (index / 4) * 4 * OrthogonalPoint.statusSize.x / 10
+        drawY = y + (index % 4) * OrthogonalPoint.statusSize.y / 6
+
+        game.field.eachInstallationAmount(player, installation).toString.reverse.foreach { n =>
+          renderer.drawImage(numImages.get(-1, n.toString.toInt).get, drawX, drawY)
+        }
+    }
   }
 }

@@ -158,8 +158,20 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     tiles.values.foreach(t => t.movedRobots = 0)
   }
 
+  def ownedTiles(player: Player) = {
+    tiles.values.filter(_.ownedBy(player))
+  }
+
   def robotAmount(player: Player) = {
-    tiles.values.filter(_.ownedBy(player)).map(_.robots).sum
+    ownedTiles(player).map(_.robots).sum
+  }
+
+  def eachInstallationAmount(player: Player, installation: Installation) = {
+    ownedTiles(player).count(_.installation.equals(installation))
+  }
+
+  def installationAmount(player: Player) = {
+    ownedTiles(player).count(tile => Installation.buildables.contains(tile.installation))
   }
 
   def availableAroundPoints(p: Point, length: Int = 1) = p.aroundPoints(length).filter(_.within(radius))
