@@ -66,7 +66,7 @@ package net.aicomp.terraforming.entity
     if (ownedBy(player)) {
       if (isHole) hole
       else installation match {
-        case Some(ins) => developedLand + ins.score
+        case Some(ins) => ins.score
         case None => undevelopedLand
       }
     } else wasteLand

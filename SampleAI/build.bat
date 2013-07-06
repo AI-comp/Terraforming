@@ -1,3 +1,3 @@
-javac *.java
+javac *.java */*.java
 g++ *.cpp
 scalac *.scala
