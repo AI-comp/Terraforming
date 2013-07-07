@@ -120,10 +120,12 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
   def attack(player: Player) = {
     for ((p, tile) <- tiles) {
-      if (tile.ownedBy(player)) {
+      if (!tile.ownedBy(player)) {
         tile.installation match {
           case Some(Installation.attack) =>
-            availableLineTiles(p).foreach { _.robots -= 2 }
+            availableLineTiles(p).foreach { t =>
+              t.robots = math.max(t.robots - 2, 0)
+            }
           case _ =>
         }
       }
