@@ -1,4 +1,4 @@
-package aicmop.net.terraforming.sample;
+package aicomp.net.terraforming.sample;
 
 public class Game {
   public final int turn;

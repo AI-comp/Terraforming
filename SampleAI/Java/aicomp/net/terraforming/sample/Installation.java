@@ -1,4 +1,4 @@
-package aicmop.net.terraforming.sample;
+package aicomp.net.terraforming.sample;
 
 public enum Installation {
   Initial(0, 0, 2),

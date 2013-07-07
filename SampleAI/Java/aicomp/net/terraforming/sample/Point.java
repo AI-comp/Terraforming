@@ -1,4 +1,4 @@
-package aicmop.net.terraforming.sample;
+package aicomp.net.terraforming.sample;
 
 public class Point {
   public final int x;

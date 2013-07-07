@@ -3,7 +3,7 @@
 
   <groupId>net.javachallenge</groupId>
   <artifactId>Terraforming</artifactId>
-  <version>0.6.4</version>
+  <version>0.6.5</version>
   <packaging>jar</packaging>
 
   <name>${project.artifactId}</name>

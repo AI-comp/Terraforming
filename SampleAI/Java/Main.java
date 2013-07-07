@@ -2,12 +2,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-import aicmop.net.terraforming.sample.Direction;
-import aicmop.net.terraforming.sample.Field;
-import aicmop.net.terraforming.sample.Game;
-import aicmop.net.terraforming.sample.Installation;
-import aicmop.net.terraforming.sample.Point;
-import aicmop.net.terraforming.sample.Tile;
+import aicomp.net.terraforming.sample.Direction;
+import aicomp.net.terraforming.sample.Field;
+import aicomp.net.terraforming.sample.Game;
+import aicomp.net.terraforming.sample.Installation;
+import aicomp.net.terraforming.sample.Point;
+import aicomp.net.terraforming.sample.Tile;
 
 public class Main {
   public static void main(String[] args) {

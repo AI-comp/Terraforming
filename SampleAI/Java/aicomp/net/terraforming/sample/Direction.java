@@ -1,4 +1,4 @@
-package aicmop.net.terraforming.sample;
+package aicomp.net.terraforming.sample;
 
 public enum Direction {
   Left(-1, 0, "l"),

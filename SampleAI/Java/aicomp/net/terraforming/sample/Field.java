@@ -1,4 +1,4 @@
-package aicmop.net.terraforming.sample;
+package aicomp.net.terraforming.sample;
 
 import java.util.ArrayList;
 import java.util.HashMap;
