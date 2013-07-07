@@ -61,3 +61,5 @@ log/
 replay/
 *.class
 *.exe
+*.o
+*.hi

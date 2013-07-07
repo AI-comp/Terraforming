@@ -24,14 +24,20 @@ public class MainTest {
 	}
 
 	@Test
-	public void runThreeSampleScalaAIPrograms() {
-		String command = "scala.bat -cp SampleAI/Scala Main";
+	public void runThreeSampleCppAIPrograms() {
+		String command = "SampleAI/Cpp/a.exe";
 		Main.main(new String[] { "-c", "-a", command, command, command });
 	}
 
 	@Test
-	public void runThreeSampleCppAIPrograms() {
-		String command = "SampleAI/C++/a.exe";
+	public void runThreeSampleHaskellAIPrograms() {
+		String command = "SampleAI/Haskell/Main.exe";
+		Main.main(new String[] { "-c", "-a", command, command, command });
+	}
+
+	@Test
+	public void runThreeSampleScalaAIPrograms() {
+		String command = "scala.bat -cp SampleAI/Scala Main";
 		Main.main(new String[] { "-c", "-a", command, command, command });
 	}
 
