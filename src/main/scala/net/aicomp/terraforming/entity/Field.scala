@@ -124,7 +124,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
         tile.installation match {
           case Some(Installation.attack) =>
             availableLineTiles(p).foreach { t =>
-              t.robots = math.max(t.robots - 2, 0)
+              t.robots = math.max(t.robots - 3, 0)
             }
           case _ =>
         }
