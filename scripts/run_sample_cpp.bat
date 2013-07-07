@@ -1,1 +1,1 @@
-build.bat & java -jar Terraforming-*.jar -a "SampleAI/Cpp/a.exe" "SampleAI/Cpp/a.exe" "SampleAI/Cpp/a.exe"
+cd SampleAI & build.bat & cd .. & java -jar Terraforming.jar -a "SampleAI/Cpp/a.exe" "SampleAI/Cpp/a.exe" "SampleAI/Cpp/a.exe"

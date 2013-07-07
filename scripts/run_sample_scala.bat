@@ -1,1 +1,1 @@
-build.bat & java -jar Terraforming-*.jar -a "scala.bat -cp SampleAI/Scala Main" "scala.bat -cp SampleAI/Scala Main" "scala.bat -cp SampleAI/Scala Main"
+cd SampleAI & build.bat & cd .. & java -jar Terraforming.jar -a "scala.bat -cp SampleAI/Scala Main" "scala.bat -cp SampleAI/Scala Main" "scala.bat -cp SampleAI/Scala Main"

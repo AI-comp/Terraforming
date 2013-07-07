@@ -1,1 +1,1 @@
-java -jar Terraforming-*.jar
+java -jar Terraforming.jar
