@@ -24,14 +24,16 @@ bool operator<(const Point& a, const Point& b) {
 class Tile {
     int _playerId;
     int _robots;
+    int _resource;
     std::string _building;
 
 public:
     Tile() {}
-    Tile(int playerId, int robots, const std::string& building)
-        : _playerId(playerId), _robots(robots), _building(building) {}
+    Tile(int playerId, int robots, int resource, const std::string& building)
+        : _playerId(playerId), _robots(robots), _resource(resource), _building(building) {}
     int playerId() const { return _playerId; };
     int robots() const { return _robots; };
+    int resource() const { return _resource; };
     std::string building() const { return _building; };
 };
 
@@ -75,10 +77,10 @@ Game *readGame() {
     std::cin >> radius >> n;
     std::map<Point, Tile> tiles;
     for (int i = 0; i < n; i++) {
-        int x, y, id, robots;
+        int x, y, id, robots, resource;
         std::string building;
-        std::cin >> x >> y >> id >> robots >> building;
-        tiles[Point(x, y)] = Tile(id, robots, building);
+        std::cin >> x >> y >> id >> robots >> resource >> building;
+        tiles[Point(x, y)] = Tile(id, robots, resource, building);
     }
     std::cin >> eos;
     assert(eos == "EOS");

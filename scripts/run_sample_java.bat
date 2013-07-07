@@ -1,0 +1,1 @@
+build.bat & java -jar Terraforming-*.jar -a "java -cp SampleAI/Java Main" "java -cp SampleAI/Java Main" "java -cp SampleAI/Java Main"

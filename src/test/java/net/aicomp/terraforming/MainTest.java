@@ -10,7 +10,7 @@ public class MainTest {
 	@Before
 	public void before() throws IOException, InterruptedException {
 		System.out.println("Start compiling.");
-		ProcessBuilder pb = new ProcessBuilder("build.bat");
+		ProcessBuilder pb = new ProcessBuilder("SampleAI/build.bat");
 		pb.directory(new File("SampleAI"));
 		Process p = pb.start();
 		p.waitFor();
@@ -25,13 +25,13 @@ public class MainTest {
 
 	@Test
 	public void runThreeSampleScalaAIPrograms() {
-		String command = "java -cp SampleAI/Scala Main";
+		String command = "scala.bat -cp SampleAI/Scala Main";
 		Main.main(new String[] { "-c", "-a", command, command, command });
 	}
 
 	@Test
 	public void runThreeSampleCppAIPrograms() {
-		String command = "Cpp/a.exe";
+		String command = "SampleAI/C++/a.exe";
 		Main.main(new String[] { "-c", "-a", command, command, command });
 	}
 
