@@ -37,7 +37,52 @@ class FieldSpec extends SpecificationWithJUnit {
         copy must_== field(p.rotate120)
       })
     }
-    "allow to moveSquad into a hole" in new fields {
+    "allow to move one robot from ten robots my Tile" in new fields {
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).robots = 10
+      initTile(field, Point(1, 0))
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 1) must_== ()
+    }
+    "allow to move squad" in new fields {
+      initTile(field, Point(0, 0))
+      initTile(field, Point(1, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).robots = 10
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 10) must_== ()
+    }
+    "decline to move too many moveSquad" in new fields {
+      initTile(field, Point(0, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).robots = 10
+      initTile(field, Point(1, 0))
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 20) must
+        throwA[CommandException]
+    }
+    "allow to move squad twice" in new fields {
+      initTile(field, Point(0, 0))
+      initTile(field, Point(1, 0))
+      initTile(field, Point(2, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).robots = 10
+      field(0, 1).owner = Some(players(0))
+      field(0, 1).robots = 10
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 10) must_== ()
+      field.moveSquad(players(0), Point(0, 1), Direction.r, 10) must_== ()
+    }
+    "decline to move same robot twice" in new fields {
+      initTile(field, Point(0, 0))
+      initTile(field, Point(1, 0))
+      initTile(field, Point(2, 0))
+      field(0, 0).owner = Some(players(0))
+      field(0, 0).robots = 10
+      field(0, 1).owner = Some(players(0))
+      field(0, 1).robots = 10
+      field.moveSquad(players(0), Point(0, 0), Direction.r, 10) must_== ()
+      field.moveSquad(players(0), Point(0, 1), Direction.r, 15) must
+        throwA[CommandException]
+    }
+    "allow to move squad into a hole" in new fields {
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
       field(0, 0).robots = 10
@@ -46,7 +91,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(1, 0).isHole = true
       field.moveSquad(players(0), Point(0, 0), Direction.r, 4) must_== ()
     }
-    "decline to moveSquad from a hole" in new fields {
+    "decline to move squad from a hole" in new fields {
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
       field(0, 0).robots = 10
@@ -54,14 +99,6 @@ class FieldSpec extends SpecificationWithJUnit {
       initTile(field, Point(1, 0))
       field(1, 0).isHole = false
       field.moveSquad(players(0), Point(0, 0), Direction.r, 4) must
-        throwA[CommandException]
-    }
-    "decline to move too many robots" in new fields {
-      initTile(field, Point(0, 0))
-      field(0, 0).owner = Some(players(0))
-      field(0, 0).robots = 10
-      initTile(field, Point(1, 0))
-      field.moveSquad(players(0), Point(0, 0), Direction.r, 20) must
         throwA[CommandException]
     }
     "remove hole when bridge is built" in new fields {
