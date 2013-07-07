@@ -1,7 +1,6 @@
 package net.aicomp.terraforming.scene
 
 import net.aicomp.terraforming.entity.GameEnvironment
-import net.aicomp.terraforming.util.misc.Logger
 import net.aicomp.terraforming.util.settings.Defaults
 import net.exkazuu.gameaiarena.gui.DefaultScene
 
