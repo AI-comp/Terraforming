@@ -267,7 +267,7 @@ object Field {
     val field = mutable.Map(Field(radius).tiles.toSeq: _*)
     for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
       // TODO: hole frequency
-      if (random.nextInt(5) == 0) {
+      if (random.nextInt(7) == 0) {
         field(Point(x, y)).isHole = true
       }
     }
@@ -276,6 +276,8 @@ object Field {
     val initialX = random.nextInt(radius) + 1 - initialY
     field(Point(initialX, initialY)).owner = Some(players(0))
     field(Point(initialX, initialY)).installation = Some(Installation.initial)
+    field(Point(initialX, initialY)).isHole = false;
+    
     // third, expand the pattern
     def copyTile(tile: Tile, player: Player) = {
       val copiedTile = tile.clone
