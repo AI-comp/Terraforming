@@ -40,8 +40,8 @@ class GraphicalUserGameManipulator() extends GameManipulator {
 }
 
 class AIPlayerGameManipulator(player: Player, com: ExternalComputerPlayer) extends GameManipulator {
-  protected var _commands: Queue[String] = Queue()
-  protected var _game: Game = null
+  private var _commands: Queue[String] = Queue()
+  private var _game: Game = null
 
   override def runPreProcessing(game: Game) {
     _commands = Queue()
@@ -69,5 +69,27 @@ class AIPlayerGameManipulator(player: Player, com: ExternalComputerPlayer) exten
     commands.toArray
   }
 
-  protected def isFinished() = _commands.lastOption.exists(_ == "finish")
+  private def isFinished() = _commands.lastOption.exists(_ == "finish")
+}
+
+class InternalAIPlayerGameManipulator(player: Player, manipulator: InternalManipulator) extends GameManipulator {
+  protected var _commands: Queue[String] = Queue()
+  protected var _game: Game = null
+
+  final override def runPreProcessing(game: Game) {
+    _commands = Queue()
+    _game = game
+  }
+
+  final override def runProcessing() {
+    val cmds = manipulator.run(_game.stringify(player), _game, player)
+    val array = if (cmds != null) cmds.toArray(Array[String]()) else Array[String]()
+    _commands = Queue(array: _*)
+  }
+
+  final override def runPostProcessing() = {
+    val commands = _commands.takeWhile(_ != "finish")
+    commands += "finish"
+    commands.toArray
+  }
 }

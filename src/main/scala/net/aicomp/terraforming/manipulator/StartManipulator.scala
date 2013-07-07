@@ -1,11 +1,12 @@
 package net.aicomp.terraforming.manipulator
 
 import java.util.Scanner
+
 import net.aicomp.terraforming.entity.Game
+import net.aicomp.terraforming.entity.Player
+import net.aicomp.terraforming.scene.graphic.TextBoxScene
 import net.exkazuu.gameaiarena.manipulator.Manipulator
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
-import net.aicomp.terraforming.scene.graphic.TextBoxScene
-import net.aicomp.terraforming.entity.Player
 
 abstract class StartManipulator extends Manipulator[Game, Array[String], String] {
   protected var _name = ""
@@ -46,5 +47,11 @@ class AIPlayerStartManipulator(player: Player, com: ExternalComputerPlayer) exte
         _name = name
       }
     }
+  }
+}
+
+class InternalAIPlayerStartManipulator(player: Player, manipulator: InternalManipulator) extends StartManipulator {
+  override def runProcessing() {
+    _name = manipulator.getClass().getName()
   }
 }

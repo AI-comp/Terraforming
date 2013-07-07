@@ -10,16 +10,13 @@ import java.awt.event.MouseEvent
 import java.util.Calendar
 import java.util.Random
 import java.util.Scanner
-
 import scala.Array.canBuildFrom
-
 import org.apache.commons.cli.BasicParser
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.OptionBuilder
 import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
-
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.JScrollPane
@@ -54,12 +51,16 @@ import net.exkazuu.gameaiarena.gui.builder.GameGuiBuilder
 import net.exkazuu.gameaiarena.gui.builder.WindowCreator
 import net.exkazuu.gameaiarena.key.AwtKeyMemorizer
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
+import net.aicomp.terraforming.manipulator.InternalAIPlayerStartManipulator
+import net.aicomp.terraforming.manipulator.InternalManipulator
+import net.aicomp.terraforming.manipulator.InternalAIPlayerGameManipulator
 
 object Main {
 
   val HELP = "h"
   val CUI_MODE = "c"
   val AI_PROGRAM = "a"
+  val INTERNAL_AI_PROGRAM = "i"
   var logFunction: String => Unit = null
 
   def log(text: String) = logFunction(text)
@@ -67,19 +68,24 @@ object Main {
   def printHelp(options: Options) {
     val help = new HelpFormatter()
     help.printHelp(
-      "java -jar Terraforming-0.5.0.jar [OPTIONS]\n"
+      "java -jar Terraforming.jar [OPTIONS]\n"
         + "[OPTIONS]: ", "", options, "", true)
   }
 
   def main(args: Array[String]) {
     OptionBuilder.hasArgs(3)
     OptionBuilder.withDescription("Set three AI programs.")
-    val opt = OptionBuilder.create(AI_PROGRAM)
+    val opt1 = OptionBuilder.create(AI_PROGRAM)
+
+    OptionBuilder.hasArgs(3)
+    OptionBuilder.withDescription("Set three internal AI programs.")
+    val opt2 = OptionBuilder.create(INTERNAL_AI_PROGRAM)
 
     val options = new Options()
       .addOption(HELP, false, "Print this help.")
       .addOption(CUI_MODE, false, "Enable CUI mode.")
-      .addOption(opt)
+      .addOption(opt1)
+      .addOption(opt2)
 
     try {
       val parser = new BasicParser()
@@ -106,27 +112,38 @@ object Main {
 
     val nums = Vector((0 to 2): _*)
     val players = nums.map(new Player(_))
-    val cmds = cl.getOptionValues(AI_PROGRAM)
-    val coms = if (cl.hasOption(AI_PROGRAM) && cmds.length == 3) {
+
+    val startAndGameMans = if (cl.hasOption(AI_PROGRAM) && cl.getOptionValues(AI_PROGRAM).length == 3) {
       Some(nums.map(i => {
+        val cmds = cl.getOptionValues(AI_PROGRAM)
         val com = new ExternalComputerPlayer(cmds(i).split(" "))
         //com.setStdoutLogStream(System.out)
         com.setErrorLogStream(System.err)
-        com
+        (new AIPlayerStartManipulator(players(i), com),
+          new AIPlayerGameManipulator(players(i), com))
+      }))
+    } else if (cl.hasOption(INTERNAL_AI_PROGRAM) && cl.getOptionValues(INTERNAL_AI_PROGRAM).length == 3) {
+      Some(nums.map(i => {
+        val cmds = cl.getOptionValues(INTERNAL_AI_PROGRAM)
+        val className = "net.aicomp.terraforming.manipulator." + cmds(i)
+        val clazz = Class.forName(className)
+        val man = clazz.newInstance().asInstanceOf[InternalManipulator]
+        (new InternalAIPlayerStartManipulator(players(i), man),
+          new InternalAIPlayerGameManipulator(players(i), man))
       }))
     } else {
       None
     }
 
     def initializeEnvironment(env: GameEnvironment, userStartManipulator: StartManipulator, userGameManipulator: GameManipulator) = {
-      val startManipulators = (coms match {
-        case Some(coms) => nums.map(i => new AIPlayerStartManipulator(players(i), coms(i)))
+      val startManipulators = (startAndGameMans match {
+        case Some(startAndGameMans) => startAndGameMans.map { case (man, _) => man }
           .map(_.limittingTime(10000))
         case None => nums.map(_ => userStartManipulator)
       }).map(_.recordingStream(oos))
         .map(_.threading())
-      val gameManipulators = (coms match {
-        case Some(coms) => nums.map(i => new AIPlayerGameManipulator(players(i), coms(i)))
+      val gameManipulators = (startAndGameMans match {
+        case Some(startAndGameMans) => startAndGameMans.map { case (_, man) => man }
           .map(_.limittingSumTime(1000, 5000))
         case None => nums.map(_ => userGameManipulator)
       }).map(_.recordingStream(oos))
@@ -137,8 +154,8 @@ object Main {
       if (env.getRenderer() != null) {
         env.getRenderer().startLogging(ReplayUtil.openStreamForJavaScript(calendar))
       }
-      if (coms.isDefined) {
-      env.getSceneManager().setFps(120)
+      if (startAndGameMans.isDefined) {
+        env.getSceneManager().setFps(120)
       }
 
       (startManipulators, gameManipulators)
