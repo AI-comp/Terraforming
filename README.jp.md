@@ -7,10 +7,10 @@ Terraforming for CEDEC 2013
 ### 遊び方
 - ユーザープレイモード
 
-        java -jar Terraforming-0.5.0.jar
+        java -jar Terraforming.jar
 
 
 - AIプレイモード
 
-        java -jar Terraforming-0.5.0.jar -a "java -cp SampleAI/Java Main" "java -cp SampleAI/Java Main" "java -cp SampleAI/Java Main"
+        java -jar Terraforming.jar -a "java -cp SampleAI/Java Main" "java -cp SampleAI/Java Main" "java -cp SampleAI/Java Main"
 
