@@ -31,7 +31,7 @@ object ImageLoader {
   def loadBackgrounds(render: Renderer) = {
     if (_backgrounds == null) {
       _backgrounds = Map(
-        32 -> render.loadImage("img/map32.png"),
+        32 -> render.loadImage("img/map32_2.png"),
         48 -> render.loadImage("img/map48.png"))
     }
     _backgrounds

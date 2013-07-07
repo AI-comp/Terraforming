@@ -46,7 +46,7 @@ trait GraphicalScene extends AbstractScene {
 
   def drawPoint(op: OrthogonalPoint, tile: Tile) = {
     val pointImages = ImageLoader.loadTiles(renderer)
-    val imgKey = tile.owner.map { p => "32_" + p.id }.getOrElse("32")
+    val imgKey = tile.owner.map { p => "32_" + p.id }.getOrElse("48")
 
     renderer.drawImage(pointImages.get(imgKey).get, op.x, op.y)
   }
