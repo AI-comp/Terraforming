@@ -10,13 +10,14 @@ import java.awt.event.MouseEvent
 import java.util.Calendar
 import java.util.Random
 import java.util.Scanner
-import scala.Array.canBuildFrom
+
 import org.apache.commons.cli.BasicParser
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.OptionBuilder
 import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
+
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.JScrollPane
@@ -35,25 +36,26 @@ import net.aicomp.terraforming.manipulator.ConsoleUserStartManipulator
 import net.aicomp.terraforming.manipulator.GameManipulator
 import net.aicomp.terraforming.manipulator.GraphicalUserGameManipulator
 import net.aicomp.terraforming.manipulator.GraphicalUserStartManipulator
+import net.aicomp.terraforming.manipulator.InternalAIPlayerGameManipulator
+import net.aicomp.terraforming.manipulator.InternalAIPlayerStartManipulator
+import net.aicomp.terraforming.manipulator.InternalManipulator
 import net.aicomp.terraforming.manipulator.StartManipulator
+import net.aicomp.terraforming.scene.AbstractScene
 import net.aicomp.terraforming.scene.MainScene
 import net.aicomp.terraforming.scene.PlayerScene
 import net.aicomp.terraforming.scene.ResultScene
 import net.aicomp.terraforming.scene.WaitingScene
-import net.aicomp.terraforming.scene.console.ConsoleScene
 import net.aicomp.terraforming.scene.graphic.GraphicalScene
-import net.aicomp.terraforming.scene.graphic.TextBoxScene
+import net.aicomp.terraforming.scene.graphic.TextBoxUtils
 import net.aicomp.terraforming.scene.graphic.TitleScene
 import net.aicomp.terraforming.util.misc.ImageLoader
+import net.aicomp.terraforming.util.misc.StreamUtils
 import net.aicomp.terraforming.util.settings.Defaults
 import net.exkazuu.gameaiarena.gui.JGamePanel
 import net.exkazuu.gameaiarena.gui.builder.GameGuiBuilder
 import net.exkazuu.gameaiarena.gui.builder.WindowCreator
 import net.exkazuu.gameaiarena.key.AwtKeyMemorizer
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
-import net.aicomp.terraforming.manipulator.InternalAIPlayerStartManipulator
-import net.aicomp.terraforming.manipulator.InternalManipulator
-import net.aicomp.terraforming.manipulator.InternalAIPlayerGameManipulator
 
 object Main {
 
@@ -61,6 +63,7 @@ object Main {
   val CUI_MODE = "c"
   val AI_PROGRAM = "a"
   val INTERNAL_AI_PROGRAM = "i"
+  val NOT_SHOWING_LOG = "n"
   var logFunction: String => Unit = null
 
   def log(text: String) = logFunction(text)
@@ -84,6 +87,7 @@ object Main {
     val options = new Options()
       .addOption(HELP, false, "Print this help.")
       .addOption(CUI_MODE, false, "Enable CUI mode.")
+      .addOption(NOT_SHOWING_LOG, false, "Disable showing logs in the scree.")
       .addOption(opt1)
       .addOption(opt2)
 
@@ -108,7 +112,8 @@ object Main {
     // Must not apply limittingTime/limittingSumTime to user manipulators
     val random = new Random()
     val calendar = Calendar.getInstance
-    val oos = ReplayUtil.openStreamForJava(calendar, random)
+    val oos = StreamUtils.openStreamForJava(calendar, random)
+    val logStream = StreamUtils.openStreamForLogging(calendar, "log")
 
     val nums = Vector((0 to 2): _*)
     val players = nums.map(new Player(_))
@@ -117,16 +122,18 @@ object Main {
       Some(nums.map(i => {
         val cmds = cl.getOptionValues(AI_PROGRAM)
         val com = new ExternalComputerPlayer(cmds(i).split(" "))
-        //com.setStdoutLogStream(System.out)
-        com.setErrorLogStream(System.err)
+        val out = StreamUtils.openStreamForLogging(calendar, "stdout_player" + i)
+        val err = StreamUtils.openStreamForLogging(calendar, "stderr_player" + i)
+        com.addStreamForLoggingStdoutOfExternalProgram(out)
+        com.addStreamForLoggingErrorOfExternalProgram(err)
+        com.addStreamForLoggingErrorOfExternalProgram(System.err)
         (new AIPlayerStartManipulator(players(i), com),
           new AIPlayerGameManipulator(players(i), com))
       }))
     } else if (cl.hasOption(INTERNAL_AI_PROGRAM) && cl.getOptionValues(INTERNAL_AI_PROGRAM).length == 3) {
       Some(nums.map(i => {
         val cmds = cl.getOptionValues(INTERNAL_AI_PROGRAM)
-        val className = "net.aicomp.terraforming.manipulator." + cmds(i)
-        val clazz = Class.forName(className)
+        val clazz = Class.forName(cmds(i))
         val man = clazz.newInstance().asInstanceOf[InternalManipulator]
         (new InternalAIPlayerStartManipulator(players(i), man),
           new InternalAIPlayerGameManipulator(players(i), man))
@@ -152,37 +159,47 @@ object Main {
       val field = Field(6, players, random)
       env.game = new Game(field, players, 200)
       if (env.getRenderer() != null) {
-        env.getRenderer().startLogging(ReplayUtil.openStreamForJavaScript(calendar))
+        //TODO: env.getRenderer().startLogging(StreamUtils.openStreamForJavaScript(calendar))
       }
       if (startAndGameMans.isDefined) {
-        env.getSceneManager().setFps(120)
+        env.getSceneManager().setFps(1000)
       }
 
       (startManipulators, gameManipulators)
     }
 
-    if (cl.hasOption(CUI_MODE)) {
+    val (env, startScene) = if (cl.hasOption(CUI_MODE)) {
       val env = GameEnvironment()
       env.getSceneManager().setFps(1000)
       val scanner = new Scanner(System.in)
+      AbstractScene.display = println
       val (startManipulators, gameManipulators) =
         initializeEnvironment(env, new ConsoleUserStartManipulator(scanner), new ConsoleUserGameManipulator(scanner))
 
-      val resultScene = new ResultScene(null) with ConsoleScene
-      val mainScene = new MainScene(resultScene, gameManipulators) with ConsoleScene
-      val playerScene = new PlayerScene(mainScene, startManipulators) with ConsoleScene
-      env.start(playerScene)
+      val resultScene = new ResultScene(null)
+      val mainScene = new MainScene(resultScene, gameManipulators)
+      (env, new PlayerScene(mainScene, startManipulators))
     } else {
       val (window, env) = initializeComponents()
       val (startManipulators, gameManipulators) =
         initializeEnvironment(env, new GraphicalUserStartManipulator(), new GraphicalUserGameManipulator())
 
-      val waitScene = new WaitingScene(null) with GraphicalScene with TextBoxScene
-      val resultScene = new ResultScene(waitScene) with GraphicalScene with TextBoxScene
-      val mainScene = new MainScene(resultScene, gameManipulators) with GraphicalScene with TextBoxScene
-      val playerScene = new PlayerScene(mainScene, startManipulators) with TitleScene with TextBoxScene
-      env.start(playerScene)
+      val waitScene = new WaitingScene(null) with GraphicalScene
+      val resultScene = new ResultScene(waitScene) with GraphicalScene
+      val mainScene = new MainScene(resultScene, gameManipulators) with GraphicalScene
+      (env, new PlayerScene(mainScene, startManipulators) with TitleScene)
     }
+    if (cl.hasOption(NOT_SHOWING_LOG)) {
+      AbstractScene.display = logStream.print
+    } else {
+      val display = AbstractScene.display
+      AbstractScene.display = { text =>
+        logStream.print(text)
+        logStream.flush()
+        display(text)
+      }
+    }
+    env.start(startScene)
   }
 
   def initializeComponents() = {
@@ -203,7 +220,7 @@ object Main {
         override def createWindow(gamePanel: JGamePanel) = {
           logArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12))
           logArea.setEditable(false)
-          TextBoxScene.display = (text) => {
+          AbstractScene.display = (text) => {
             logArea.append(text)
             logArea.setCaretPosition(logArea.getText().length())
           }
@@ -216,7 +233,7 @@ object Main {
             def actionPerformed(e: ActionEvent) = {
               val command = commandField.getText()
               commandField.setText("")
-              TextBoxScene.addCommand(command)
+              TextBoxUtils.addCommand(command)
             }
           })
 
@@ -258,8 +275,8 @@ object Main {
           val square = OrthogonalPoint.orthogonalPointToPoints(cp, env.game.field)
           square.headOption match {
             case Some(p) =>
-              TextBoxScene.display("Your clicked location is ( " + p.x + ", " + p.y + " )")
-              TextBoxScene.display(Defaults.NEW_LINE)
+              AbstractScene.display("Your clicked location is ( " + p.x + ", " + p.y + " )")
+              AbstractScene.display(Defaults.NEW_LINE)
               if (e.getButton() == MouseEvent.BUTTON3) { // BUTTON3 indicates the right button
                 commandField.setText(commandField.getText + " " + p.x + " " + p.y + " ")
               }

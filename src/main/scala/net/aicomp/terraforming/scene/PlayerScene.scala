@@ -6,7 +6,7 @@ import net.aicomp.terraforming.entity.GameSetting
 import net.exkazuu.gameaiarena.gui.Scene
 import net.exkazuu.gameaiarena.manipulator.ThreadManipulator
 
-abstract class PlayerScene(nextScene: Scene[GameEnvironment],
+class PlayerScene(nextScene: Scene[GameEnvironment],
   manipulators: Vector[ThreadManipulator[Game, Array[String], String]] = Vector())
   extends ManipultorScene(manipulators) {
 

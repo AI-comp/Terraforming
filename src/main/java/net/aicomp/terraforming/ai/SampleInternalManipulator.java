@@ -1,4 +1,4 @@
-package net.aicomp.terraforming.manipulator;
+package net.aicomp.terraforming.ai;
 
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -6,18 +6,19 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-import net.aicomp.terraforming.manipulator.sample.Direction;
-import net.aicomp.terraforming.manipulator.sample.Field;
-import net.aicomp.terraforming.manipulator.sample.Game;
-import net.aicomp.terraforming.manipulator.sample.Installation;
-import net.aicomp.terraforming.manipulator.sample.Point;
-import net.aicomp.terraforming.manipulator.sample.Tile;
+import net.aicomp.terraforming.ai.entity.Direction;
+import net.aicomp.terraforming.ai.entity.Field;
+import net.aicomp.terraforming.ai.entity.Game;
+import net.aicomp.terraforming.ai.entity.Installation;
+import net.aicomp.terraforming.ai.entity.Point;
+import net.aicomp.terraforming.ai.entity.Tile;
+import net.aicomp.terraforming.manipulator.InternalManipulator;
 
 public class SampleInternalManipulator implements InternalManipulator {
 	public static void main(String[] args) {
-		String name = "SampleInternalManipulator";
+		String name = SampleInternalManipulator.class.getName();
 		net.aicomp.terraforming.Main
-				.main(new String[] { "-i", name, name, name });
+				.main(new String[] { "-n", "-i", name, name, name });
 	}
 
 	private Random rand = new Random("aicomp".hashCode());

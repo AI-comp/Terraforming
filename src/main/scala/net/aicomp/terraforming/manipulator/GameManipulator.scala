@@ -1,12 +1,14 @@
 package net.aicomp.terraforming.manipulator
 
 import java.util.Scanner
+
 import scala.collection.mutable.Queue
+
 import net.aicomp.terraforming.entity.Game
+import net.aicomp.terraforming.entity.Player
+import net.aicomp.terraforming.scene.graphic.TextBoxUtils
 import net.exkazuu.gameaiarena.manipulator.Manipulator
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
-import net.aicomp.terraforming.scene.graphic.TextBoxScene
-import net.aicomp.terraforming.entity.Player
 
 abstract class GameManipulator extends Manipulator[Game, Array[String], String] {
   override def getComputerPlayer = null
@@ -29,7 +31,7 @@ class GraphicalUserGameManipulator() extends GameManipulator {
 
   override def runPreProcessing(game: Game) {}
   override def runProcessing() {
-    TextBoxScene.inputCommandLists() match {
+    TextBoxUtils.inputCommandLists() match {
       case Some(cmd) => _commandString = cmd
       case None => _commandString = null
     }

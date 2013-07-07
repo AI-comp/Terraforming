@@ -1,4 +1,4 @@
-package net.aicomp.terraforming
+package net.aicomp.terraforming.util.misc
 
 import java.io.BufferedInputStream
 import java.io.File
@@ -10,10 +10,12 @@ import java.io.PrintStream
 import java.util.Calendar
 import java.util.Random
 
-import net.aicomp.terraforming.util.misc.DateUtils
 import net.exkazuu.gameaiarena.io.InputStreams
 
-object ReplayUtil {
+object StreamUtils {
+  new File("replay").mkdir()
+  new File("log").mkdir()
+
   def initializeReplay(filePath: String) = {
     val stream = InputStreams.openFileOrResource(filePath);
     if (stream == null) {
@@ -36,10 +38,9 @@ object ReplayUtil {
   }
 
   def openStreamForJava(calendar: Calendar, random: Random) = {
-    new File("replay").mkdir()
     val dateForName = DateUtils.dateStringForFileName(calendar)
-    val fileNameForJava = "replay/" + dateForName + ".rep"
-    val fos = new FileOutputStream(fileNameForJava);
+    val fileName = "replay/" + dateForName + ".rep"
+    val fos = new FileOutputStream(fileName);
     fos.write('V');
     fos.write('0');
     val oos = new ObjectOutputStream(fos);
@@ -48,9 +49,14 @@ object ReplayUtil {
   }
 
   def openStreamForJavaScript(calendar: Calendar) = {
-    new File("replay").mkdir()
     val dateForName = DateUtils.dateStringForFileName(calendar)
-    val fileNameForJavaScript = "replay/" + dateForName + ".js"
-    new PrintStream(fileNameForJavaScript)
+    val fileName = "replay/" + dateForName + ".js"
+    new PrintStream(fileName)
+  }
+
+  def openStreamForLogging(calendar: Calendar, prefix: String) = {
+    val dateForName = DateUtils.dateStringForFileName(calendar)
+    val fileName = "log/" + prefix + "_" + dateForName + ".txt"
+    new PrintStream(fileName)
   }
 }

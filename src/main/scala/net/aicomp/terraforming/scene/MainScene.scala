@@ -8,7 +8,7 @@ import net.aicomp.terraforming.entity.GameSetting
 import net.exkazuu.gameaiarena.gui.Scene
 import net.exkazuu.gameaiarena.manipulator.ThreadManipulator
 
-abstract class MainScene(nextScene: Scene[GameEnvironment],
+class MainScene(nextScene: Scene[GameEnvironment],
   manipulators: Vector[ThreadManipulator[Game, Array[String], String]] = Vector())
   extends ManipultorScene(manipulators) {
   override def initialize() {

@@ -4,7 +4,7 @@ import java.util.Scanner
 
 import net.aicomp.terraforming.entity.Game
 import net.aicomp.terraforming.entity.Player
-import net.aicomp.terraforming.scene.graphic.TextBoxScene
+import net.aicomp.terraforming.scene.graphic.TextBoxUtils
 import net.exkazuu.gameaiarena.manipulator.Manipulator
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
 
@@ -30,7 +30,7 @@ class ConsoleUserStartManipulator(scanner: Scanner) extends StartManipulator {
 
 class GraphicalUserStartManipulator() extends StartManipulator {
   override def runProcessing() {
-    TextBoxScene.inputCommandLists() match {
+    TextBoxUtils.inputCommandLists() match {
       case Some(name) => _name = name
       case None => _name = null
     }

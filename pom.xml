@@ -3,7 +3,7 @@
 
   <groupId>net.javachallenge</groupId>
   <artifactId>Terraforming</artifactId>
-  <version>0.6.5</version>
+  <version>0.6.6</version>
   <packaging>jar</packaging>
 
   <name>${project.artifactId}</name>
@@ -65,7 +65,7 @@
     <dependency>
       <groupId>jp.ac.waseda</groupId>
       <artifactId>GameAIArena</artifactId>
-      <version>1.6.4</version>
+      <version>1.6.7</version>
     </dependency>
 
     <!-- Test -->

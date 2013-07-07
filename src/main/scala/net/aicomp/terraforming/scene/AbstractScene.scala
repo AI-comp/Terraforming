@@ -11,11 +11,10 @@ abstract class AbstractScene extends DefaultScene[GameEnvironment] {
   def inputer = env.getInputer
   def game = env.game
 
-  protected def displayCore(text: String)
-
   final def display(text: String) {
-    displayCore(text)
-    Logger.writeAndFlush(text)
+    if (AbstractScene.display != null) {
+      AbstractScene.display(text)
+    }
   }
 
   final def displayLine(text: String) {
@@ -26,4 +25,8 @@ abstract class AbstractScene extends DefaultScene[GameEnvironment] {
     val dashes = "-" * 20
     displayLine(dashes + sceneDescription + dashes)
   }
+}
+
+object AbstractScene {
+  var display: (String => Unit) = null
 }

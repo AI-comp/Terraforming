@@ -8,16 +8,15 @@ import net.aicomp.terraforming.entity.Field
 import net.aicomp.terraforming.entity.Game
 import net.aicomp.terraforming.entity.GameEnvironment
 import net.aicomp.terraforming.entity.Player
-import net.aicomp.terraforming.scene.console.ConsoleScene
 
-trait TestScene extends ManipultorScene with ConsoleScene {
+trait TestScene extends ManipultorScene {
   val output = Queue[String]()
   private val input = Queue[String]()
+  AbstractScene.display = { (text: String) => output += text }
 
   override def run() = {
     runWithCommandString(input.dequeue())
   }
-  override def displayCore(text: String) { output += text }
 
   def accept(env: GameEnvironment, command: String) = {
     input += command

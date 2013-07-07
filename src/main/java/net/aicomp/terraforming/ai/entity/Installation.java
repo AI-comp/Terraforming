@@ -1,4 +1,4 @@
-package net.aicomp.terraforming.manipulator.sample;
+package net.aicomp.terraforming.ai.entity;
 
 public enum Installation {
   Initial(0, 0, 2),
