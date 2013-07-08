@@ -26,15 +26,13 @@ object ImageLoader {
     }
   }
 
-  private var _backgrounds: Map[Int, Image] = null
+  private var _background: Image = null
 
-  def loadBackgrounds(render: Renderer) = {
-    if (_backgrounds == null) {
-      _backgrounds = Map(
-        32 -> render.loadImage("img/map32_2.png"),
-        48 -> render.loadImage("img/map48.png"))
+  def loadBackground(render: Renderer) = {
+    if (_background == null) {
+      _background = render.loadImage("img/map.png")
     }
-    _backgrounds
+    _background
   }
 
   private var _tiles: Map[String, Image] = null
@@ -42,31 +40,78 @@ object ImageLoader {
   def loadTiles(render: Renderer) = {
     if (_tiles == null) {
       _tiles = Map(
-        "32" -> render.loadImage("img/hex32.png"),
-        "32_0" -> render.loadImage("img/hex32_0.png"),
-        "32_1" -> render.loadImage("img/hex32_1.png"),
-        "32_2" -> render.loadImage("img/hex32_2.png"),
-        "48" -> render.loadImage("img/hex48.png"))
+        "32" -> render.loadImage("img/hex/hex32.png"),
+        "32_0" -> render.loadImage("img/hex/hex32_0.png"),
+        "32_1" -> render.loadImage("img/hex/hex32_1.png"),
+        "32_2" -> render.loadImage("img/hex/hex32_2.png"),
+        "48" -> render.loadImage("img/hex/hex48.png"),
+        "48_0" -> render.loadImage("img/hex/hex48_0.png"),
+        "48_1" -> render.loadImage("img/hex/hex48_1.png"),
+        "48_2" -> render.loadImage("img/hex/hex48_2.png"))
     }
     _tiles
   }
-
-  private var _roundTitle: Image = null
-
-  def loadRoundTitle(renderer: Renderer) = {
-    if (_roundTitle == null) {
-      _roundTitle = renderer.loadImage("img/round/round.png")
+  
+  private var _installations: Map[String, Image] = null
+  def loadInstallations(render: Renderer) = {
+    if (_installations == null){
+      _installations = Map(
+          "hole" -> render.loadImage("img/installation/hole.png"),
+          "installation_0" -> render.loadImage("img/installation/installation0.png"),
+          "installation_1" -> render.loadImage("img/installation/installation1.png"),
+          "installation_2" -> render.loadImage("img/installation/installation2.png"),
+          "initial_0" -> render.loadImage("img/installation/largefactory0.png"),
+          "initial_1" -> render.loadImage("img/installation/largefactory1.png"),
+          "initial_2" -> render.loadImage("img/installation/largefactory2.png"),
+          "factory_0" -> render.loadImage("img/installation/factory0.png"),
+          "factory_1" -> render.loadImage("img/installation/factory1.png"),
+          "factory_2" -> render.loadImage("img/installation/factory2.png"),
+          "pit_0" -> render.loadImage("img/installation/pit0.png"),
+          "pit_1" -> render.loadImage("img/installation/pit1.png"),
+          "pit_2" -> render.loadImage("img/installation/pit2.png"),
+          "attack_0" -> render.loadImage("img/installation/attack0.png"),
+          "attack_1" -> render.loadImage("img/installation/attack1.png"),
+          "attack_2" -> render.loadImage("img/installation/attack2.png"),
+          "shield_0" -> render.loadImage("img/installation/shield0.png"),
+          "shield_1" -> render.loadImage("img/installation/shield1.png"),
+          "shield_2" -> render.loadImage("img/installation/shield2.png"),
+          "bridge_0" -> render.loadImage("img/installation/bridge0.png"),
+          "bridge_1" -> render.loadImage("img/installation/bridge1.png"),
+          "bridge_2" -> render.loadImage("img/installation/bridge2.png"),
+          "house_0" -> render.loadImage("img/installation/house0.png"),
+          "house_1" -> render.loadImage("img/installation/house1.png"),
+          "house_2" -> render.loadImage("img/installation/house2.png"),
+          "town_0" -> render.loadImage("img/installation/town0.png"),
+          "town_1" -> render.loadImage("img/installation/town1.png"),
+          "town_2" -> render.loadImage("img/installation/town2.png"),
+          "city_0" -> render.loadImage("img/installation/city0.png"),
+          "city_1" -> render.loadImage("img/installation/city1.png"),
+          "city_2" -> render.loadImage("img/installation/city2.png")
+          )
     }
-    _roundTitle
+    _installations
   }
 
-  private var _roundSlash: Image = null
-
-  def loadRoundSlash(renderer: Renderer) = {
-    if (_roundSlash == null) {
-      _roundSlash = renderer.loadImage("img/round/rnslash.png")
+    private var _statusInstallations: Map[String, Image] = null
+  def loadStatusInstallations(render: Renderer) = {
+    if (_statusInstallations == null){
+      _statusInstallations = Map(
+          "town_0" -> render.loadImage("img/playerInfo/town0.png"),
+          "town_1" -> render.loadImage("img/playerInfo/town1.png"),
+          "town_2" -> render.loadImage("img/playerInfo/town2.png")
+          )
     }
-    _roundSlash
+    _statusInstallations
+  }
+  
+  private var _roundParts: Map[String, Image] = null
+
+  def loadRoundParts(renderer: Renderer) = {
+    if (_roundParts == null) {
+      _roundParts = Map("Title" -> renderer.loadImage("img/round/round.png"),
+        "Slash" -> renderer.loadImage("img/round/rnslash.png"))
+    }
+    _roundParts
   }
 
   private var _roundNumber: Map[Int, Image] = null
@@ -80,45 +125,7 @@ object ImageLoader {
     _roundNumber
   }
 
-  private var _buyIcon: Image = null
-  def loadBuyIcon(render: Renderer) = {
-    if (_buyIcon == null) {
-      _buyIcon = render.loadImage("img/playerInfo/buy.png")
-    }
-    _buyIcon
-  }
-
-  private var _sellIcon: Image = null
-  def loadSellIcon(render: Renderer) = {
-    if (_sellIcon == null) {
-      _sellIcon = render.loadImage("img/playerInfo/sell.png")
-    }
-    _sellIcon
-  }
-
-  private val _playerIndices = (-1 to 5)
-  private var _veins: Map[Int, Image] = null
-
-  def loadVeins(render: Renderer) = {
-    if (_veins == null) {
-      _veins =
-        _playerIndices
-          .map { t => (t, render.loadImage("img/vein" + t + ".png")) }
-          .toMap
-    }
-    _veins
-  }
-
-  private var _plusMarks: Map[Int, Image] = null
-  def loadPlusMarks(render: Renderer) = {
-    if (_plusMarks == null) {
-      _plusMarks =
-        _playerIndices
-          .map { t => (t, render.loadImage("img/plus" + t + ".png")) }
-          .toMap
-    }
-    _plusMarks
-  }
+  private val _playerIndices = (-1 to 2)
 
   private var _robots: Map[Int, Image] = null
   def loadRobots(render: Renderer) = {
@@ -126,10 +133,22 @@ object ImageLoader {
       _robots =
         _playerIndices
           .filter { _ >= 0 }
-          .map { t => (t, render.loadImage("img/robot" + t + ".png")) }
+          .map { t => (t, render.loadImage("img/robot/robot" + t + ".png")) }
           .toMap
     }
     _robots
+  }
+
+  private var _largeRobots: Map[Int, Image] = null
+  def loadLargeRobots(render: Renderer) = {
+    if (_largeRobots == null) {
+      _largeRobots =
+        _playerIndices
+          .filter { _ >= 0 }
+          .map { t => (t, render.loadImage("img/robot/lrobot" + t + ".png")) }
+          .toMap
+    }
+    _largeRobots
   }
 
   private var _numbers: Map[(Int, Int), Image] = null
@@ -148,6 +167,22 @@ object ImageLoader {
     _numbers
   }
 
+  private var _statusNumbers: Map[(Int, Int), Image] = null
+  def loadStatusNumbers(render: Renderer) = {
+    if (_statusNumbers == null) {
+      _statusNumbers =
+        _playerIndices
+          .flatMap {
+            p =>
+              (0 to 9).map {
+                n => ((p, n), render.loadImage("img/lnumber/num" + p + n + ".png"))
+              }
+          }
+          .toMap
+    }
+    _statusNumbers
+  }
+
   private var _playerInformationBackgrounds: Map[Int, Image] = null
   def loadPlayerInformationBackgrounds(render: Renderer) = {
     if (_playerInformationBackgrounds == null) {
@@ -160,36 +195,12 @@ object ImageLoader {
     _playerInformationBackgrounds
   }
 
-  private var _bankInformationBackground: Image = null
-  def loadBankInformationBackground(render: Renderer) = {
-    if (_bankInformationBackground == null) {
-      _bankInformationBackground = render.loadImage("img/bank.png")
-    }
-    _bankInformationBackground
-  }
-
   private var _playerHighlightFrame: Image = null
   def loadPlayerHighlightFrame(render: Renderer) = {
     if (_playerHighlightFrame == null) {
       _playerHighlightFrame = render.loadImage("img/pactive.png")
     }
     _playerHighlightFrame
-  }
-
-  private var _activePlayerStar: Image = null
-  def loadActivePlayerStar(render: Renderer) = {
-    if (_activePlayerStar == null) {
-      _activePlayerStar = render.loadImage("img/star.png")
-    }
-    _activePlayerStar
-  }
-
-  private var _veinSample: Image = null
-  def loadVeinSample(render: Renderer) = {
-    if (_veinSample == null) {
-      _veinSample = render.loadImage("img/veinSample.png")
-    }
-    _veinSample
   }
 
   private var _resultBackground: Image = null
@@ -214,19 +225,10 @@ object ImageLoader {
     _resultNumber
   }
 
-  private var _lamp: Map[Int, Image] = null
-  def loadLamp(render: Renderer) = {
-    if (_lamp == null) {
-      _lamp = Range(0, 6).map(num =>
-        (num, render.loadImage("img/result/lamp_" + num.toString + ".png"))).toMap
-    }
-    _lamp
-  }
-
   private var _title: Image = null
   def loadTitle(render: Renderer) = {
     if (_title == null) {
-      _title = render.loadImage("img/start/title.png")
+      _title = render.loadImage("img/start/title.jpg")
     }
     _title
   }

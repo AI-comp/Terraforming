@@ -5,18 +5,12 @@ case class OrthogonalPoint(x: Int, y: Int) {
 }
 
 object OrthogonalPoint {
+
   // default center of Map is (500,250)
   val defaultX = 320
   val defaultY = 250
-  val statusX = 700
-  val statusY = 50
-  // image size
+
   val pointSize = Size(48, 48)
-  val robotSize = Size(10, 9)
-  val numSize = Size(6, 9)
-  val roundSlashSize = Size(32, 32)
-  val roundNumberSize = Size(24, 32)
-  val statusSize = Size(250, 120)
 
   case class Size(val x: Int, val y: Int)
 
