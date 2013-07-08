@@ -60,12 +60,6 @@ https://github.com/AI-comp/JavaChallenge2012/blob/master/src/main/scala/net/java
 ## Contributors
 - __Project Leader__
   - Kazunori Sakamoto (National Institute of Informatics)
-- __Game Designers__
-  - Hiroaki Hosono (Tokyo Institute of Technology)
-  - Junichi Kobayashi (Waseda University)
-  - Seiji Sato (Waseda University)
-  - Kosuke Yatoh (University of Tokyo)
-  - Naoki Yaguchi (Waseda University)
 - __Developers of Game Platform__
   - Kosuke Yatoh (University of Tokyo)
   - Hiroaki Hosono (Tokyo Institute of Technology)
@@ -73,6 +67,7 @@ https://github.com/AI-comp/JavaChallenge2012/blob/master/src/main/scala/net/java
   - Koji Tumura (Waseda University)
   - Ryu Yasuda (Waseda University)
   - Daichi Ota (ACCESS CO., LTD.)
+  - Seiji Sato (Waseda University)
   - Junichi Kobayashi (Waseda University)
   - Masataka Kido (Waseda University)
   - Fumiya Kato (Waseda University)
@@ -91,6 +86,12 @@ https://github.com/AI-comp/JavaChallenge2012/blob/master/src/main/scala/net/java
   - __C++, Haskell__: Kosuke Yatoh (University of Tokyo)
   - __Scala__: Ryu Yasuda (Waseda University)
   - __Java__: Kazunori Sakamoto (National Institute of Informatics)
+- __Game Designers__
+  - Hiroaki Hosono (Tokyo Institute of Technology)
+  - Junichi Kobayashi (Waseda University)
+  - Seiji Sato (Waseda University)
+  - Kosuke Yatoh (University of Tokyo)
+  - Naoki Yaguchi (Waseda University)
 - __Graphic Designers__
   - Masayuki Asakura (Waseda University)
   - Masahiko Wada
