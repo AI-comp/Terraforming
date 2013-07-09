@@ -264,20 +264,33 @@ object Field {
 
     // first, generate 1/3 pattern
     // region: (x, y) such that y >= 0 && x + y >= 1
+
     val field = mutable.Map(Field(radius).tiles.toSeq: _*)
-    for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
-      // TODO: hole frequency
-      if (random.nextInt(7) == 0) {
-        field(Point(x, y)).isHole = true
+    var holeCount = 0
+    do {
+      holeCount = 0
+      for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
+        field(Point(x, y)).owner = None
+        field(Point(x, y)).installation = None
+
+        if (random.nextInt(7) == 0) {
+          field(Point(x, y)).isHole = true
+          holeCount += 1
+        } else {
+          field(Point(x, y)).isHole = false
+        }
       }
-    }
-    // second, decide initial position
-    val initialY = random.nextInt(radius + 1)
-    val initialX = random.nextInt(radius) + 1 - initialY
-    field(Point(initialX, initialY)).owner = Some(players(0))
-    field(Point(initialX, initialY)).installation = Some(Installation.initial)
-    field(Point(initialX, initialY)).isHole = false;
-    
+      // second, decide initial position
+      val initialY = random.nextInt(radius + 1)
+      val initialX = random.nextInt(radius) + 1 - initialY
+      field(Point(initialX, initialY)).owner = Some(players(0))
+      field(Point(initialX, initialY)).installation = Some(Installation.initial)
+      if (field(Point(initialX, initialY)).isHole) {
+        holeCount -= 1
+        field(Point(initialX, initialY)).isHole = false;
+      }
+    } while (holeCount > 14)
+
     // third, expand the pattern
     def copyTile(tile: Tile, player: Player) = {
       val copiedTile = tile.clone
@@ -286,6 +299,7 @@ object Field {
       }
       copiedTile
     }
+
     for (y <- 0 to radius; x <- -y to -y + radius) {
       val p = Point(x, y)
       field(p.rotate120) = copyTile(field(p), players(1))
