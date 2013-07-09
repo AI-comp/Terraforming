@@ -122,7 +122,7 @@ class InstallationSpec extends SpecificationWithJUnit {
       field.build(players(0), origin, Installation.pit) must throwA[CommandException]
     }
     "allow to accept building a 'house'" in new installations {
-      field(origin).robots = 1
+      field(origin).robots = 10
 
       field.build(players(0), origin, Installation.house) must_== ()
     }
@@ -175,7 +175,7 @@ class InstallationSpec extends SpecificationWithJUnit {
       val pitPlace = Point(1, 1)
       initTile(field, pitPlace, players(0))
       field.availableAroundPoints(pitPlace).foreach(initTile(field, _, players(0)))
-      field(origin).robots = 1
+      field(origin).robots = 10
       field(pitPlace).robots = 20
     }
 
@@ -220,7 +220,7 @@ class InstallationSpec extends SpecificationWithJUnit {
         field.availableAroundPoints(_p).foreach(initTile(field, _, players(0)))
       })
 
-      field(origin).robots = 1
+      field(origin).robots = 10
       pitPlaces.foreach(_p => field(_p).robots = 20)
     }
 

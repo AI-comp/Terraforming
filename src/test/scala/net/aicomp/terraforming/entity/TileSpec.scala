@@ -7,9 +7,8 @@ class TileSpec extends SpecificationWithJUnit {
     val holeScore = 0
     val wasteLandScore = 0
     val undevelopedLandScore = 1
-    val developedLandScore = 2
+    val developedLandScore = 3
     val houseFacilityScore = 3
-    val cityFacilityScore = 10
     "equals another tile which has same values" in {
       new Tile().equals(new Tile()) must_== true
     }
