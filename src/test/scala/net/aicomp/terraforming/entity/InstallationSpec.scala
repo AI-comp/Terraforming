@@ -224,24 +224,12 @@ class InstallationSpec extends SpecificationWithJUnit {
       pitPlaces.foreach(_p => field(_p).robots = 20)
     }
 
-    "allow to accept building a 'city'" in new originAndPits {
+    "allow to accept building a 'town'" in new originAndPits {
       pitPlaces.foreach(_p =>
         field.build(players(0), _p, Installation.pit) must_== ())
-      field.build(players(0), origin, Installation.city) must_== ()
-    }
-
-    "decline to accept building a 'city' in hole" in new originAndPits {
-      field(origin).isHole = true
-
-      pitPlaces.foreach(_p =>
-        field.build(players(0), _p, Installation.pit) must_== ())
-      field.build(players(0), origin, Installation.city) must throwA[CommandException]
-    }
-
-    "decline to accept building a 'city' in settlement which is not enough material" in new originAndPits {
-      pitPlaces.tail.foreach(_p =>
-        field.build(players(0), _p, Installation.pit) must_== ())
-      field.build(players(0), origin, Installation.city) must throwA[CommandException]
+      field.build(players(0), origin, Installation.town) must_== ()
+      field(origin).additionalScore must_== 10
+      
     }
   }
 }

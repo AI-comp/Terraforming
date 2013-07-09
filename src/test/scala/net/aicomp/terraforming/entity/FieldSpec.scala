@@ -424,10 +424,6 @@ class FieldSpec extends SpecificationWithJUnit {
       field(0, 0).owner = Some(players(0))
       field(0, 0).installation = Some(Installation.attack)
       field.calculateScore(players(0)) must_== initialScore + developedLandScore
-      initTile(field, Point(0, 0))
-      field(0, 0).owner = Some(players(0))
-      field(0, 0).installation = Some(Installation.city)
-      field.calculateScore(players(0)) must_== initialScore + cityFacilityScore
     }
     "stringify itself" in {
       val players = Vector(new Player(1), new Player(2), new Player(3))
