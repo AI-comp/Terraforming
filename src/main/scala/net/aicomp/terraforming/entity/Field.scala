@@ -36,6 +36,11 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   def apply(x: Int, y: Int): Tile = tiles(new Point(x, y))
   def apply(p: Point): Tile = tiles(p)
 
+  def clearMovedRobots() {
+    tiles.values.foreach(t => t.movedRobots = 0)
+  }
+
+  //Commands
   def moveSquad(player: Player, p: Point, d: Direction, amount: Int) = {
     if (!points.contains(p)) {
       throw new CommandException("You cannot choose an outer tile of the field")
@@ -97,13 +102,12 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
       case Installation.town =>
         availableAroundTiles(p).filter(_.ownedBy(player)).filter(_.installation.isEmpty)
           .foreach { tile => tile.installation = Some(Installation.house) }
-      case Installation.city =>
-        availableAroundTiles(p, 2).filter(_.ownedBy(player)).filter(_.installation.isEmpty)
-          .foreach { tile => tile.installation = Some(Installation.house) }
+        tile.additionalScore = aroundMaterial - 9
       case _ =>
     }
   }
 
+  //Effects of Installation
   def produceRobot(player: Player) = {
     for ((p, tile) <- tiles) {
       if (tile.ownedBy(player)) {
@@ -118,6 +122,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     }
   }
 
+  //AttackTower
   def attack(player: Player) = {
     for ((p, tile) <- tiles) {
       if (tile.ownedBy(player)) {
@@ -132,32 +137,38 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     }
   }
 
+  //Shield
   def startDefense(player: Player) = {
+    for ((p, tile) <- tiles) {
+      if (tile.ownedBy(player)) {
+        tile.aroundSield = 0
+      }
+    }
+
     for ((p, tile) <- tiles) {
       if (tile.ownedBy(player)) {
         tile.installation match {
           case Some(Installation.shield) =>
-            availableAroundTiles(p).foreach { _.robots *= 2 }
+            availableAroundTiles(p, 2).foreach { _.aroundSield += 1 }
           case _ =>
         }
       }
     }
+
+    for ((p, tile) <- tiles) {
+      if (tile.ownedBy(player)) {
+        tile.robots *= (tile.aroundSield + 1)
+      }
+    }
+
   }
 
   def finishDefense(player: Player) = {
     for ((p, tile) <- tiles) {
       if (tile.ownedBy(player)) {
-        tile.installation match {
-          case Some(Installation.shield) =>
-            availableAroundTiles(p).foreach { _.robots /= 2 }
-          case _ =>
-        }
+        tile.robots /= (tile.aroundSield + 1)
       }
     }
-  }
-
-  def clearMovedRobots() {
-    tiles.values.foreach(t => t.movedRobots = 0)
   }
 
   def ownedTiles(player: Player) = {

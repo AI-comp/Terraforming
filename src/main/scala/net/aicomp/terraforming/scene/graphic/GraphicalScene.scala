@@ -14,7 +14,7 @@ import java.awt.Color
 trait GraphicalScene extends AbstractScene {
 
   val statusPosition = new OrthogonalPoint(720, 20)
-  val roundPosition = new OrthogonalPoint(865, 445)
+  val roundPosition = new OrthogonalPoint(910, 445)
 
   // image size
   val robotSize = Size(10, 9)
@@ -62,7 +62,7 @@ trait GraphicalScene extends AbstractScene {
   def drawRound() = {
     val round = ImageLoader.loadRoundParts(renderer)
 
-    renderer.drawImage(round("Title"), roundPosition.x - 170, roundPosition.y)
+    renderer.drawImage(round("Title"), roundPosition.x - 210, roundPosition.y)
     renderer.drawImage(round("Slash"), roundPosition.x, roundPosition.y)
     drawRoundNumber(game.currentTurn, roundPosition.x, roundPosition.y)
     drawRoundNumber(game.maxTurn, roundPosition.x + roundSlashSize.x + 3 * roundNumberSize.x, roundPosition.y)
@@ -163,7 +163,7 @@ trait GraphicalScene extends AbstractScene {
 
       // player name
       val nameY = statusPosition.y + 28 + (statusSize.y + marginY) * player.id
-      renderer.drawString(player.name, statusPosition.x + 10, nameY, Color.WHITE, font)
+      renderer.drawString(player.name , statusPosition.x + 10, nameY, Color.WHITE, font)
 
       // score
       val scoreY = statusPosition.y + 15 + (statusSize.y + marginY) * player.id
