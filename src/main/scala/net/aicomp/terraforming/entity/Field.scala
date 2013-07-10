@@ -209,11 +209,13 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     baseAmount + aroundMount
   }
 
-  def calculateScore(player: Player): Int = tiles.values.foldLeft(0)(_ + _.score(player))
+  def calculateScore(player: Player) = tiles.values.foldLeft(0)(_ + _.score(player))
 
-  def stringify(player: Player): String =
-    (radius + 1) + " " + tiles.size + "\n" + points.toList.sorted.map(p =>
-      p.stringify + " " + tiles(p).stringify(materialAmount(p, player)) + "\n").mkString
+  def stringify: String =
+    (radius + 1) + " " + tiles.size + "\n" + points.toList.sorted.map { p =>
+      val material = tiles(p).owner match { case Some(owner) => materialAmount(p, owner) case _ => 0 }
+      p.stringify + " " + tiles(p).stringify(material) + "\n"
+    }.mkString
 
   override def toString: String = {
     val height = radius * 6 + 5

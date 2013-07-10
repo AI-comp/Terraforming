@@ -440,19 +440,22 @@ class FieldSpec extends SpecificationWithJUnit {
       f.calculateScore(players(0)) must_== f.calculateScore(players(1))
       f.calculateScore(players(1)) must_== f.calculateScore(players(2))
     }
-    "stringify itself" in {
-      val players = Vector(new Player(1), new Player(2), new Player(3))
-      val p = players(0)
-      val field = Field(1, players)
-      field.stringify(p) must_==
+    "stringify itself" in new fields {
+      val f = Field(1, players)
+      f.points.foreach(p => initTile(f, p))
+      f(Point(-1, 0)).owner = Some(players(0))
+      f(Point(-1, 1)).owner = Some(players(1))
+      f(Point(0, 0)).owner = Some(players(0))
+      f(Point(0, 0)).installation = Some(Installation.pit)
+      f.stringify must_==
         "2 7\n" +
-        "-1 0 " + field(-1, 0).stringify(field.materialAmount(Point(-1, 0), p)) + "\n" +
-        "-1 1 " + field(-1, 1).stringify(field.materialAmount(Point(-1, 1), p)) + "\n" +
-        "0 -1 " + field(0, -1).stringify(field.materialAmount(Point(0, -1), p)) + "\n" +
-        "0 0 " + field(0, 0).stringify(field.materialAmount(Point(0, 0), p)) + "\n" +
-        "0 1 " + field(0, 1).stringify(field.materialAmount(Point(0, 1), p)) + "\n" +
-        "1 -1 " + field(1, -1).stringify(field.materialAmount(Point(1, -1), p)) + "\n" +
-        "1 0 " + field(1, 0).stringify(field.materialAmount(Point(1, 0), p)) + "\n"
+        "-1 0 " + f(-1, 0).stringify(2) + "\n" +
+        "-1 1 " + f(-1, 1).stringify(1) + "\n" +
+        "0 -1 " + f(0, -1).stringify(0) + "\n" +
+        "0 0 " + f(0, 0).stringify(0) + "\n" +
+        "0 1 " + f(0, 1).stringify(0) + "\n" +
+        "1 -1 " + f(1, -1).stringify(0) + "\n" +
+        "1 0 " + f(1, 0).stringify(0) + "\n"
     }
   }
 }

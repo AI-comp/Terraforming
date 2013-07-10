@@ -69,6 +69,6 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
 
   def stringify(player: Player): String = "START\n" +
     currentTurn + " " + maxTurn + " " + player.id + "\n" +
-    field.stringify(player) +
+    field.stringify +
     "EOS"
 }
