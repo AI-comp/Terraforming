@@ -11,16 +11,13 @@ import java.awt.image.BufferedImage
 import java.util.Calendar
 import java.util.Random
 import java.util.Scanner
-
 import scala.util.control.Exception.allCatch
-
 import org.apache.commons.cli.BasicParser
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.OptionBuilder
 import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
-
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.JScrollPane
@@ -59,18 +56,42 @@ import net.exkazuu.gameaiarena.gui.builder.GameGuiBuilder
 import net.exkazuu.gameaiarena.gui.builder.WindowCreator
 import net.exkazuu.gameaiarena.key.AwtKeyMemorizer
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
+import net.aicomp.terraforming.ai.SampleInternalManipulator
+import scala.collection.mutable.ListBuffer
+import net.exkazuu.gameaiarena.manipulator.Manipulator
 
 object Main {
 
   val HELP = "h"
   val FPS = "f"
   val CUI_MODE = "c"
-  val AI_PROGRAM = "a"
+  val USER_PLAYERS = "u"
+  val EXTERNAL_AI_PROGRAM = "a"
   val INTERNAL_AI_PROGRAM = "i"
   val NOT_SHOWING_LOG = "n"
+  val calendar = Calendar.getInstance
   var logFunction: String => Unit = null
 
   def log(text: String) = logFunction(text)
+
+  def main(args: Array[String]) {
+    val options = buildOptions()
+    try {
+      val parser = new BasicParser()
+      val cl = parser.parse(options, args)
+      if (cl.hasOption(HELP)) {
+        printHelp(options)
+      } else {
+        startGame(cl)
+      }
+    } catch {
+      case e: ParseException => {
+        System.err.println("Error: " + e.getMessage())
+        printHelp(options)
+        System.exit(-1)
+      }
+    }
+  }
 
   def printHelp(options: Options) {
     val help = new HelpFormatter()
@@ -79,14 +100,18 @@ object Main {
         + "[OPTIONS]: ", "", options, "", true)
   }
 
-  def main(args: Array[String]) {
-    OptionBuilder.hasArgs(3)
-    OptionBuilder.withDescription("Set three AI programs.")
-    val aiOption = OptionBuilder.create(AI_PROGRAM)
+  def buildOptions() = {
+    OptionBuilder.hasArg()
+    OptionBuilder.withDescription("Set 0-3 user players. When specifying no player option (-u, -a, -i), a game is provided for 1 user player and 2 default internal AI plyaers")
+    val userOption = OptionBuilder.create(USER_PLAYERS)
 
-    OptionBuilder.hasArgs(3)
-    OptionBuilder.withDescription("Set three internal AI programs.")
-    val internalOption = OptionBuilder.create(INTERNAL_AI_PROGRAM)
+    OptionBuilder.hasArgs()
+    OptionBuilder.withDescription("Set 1-3 AI players with external programs.")
+    val externalAIOption = OptionBuilder.create(EXTERNAL_AI_PROGRAM)
+
+    OptionBuilder.hasArgs()
+    OptionBuilder.withDescription("Set 1-3 AI players with internal classes for debugging puropose.")
+    val internalAIOption = OptionBuilder.create(INTERNAL_AI_PROGRAM)
 
     OptionBuilder.withDescription(
       "FPS to adjust game speed. Default value is 30 for user mode or 1000 for ai mode.")
@@ -99,107 +124,24 @@ object Main {
       .addOption(FPS, false, "Enable CUI mode.")
       .addOption(CUI_MODE, false, "Enable CUI mode.")
       .addOption(NOT_SHOWING_LOG, false, "Disable showing logs in the scree.")
-      .addOption(aiOption)
-      .addOption(internalOption)
+      .addOption(userOption)
+      .addOption(externalAIOption)
+      .addOption(internalAIOption)
       .addOption(fpsOption)
-
-    try {
-      val parser = new BasicParser()
-      val cl = parser.parse(options, args)
-      if (cl.hasOption(HELP)) {
-        printHelp(options)
-      } else {
-        startGame(options, cl)
-      }
-    } catch {
-      case e: ParseException => {
-        System.err.println("Error: " + e.getMessage())
-        printHelp(options)
-        System.exit(-1)
-      }
-    }
+    options
   }
 
-  def startGame(options: Options, cl: CommandLine) {
-    // Must not apply limittingTime/limittingSumTime to user manipulators
-    val random = new Random()
-    val calendar = Calendar.getInstance
-    val oos = StreamUtils.openStreamForJava(calendar, random)
+  def getOptionsValuesWithoutNull(cl: CommandLine, option: String) = {
+    if (cl.hasOption(option))
+      cl.getOptionValues(option)
+    else
+      Array[String]()
+  }
+
+  def startGame(cl: CommandLine) {
+    val (env, startScene) = initializeEnvironmentAndScenes(cl)
+
     val logStream = StreamUtils.openStreamForLogging(calendar, "log")
-
-    val nums = Vector((0 to 2): _*)
-    val players = nums.map(new Player(_))
-
-    val startAndGameMans = if (cl.hasOption(AI_PROGRAM) && cl.getOptionValues(AI_PROGRAM).length == 3) {
-      Some(nums.map(i => {
-        val cmds = cl.getOptionValues(AI_PROGRAM)
-        val com = new ExternalComputerPlayer(cmds(i).split(" "))
-        val out = StreamUtils.openStreamForLogging(calendar, "stdout_player" + i)
-        val err = StreamUtils.openStreamForLogging(calendar, "stderr_player" + i)
-        com.addStreamForLoggingStdoutOfExternalProgram(out)
-        com.addStreamForLoggingErrorOfExternalProgram(err)
-        com.addStreamForLoggingErrorOfExternalProgram(System.err)
-        (new AIPlayerStartManipulator(players(i), com),
-          new AIPlayerGameManipulator(players(i), com))
-      }))
-    } else if (cl.hasOption(INTERNAL_AI_PROGRAM) && cl.getOptionValues(INTERNAL_AI_PROGRAM).length == 3) {
-      Some(nums.map(i => {
-        val cmds = cl.getOptionValues(INTERNAL_AI_PROGRAM)
-        val clazz = Class.forName(cmds(i))
-        val man = clazz.newInstance().asInstanceOf[InternalManipulator]
-        (new InternalAIPlayerStartManipulator(players(i), man),
-          new InternalAIPlayerGameManipulator(players(i), man))
-      }))
-    } else {
-      None
-    }
-
-    def initializeEnvironment(env: GameEnvironment, userStartManipulator: StartManipulator, userGameManipulator: GameManipulator) = {
-      val startManipulators = (startAndGameMans match {
-        case Some(startAndGameMans) => startAndGameMans.map { case (man, _) => man }
-          .map(_.limittingTime(10000))
-        case None => nums.map(_ => userStartManipulator)
-      }).map(_.recordingStream(oos))
-        .map(_.threading())
-      val gameManipulators = (startAndGameMans match {
-        case Some(startAndGameMans) => startAndGameMans.map { case (_, man) => man }
-          .map(_.limittingSumTime(1000, 5000))
-        case None => nums.map(_ => userGameManipulator)
-      }).map(_.recordingStream(oos))
-        .map(_.threading())
-
-      val field = Field(6, players, random)
-      env.game = new Game(field, players, 200)
-      if (startAndGameMans.isDefined) {
-        env.getSceneManager().setFps(1000)
-      } else {
-        env.getSceneManager().setFps(30)
-      }
-
-      (startManipulators, gameManipulators)
-    }
-
-    val (env, startScene) = if (cl.hasOption(CUI_MODE)) {
-      val env = GameEnvironment()
-      val scanner = new Scanner(System.in)
-      AbstractScene.display = println
-      val (startManipulators, gameManipulators) =
-        initializeEnvironment(env, new ConsoleUserStartManipulator(scanner), new ConsoleUserGameManipulator(scanner))
-
-      val resultScene = new ResultScene(null)
-      val mainScene = new MainScene(resultScene, gameManipulators)
-      (env, new PlayerScene(mainScene, startManipulators))
-    } else {
-      val (window, env) = initializeComponents()
-      ImageLoader.prefetch(env.getRenderer())
-      val (startManipulators, gameManipulators) =
-        initializeEnvironment(env, new GraphicalUserStartManipulator(), new GraphicalUserGameManipulator())
-
-      val waitScene = new WaitingScene(null) with GraphicalScene
-      val resultScene = new ResultScene(waitScene) with GraphicalScene
-      val mainScene = new MainScene(resultScene, gameManipulators) with GraphicalScene
-      (env, new PlayerScene(mainScene, startManipulators) with TitleScene)
-    }
     if (cl.hasOption(NOT_SHOWING_LOG)) {
       AbstractScene.display = logStream.print
     } else {
@@ -210,7 +152,7 @@ object Main {
         display(text)
       }
     }
-    env.getSceneManager()
+
     if (cl.hasOption(FPS)) {
       val m = env.getSceneManager()
       val fps = allCatch opt cl.getOptionValue(FPS).toDouble getOrElse (m.getFps())
@@ -219,6 +161,90 @@ object Main {
 
     env.getRenderer().waitLoadImage()
     env.start(startScene)
+  }
+
+  def initializeEnvironmentAndScenes(cl: CommandLine) = {
+    if (cl.hasOption(CUI_MODE)) {
+      val env = GameEnvironment()
+      val scanner = new Scanner(System.in)
+      AbstractScene.display = println
+      val (startManipulators, gameManipulators) =
+        initializeManipulators(cl, env, new ConsoleUserStartManipulator(scanner),
+          new ConsoleUserGameManipulator(scanner))
+
+      val resultScene = new ResultScene(null)
+      val mainScene = new MainScene(resultScene, gameManipulators)
+      (env, new PlayerScene(mainScene, startManipulators))
+    } else {
+      val (window, env) = initializeComponents()
+      ImageLoader.prefetch(env.getRenderer())
+      val (startManipulators, gameManipulators) =
+        initializeManipulators(cl, env, new GraphicalUserStartManipulator(),
+          new GraphicalUserGameManipulator())
+
+      val waitScene = new WaitingScene(null) with GraphicalScene
+      val resultScene = new ResultScene(waitScene) with GraphicalScene
+      val mainScene = new MainScene(resultScene, gameManipulators) with GraphicalScene
+      (env, new PlayerScene(mainScene, startManipulators) with TitleScene)
+    }
+  }
+
+  def initializeManipulators(cl: CommandLine, env: GameEnvironment, userStartManipulator: StartManipulator, userGameManipulator: GameManipulator) = {
+    val nums = Vector(0 to 2: _*)
+    val players = nums.map(new Player(_))
+    val nUsers = allCatch opt Math.min(0, cl.getOptionValue(USER_PLAYERS).toInt) getOrElse (0)
+    val externalCmds = getOptionsValuesWithoutNull(cl, EXTERNAL_AI_PROGRAM)
+    val internalNames = getOptionsValuesWithoutNull(cl, INTERNAL_AI_PROGRAM)
+    val defaultNames = nums.map(_ => classOf[SampleInternalManipulator].getName())
+    val userIndices = if (nUsers + externalCmds.size + internalNames.size == 0) {
+      Vector(0)
+    } else {
+      Vector(0 until nUsers: _*)
+    }
+
+    var iPlayers = 0
+    val startMans = ListBuffer[Manipulator[Game, Array[String], String]]()
+    val gameMans = ListBuffer[Manipulator[Game, Array[String], String]]()
+
+    for (n <- userIndices.take(3 - iPlayers)) {
+      startMans += userStartManipulator
+      gameMans += userGameManipulator
+      iPlayers += 1
+    }
+    for (cmd <- externalCmds.take(3 - iPlayers)) {
+      val com = new ExternalComputerPlayer(cmd.split(" "))
+      val out = StreamUtils.openStreamForLogging(calendar, "stdout_player" + iPlayers)
+      val err = StreamUtils.openStreamForLogging(calendar, "stderr_player" + iPlayers)
+      com.addStreamForLoggingStdoutOfExternalProgram(out)
+      com.addStreamForLoggingErrorOfExternalProgram(err)
+      com.addStreamForLoggingErrorOfExternalProgram(System.err)
+      startMans += (new AIPlayerStartManipulator(players(iPlayers), com)).limittingTime(10000)
+      gameMans += new AIPlayerGameManipulator(players(iPlayers), com)
+        .limittingSumTime(1000, 5000)
+      iPlayers += 1
+    }
+    for (name <- (internalNames ++ defaultNames).take(3 - iPlayers)) {
+      val clazz = Class.forName(name)
+      val man = clazz.newInstance().asInstanceOf[InternalManipulator]
+      startMans += (new InternalAIPlayerStartManipulator(players(iPlayers), man)
+        .limittingTime(10000))
+      gameMans += new InternalAIPlayerGameManipulator(players(iPlayers), man)
+        .limittingSumTime(1000, 5000)
+      iPlayers += 1
+    }
+
+    val random = new Random()
+    val field = Field(6, players, random)
+    env.game = new Game(field, players, 200)
+    if (userIndices.size == 0) {
+      env.getSceneManager().setFps(1000)
+    } else {
+      env.getSceneManager().setFps(30)
+    }
+
+    val oos = StreamUtils.openStreamForJava(calendar, random)
+    (Vector(startMans.map(_.recordingStream(oos)).map(_.threading()): _*),
+      Vector(gameMans.map(_.recordingStream(oos)).map(_.threading()): _*))
   }
 
   def initializeComponents() = {
