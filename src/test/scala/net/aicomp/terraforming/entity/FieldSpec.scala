@@ -2,10 +2,11 @@ package net.aicomp.terraforming.entity
 
 import org.specs2.mutable.SpecificationWithJUnit
 import org.specs2.specification.Scope
+import java.util.Random
 
 class FieldSpec extends SpecificationWithJUnit {
   trait fields extends Scope {
-    val players = Vector(new Player(1), new Player(2), new Player(3))
+    val players = Vector(new Player(0), new Player(1), new Player(2))
     val radius = 7
     val field = Field(radius, players)
 
@@ -424,6 +425,20 @@ class FieldSpec extends SpecificationWithJUnit {
       field(0, 0).owner = Some(players(0))
       field(0, 0).installation = Some(Installation.attack)
       field.calculateScore(players(0)) must_== initialScore + developedLandScore
+    }
+    "create a map as each player has a same score" in new fields {
+      val f = Field(radius, players, new Random(-497319))
+      val p1 = Point(5, 0)
+      val p2 = Point(-5, 5)
+      val p3 = Point(0, -5)
+      f(p1).installation must_== Some(Installation.initial)
+      f(p2).installation must_== Some(Installation.initial)
+      f(p3).installation must_== Some(Installation.initial)
+      f(p1).owner.get.id must_== 0
+      f(p2).owner.get.id must_== 1
+      f(p3).owner.get.id must_== 2
+      f.calculateScore(players(0)) must_== f.calculateScore(players(1))
+      f.calculateScore(players(1)) must_== f.calculateScore(players(2))
     }
     "stringify itself" in {
       val players = Vector(new Player(1), new Player(2), new Player(3))

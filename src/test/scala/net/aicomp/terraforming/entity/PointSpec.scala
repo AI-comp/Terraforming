@@ -21,6 +21,9 @@ class PointSpec extends SpecificationWithJUnit {
       Point(1, 0).rotate120 must_== Point(-1, 1)
       Point(-2, 1).rotate120 must_== Point(1, -2)
       Point(-3, -2).rotate120.rotate240 must_== Point(-3, -2)
+      Point(5, 0).rotate120 must_!= Point(5, 0)
+      Point(5, 0).rotate240 must_!= Point(5, 0)
+      Point(5, 0).rotate120 must_!= Point(5, 0).rotate240
     }
     "calculate distance between 2 points" in {
       // x
@@ -102,14 +105,14 @@ class PointSpec extends SpecificationWithJUnit {
       Point(0, 0).aroundPoints(2) must contain(Point(0, 1))
       Point(0, 0).aroundPoints(2) must contain(Point(-1, 0))
       Point(0, 0).aroundPoints(2) must contain(Point(1, 0))
-      
+
       Point(0, 0).aroundPoints(2) must contain(Point(-2, 2))
       Point(0, 0).aroundPoints(2) must contain(Point(2, -2))
       Point(0, 0).aroundPoints(2) must contain(Point(0, -2))
       Point(0, 0).aroundPoints(2) must contain(Point(0, 2))
       Point(0, 0).aroundPoints(2) must contain(Point(-2, 0))
       Point(0, 0).aroundPoints(2) must contain(Point(2, 0))
-      
+
       Point(0, 0).aroundPoints(2) must contain(Point(2, -1))
       Point(0, 0).aroundPoints(2) must contain(Point(1, 1))
       Point(0, 0).aroundPoints(2) must contain(Point(-1, 2))
@@ -134,7 +137,7 @@ class PointSpec extends SpecificationWithJUnit {
       Point(0, 0).linePoints(2) must contain(Point(0, 1))
       Point(0, 0).linePoints(2) must contain(Point(-1, 0))
       Point(0, 0).linePoints(2) must contain(Point(1, 0))
-      
+
       Point(0, 0).linePoints(2) must contain(Point(-2, 2))
       Point(0, 0).linePoints(2) must contain(Point(2, -2))
       Point(0, 0).linePoints(2) must contain(Point(0, -2))

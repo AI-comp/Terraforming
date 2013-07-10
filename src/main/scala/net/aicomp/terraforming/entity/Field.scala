@@ -274,12 +274,11 @@ object Field {
     require(players.length == 3)
 
     // first, generate 1/3 pattern
-    // region: (x, y) such that y >= 0 && x + y >= 1
-
     val field = mutable.Map(Field(radius).tiles.toSeq: _*)
     var holeCount = 0
     do {
       holeCount = 0
+      // region: (x, y) such that y >= 0 && x + y >= 1
       for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
         field(Point(x, y)).owner = None
         field(Point(x, y)).installation = None
@@ -310,8 +309,8 @@ object Field {
       }
       copiedTile
     }
-
-    for (y <- 0 to radius; x <- -y to -y + radius) {
+    // region: (x, y) such that y >= 0 && x + y >= 1
+    for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
       val p = Point(x, y)
       field(p.rotate120) = copyTile(field(p), players(1))
       field(p.rotate240) = copyTile(field(p), players(2))
