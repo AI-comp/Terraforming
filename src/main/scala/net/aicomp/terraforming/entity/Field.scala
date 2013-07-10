@@ -176,7 +176,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   }
 
   def ownedTileAmount(player: Player) = {
-    ownedTiles(player).count(_ => true)
+    ownedTiles(player).size
   }
 
   def additionalScoreAmount(player: Player) = {

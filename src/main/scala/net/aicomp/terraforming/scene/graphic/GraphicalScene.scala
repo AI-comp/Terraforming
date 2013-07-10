@@ -103,22 +103,14 @@ trait GraphicalScene extends AbstractScene {
     val y = op.y + 6
 
     val instImages = ImageLoader.loadInstallations(renderer)
-    if (tile.isHole) {
+    if (tile.isHole || tile.installation.exists(_ == Installation.bridge)){
       renderer.drawImage(instImages("hole"), x - 7, y)
-    } else {
-      tile.installation match {
-        case Some(Installation.bridge) => {
-          renderer.drawImage(instImages("hole"), x - 7, y)
-        }
-        case _ =>
-      }
     }
 
     tile.owner match {
       case Some(owner) => {
         tile.installation.map { inst =>
           renderer.drawImage(instImages(inst.name.toString() + "_" + owner.id), x, y)
-          //renderer.drawString(inst.head.toString(), x, y)
         }
       }
       case _ =>
@@ -169,9 +161,9 @@ trait GraphicalScene extends AbstractScene {
       val infoBgY = statusPosition.y + (statusSize.y + marginY) * player.id
       renderer.drawImage(playerInfoBg(player.id), statusPosition.x, infoBgY)
 
-      // player .
+      // player name
       val nameY = statusPosition.y + 28 + (statusSize.y + marginY) * player.id
-      renderer.drawString(if (player.name.length() > 16) player.name.substring(0, 16) else player.name, statusPosition.x + 10, nameY, Color.WHITE, font)
+      renderer.drawString(player.name.take(16), statusPosition.x + 10, nameY, Color.WHITE, font)
 
       // score
       val amountY = 43 + statusPosition.y + (statusSize.y + marginY) * player.id
