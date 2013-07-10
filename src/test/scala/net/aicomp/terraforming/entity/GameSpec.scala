@@ -114,7 +114,7 @@ class GameSpec extends SpecificationWithJUnit {
     "stringify itself" in new games(12) {
       game.stringify(players(1)) must_== "START\n" +
         "1 12 1\n" +
-        field.stringify(players(1)) +
+        field.stringify +
         "EOS"
     }
   }
