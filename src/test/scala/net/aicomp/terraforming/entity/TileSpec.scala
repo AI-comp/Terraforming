@@ -7,9 +7,8 @@ class TileSpec extends SpecificationWithJUnit {
     val holeScore = 0
     val wasteLandScore = 0
     val undevelopedLandScore = 1
-    val developedLandScore = 2
+    val developedLandScore = 3
     val houseFacilityScore = 3
-    val cityFacilityScore = 10
     "equals another tile which has same values" in {
       new Tile().equals(new Tile()) must_== true
     }
@@ -44,13 +43,6 @@ class TileSpec extends SpecificationWithJUnit {
       tile.owner = Some(player)
       tile.installation = Some(Installation.attack)
       tile.score(player) must_== developedLandScore
-    }
-    "score a developed land in which a city facility built" in {
-      val player = new Player(1)
-      val tile = new Tile
-      tile.owner = Some(player)
-      tile.installation = Some(Installation.city)
-      tile.score(player) must_== cityFacilityScore
     }
     "stringify wasteland" in {
       val tile = new Tile
