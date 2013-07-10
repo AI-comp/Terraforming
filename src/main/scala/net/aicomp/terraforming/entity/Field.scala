@@ -277,7 +277,7 @@ object Field {
     field(Point(initialX, initialY)).owner = Some(players(0))
     field(Point(initialX, initialY)).installation = Some(Installation.initial)
     field(Point(initialX, initialY)).isHole = false;
-    
+
     // third, expand the pattern
     def copyTile(tile: Tile, player: Player) = {
       val copiedTile = tile.clone
@@ -286,7 +286,9 @@ object Field {
       }
       copiedTile
     }
-    for (y <- 0 to radius; x <- -y to -y + radius) {
+    
+    // region: (x, y) such that y >= 0 && x + y >= 1
+    for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
       val p = Point(x, y)
       field(p.rotate120) = copyTile(field(p), players(1))
       field(p.rotate240) = copyTile(field(p), players(2))

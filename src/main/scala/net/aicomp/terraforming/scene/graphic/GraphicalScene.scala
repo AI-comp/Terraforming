@@ -187,7 +187,7 @@ trait GraphicalScene extends AbstractScene {
 
       // each installation
       val eachInstallationAmountY = statusPosition.y + 71 + (statusSize.y + marginY) * player.id
-      renderer.drawImage(instImages("town_"+player.id),eachInstallationAmountX - 49 + 2 * 66, eachInstallationAmountY + 1 * 24)
+      renderer.drawImage(instImages("town_" + player.id), eachInstallationAmountX - 49 + 2 * 66, eachInstallationAmountY + 1 * 24)
 
       Installation.buildables.iterator.zipWithIndex.foreach {
         case (installation, index) => {

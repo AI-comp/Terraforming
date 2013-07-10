@@ -159,10 +159,11 @@ object Main {
       val field = Field(6, players, random)
       env.game = new Game(field, players, 200)
       if (env.getRenderer() != null) {
-        //TODO: env.getRenderer().startLogging(StreamUtils.openStreamForJavaScript(calendar))
+        //TODO: 
+        env.getRenderer().startLogging(StreamUtils.openStreamForJavaScript(calendar))
       }
       if (startAndGameMans.isDefined) {
-        env.getSceneManager().setFps(1000)
+        env.getSceneManager().setFps(10)
       }
 
       (startManipulators, gameManipulators)
