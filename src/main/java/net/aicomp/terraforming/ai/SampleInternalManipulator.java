@@ -17,8 +17,8 @@ import net.aicomp.terraforming.manipulator.InternalManipulator;
 public class SampleInternalManipulator implements InternalManipulator {
 	public static void main(String[] args) {
 		String name = SampleInternalManipulator.class.getName();
-		net.aicomp.terraforming.Main.main(new String[] { "-n", "-i", name,
-				name, name });
+		net.aicomp.terraforming.Main
+				.main(new String[] { "-i", name, name, name });
 	}
 
 	private Random rand = new Random("aicomp".hashCode());

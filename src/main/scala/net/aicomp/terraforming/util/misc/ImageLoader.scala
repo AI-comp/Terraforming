@@ -51,59 +51,57 @@ object ImageLoader {
     }
     _tiles
   }
-  
+
   private var _installations: Map[String, Image] = null
   def loadInstallations(render: Renderer) = {
-    if (_installations == null){
+    if (_installations == null) {
       _installations = Map(
-          "hole" -> render.loadImage("img/installation/hole.png"),
-          "installation_0" -> render.loadImage("img/installation/installation0.png"),
-          "installation_1" -> render.loadImage("img/installation/installation1.png"),
-          "installation_2" -> render.loadImage("img/installation/installation2.png"),
-          "initial_0" -> render.loadImage("img/installation/largefactory0.png"),
-          "initial_1" -> render.loadImage("img/installation/largefactory1.png"),
-          "initial_2" -> render.loadImage("img/installation/largefactory2.png"),
-          "factory_0" -> render.loadImage("img/installation/factory0.png"),
-          "factory_1" -> render.loadImage("img/installation/factory1.png"),
-          "factory_2" -> render.loadImage("img/installation/factory2.png"),
-          "pit_0" -> render.loadImage("img/installation/pit0.png"),
-          "pit_1" -> render.loadImage("img/installation/pit1.png"),
-          "pit_2" -> render.loadImage("img/installation/pit2.png"),
-          "attack_0" -> render.loadImage("img/installation/attack0.png"),
-          "attack_1" -> render.loadImage("img/installation/attack1.png"),
-          "attack_2" -> render.loadImage("img/installation/attack2.png"),
-          "shield_0" -> render.loadImage("img/installation/shield0.png"),
-          "shield_1" -> render.loadImage("img/installation/shield1.png"),
-          "shield_2" -> render.loadImage("img/installation/shield2.png"),
-          "bridge_0" -> render.loadImage("img/installation/bridge0.png"),
-          "bridge_1" -> render.loadImage("img/installation/bridge1.png"),
-          "bridge_2" -> render.loadImage("img/installation/bridge2.png"),
-          "house_0" -> render.loadImage("img/installation/house0.png"),
-          "house_1" -> render.loadImage("img/installation/house1.png"),
-          "house_2" -> render.loadImage("img/installation/house2.png"),
-          "town_0" -> render.loadImage("img/installation/town0.png"),
-          "town_1" -> render.loadImage("img/installation/town1.png"),
-          "town_2" -> render.loadImage("img/installation/town2.png"),
-          "city_0" -> render.loadImage("img/installation/city0.png"),
-          "city_1" -> render.loadImage("img/installation/city1.png"),
-          "city_2" -> render.loadImage("img/installation/city2.png")
-          )
+        "hole" -> render.loadImage("img/installation/hole.png"),
+        "installation_0" -> render.loadImage("img/installation/installation0.png"),
+        "installation_1" -> render.loadImage("img/installation/installation1.png"),
+        "installation_2" -> render.loadImage("img/installation/installation2.png"),
+        "initial_0" -> render.loadImage("img/installation/largefactory0.png"),
+        "initial_1" -> render.loadImage("img/installation/largefactory1.png"),
+        "initial_2" -> render.loadImage("img/installation/largefactory2.png"),
+        "factory_0" -> render.loadImage("img/installation/factory0.png"),
+        "factory_1" -> render.loadImage("img/installation/factory1.png"),
+        "factory_2" -> render.loadImage("img/installation/factory2.png"),
+        "pit_0" -> render.loadImage("img/installation/pit0.png"),
+        "pit_1" -> render.loadImage("img/installation/pit1.png"),
+        "pit_2" -> render.loadImage("img/installation/pit2.png"),
+        "attack_0" -> render.loadImage("img/installation/attack0.png"),
+        "attack_1" -> render.loadImage("img/installation/attack1.png"),
+        "attack_2" -> render.loadImage("img/installation/attack2.png"),
+        "shield_0" -> render.loadImage("img/installation/shield0.png"),
+        "shield_1" -> render.loadImage("img/installation/shield1.png"),
+        "shield_2" -> render.loadImage("img/installation/shield2.png"),
+        "bridge_0" -> render.loadImage("img/installation/bridge0.png"),
+        "bridge_1" -> render.loadImage("img/installation/bridge1.png"),
+        "bridge_2" -> render.loadImage("img/installation/bridge2.png"),
+        "house_0" -> render.loadImage("img/installation/house0.png"),
+        "house_1" -> render.loadImage("img/installation/house1.png"),
+        "house_2" -> render.loadImage("img/installation/house2.png"),
+        "town_0" -> render.loadImage("img/installation/town0.png"),
+        "town_1" -> render.loadImage("img/installation/town1.png"),
+        "town_2" -> render.loadImage("img/installation/town2.png"),
+        "city_0" -> render.loadImage("img/installation/city0.png"),
+        "city_1" -> render.loadImage("img/installation/city1.png"),
+        "city_2" -> render.loadImage("img/installation/city2.png"))
     }
     _installations
   }
 
-    private var _statusInstallations: Map[String, Image] = null
+  private var _statusInstallations: Map[String, Image] = null
   def loadStatusInstallations(render: Renderer) = {
-    if (_statusInstallations == null){
+    if (_statusInstallations == null) {
       _statusInstallations = Map(
-          "town_0" -> render.loadImage("img/playerInfo/town0.png"),
-          "town_1" -> render.loadImage("img/playerInfo/town1.png"),
-          "town_2" -> render.loadImage("img/playerInfo/town2.png")
-          )
+        "town_0" -> render.loadImage("img/playerInfo/town0.png"),
+        "town_1" -> render.loadImage("img/playerInfo/town1.png"),
+        "town_2" -> render.loadImage("img/playerInfo/town2.png"))
     }
     _statusInstallations
   }
-  
+
   private var _roundParts: Map[String, Image] = null
 
   def loadRoundParts(renderer: Renderer) = {
