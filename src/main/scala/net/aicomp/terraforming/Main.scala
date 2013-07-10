@@ -1,5 +1,6 @@
 package net.aicomp.terraforming
 
+import scala.util.control.Exception._
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
@@ -60,6 +61,7 @@ import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
 object Main {
 
   val HELP = "h"
+  val FPS = "f"
   val CUI_MODE = "c"
   val AI_PROGRAM = "a"
   val INTERNAL_AI_PROGRAM = "i"
@@ -78,18 +80,26 @@ object Main {
   def main(args: Array[String]) {
     OptionBuilder.hasArgs(3)
     OptionBuilder.withDescription("Set three AI programs.")
-    val opt1 = OptionBuilder.create(AI_PROGRAM)
+    val aiOption = OptionBuilder.create(AI_PROGRAM)
 
     OptionBuilder.hasArgs(3)
     OptionBuilder.withDescription("Set three internal AI programs.")
-    val opt2 = OptionBuilder.create(INTERNAL_AI_PROGRAM)
+    val internalOption = OptionBuilder.create(INTERNAL_AI_PROGRAM)
+
+    OptionBuilder.withDescription(
+      "FPS to adjust game speed. Default value is 30 for user mode or 1000 for ai mode.")
+    OptionBuilder.hasArg()
+    OptionBuilder.withArgName("fps")
+    val fpsOption = OptionBuilder.create(FPS)
 
     val options = new Options()
       .addOption(HELP, false, "Print this help.")
+      .addOption(FPS, false, "Enable CUI mode.")
       .addOption(CUI_MODE, false, "Enable CUI mode.")
       .addOption(NOT_SHOWING_LOG, false, "Disable showing logs in the scree.")
-      .addOption(opt1)
-      .addOption(opt2)
+      .addOption(aiOption)
+      .addOption(internalOption)
+      .addOption(fpsOption)
 
     try {
       val parser = new BasicParser()
@@ -160,6 +170,8 @@ object Main {
       env.game = new Game(field, players, 200)
       if (startAndGameMans.isDefined) {
         env.getSceneManager().setFps(1000)
+      } else {
+        env.getSceneManager().setFps(30)
       }
 
       (startManipulators, gameManipulators)
@@ -167,7 +179,6 @@ object Main {
 
     val (env, startScene) = if (cl.hasOption(CUI_MODE)) {
       val env = GameEnvironment()
-      env.getSceneManager().setFps(1000)
       val scanner = new Scanner(System.in)
       AbstractScene.display = println
       val (startManipulators, gameManipulators) =
@@ -196,6 +207,12 @@ object Main {
         display(text)
       }
     }
+    env.getSceneManager()
+    if (cl.hasOption(FPS)) {
+      val m = env.getSceneManager()
+      val fps = allCatch opt cl.getOptionValue(FPS).toDouble getOrElse (m.getFps())
+      m.setFps(fps)
+    }
     env.start(startScene)
   }
 
@@ -211,7 +228,6 @@ object Main {
     val ret = builder.setTitle("Terraforming")
       .setWindowSize(1024, 740)
       .setPanelSize(1024, 495)
-      .setFps(5)
       .setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
       .setWindowCreator(new WindowCreator() {
         override def createWindow(gamePanel: JGamePanel) = {
