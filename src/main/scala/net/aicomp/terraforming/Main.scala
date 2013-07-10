@@ -1,6 +1,5 @@
 package net.aicomp.terraforming
 
-import scala.util.control.Exception._
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
@@ -8,9 +7,12 @@ import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.image.BufferedImage
 import java.util.Calendar
 import java.util.Random
 import java.util.Scanner
+
+import scala.util.control.Exception.allCatch
 
 import org.apache.commons.cli.BasicParser
 import org.apache.commons.cli.CommandLine
@@ -189,6 +191,7 @@ object Main {
       (env, new PlayerScene(mainScene, startManipulators))
     } else {
       val (window, env) = initializeComponents()
+      ImageLoader.prefetch(env.getRenderer())
       val (startManipulators, gameManipulators) =
         initializeEnvironment(env, new GraphicalUserStartManipulator(), new GraphicalUserGameManipulator())
 
@@ -213,6 +216,8 @@ object Main {
       val fps = allCatch opt cl.getOptionValue(FPS).toDouble getOrElse (m.getFps())
       m.setFps(fps)
     }
+
+    env.getRenderer().waitLoadImage()
     env.start(startScene)
   }
 
