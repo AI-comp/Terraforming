@@ -229,7 +229,55 @@ class InstallationSpec extends SpecificationWithJUnit {
         field.build(players(0), _p, Installation.pit) must_== ())
       field.build(players(0), origin, Installation.town) must_== ()
       field(origin).additionalScore must_== 10
-      
+
     }
+
+    "allow to accept building a 'house' in vertex" in new installations {
+      val settlementPlaces = List(
+        Point(5, 0), Point(5, 1), Point(6, -1),
+        Point(5, -5), Point(6, -5), Point(5, -6),
+        Point(0, -5), Point(1, -6), Point(-1, -5),
+        Point(-5, 0), Point(-5, -1), Point(-6, 1),
+        Point(-5, 5), Point(-6, 5), Point(-5, 6),
+        Point(0, 5), Point(-1, 6), Point(1, 5))
+
+      val housePlaces = List(
+        Point(-6, 6), Point(-6, 0), Point(0, -6),
+        Point(0, 6), Point(6, -6), Point(6, 0))
+
+      settlementPlaces.foreach(_p =>
+        initTile(field, _p, players(0)))
+        
+      housePlaces.foreach(_p => {
+        initTile(field, _p, players(0))
+        field(_p).robots = 10
+        field.build(players(0), _p, Installation.house)
+      })
+    }
+    
+        "allow to accept building a 'house' in vertex" in new installations {
+      val settlementPlaces = List(
+        Point(5, 0), Point(5, 1), Point(6, -1),
+        Point(5, -5), Point(6, -5), Point(5, -6),
+        Point(0, -5), Point(1, -6), Point(-1, -5),
+        Point(-5, 0), Point(-5, -1), Point(-6, 1),
+        Point(-5, 5), Point(-6, 5), Point(-5, 6),
+        Point(0, 5), Point(-1, 6), Point(1, 5))
+
+      val housePlaces = List(
+        Point(-6, 6), Point(-6, 0), Point(0, -6),
+        Point(0, 6), Point(6, -6), Point(6, 0))
+
+      settlementPlaces.foreach(_p =>
+        initTile(field, _p, players(0)))
+        
+      housePlaces.foreach(_p => {
+        initTile(field, _p, players(0))
+        field(_p).robots = 10
+        field.build(players(0), _p, Installation.house)
+      })
+    }
+
   }
+
 }
