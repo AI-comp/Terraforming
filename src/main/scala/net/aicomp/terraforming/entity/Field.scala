@@ -175,16 +175,24 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     tiles.values.filter(_.ownedBy(player))
   }
 
+  def ownedTileAmount(player: Player) = {
+    ownedTiles(player).count(_ => true)
+  }
+
+  def additionalScoreAmount(player: Player) = {
+    ownedTiles(player).map(_.additionalScore).sum
+  }
+
   def robotAmount(player: Player) = {
     ownedTiles(player).map(_.robots).sum
   }
 
   def eachInstallationAmount(player: Player, installation: Installation) = {
-    ownedTiles(player).count(_.installation.equals(installation))
+    ownedTiles(player).count(_.installation.exists(_ == installation))
   }
 
   def installationAmount(player: Player) = {
-    ownedTiles(player).count(tile => Installation.buildables.contains(tile.installation))
+    ownedTiles(player).count(_.installation.isDefined)
   }
 
   def availableAroundPoints(p: Point, length: Int = 1) = p.aroundPoints(length).filter(_.within(radius))
