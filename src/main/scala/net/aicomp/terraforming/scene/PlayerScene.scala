@@ -22,7 +22,7 @@ class PlayerScene(nextScene: Scene[GameEnvironment],
       displayLine("Please enter a name.")
       this
     } else {
-      game.currentPlayer.name = name
+      game.currentPlayer.name = if (name.length() < 20) name else name.substring(0, 20)
       if (game.changePlayerIndex() == 0) {
         displayLine(game.players.size + " players have joined the game. ("
           + game.players.map(_.name).mkString(", ") + ")")
