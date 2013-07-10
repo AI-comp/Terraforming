@@ -57,6 +57,16 @@ object ImageLoader {
     if (_installations == null) {
       _installations = Map(
         "hole" -> render.loadImage("img/installation/hole.png"),
+        "hole_18" -> render.loadImage("img/installation/hole18.png"),
+        "tile_0" -> render.loadImage("img/installation/tile0.png"),
+        "tile_1" -> render.loadImage("img/installation/tile1.png"),
+        "tile_2" -> render.loadImage("img/installation/tile2.png"),
+        "vp_0" -> render.loadImage("img/installation/vp0.png"),
+        "vp_1" -> render.loadImage("img/installation/vp1.png"),
+        "vp_2" -> render.loadImage("img/installation/vp2.png"),
+        "additionalScore_0" -> render.loadImage("img/installation/townvp0.png"),
+        "additionalScore_1" -> render.loadImage("img/installation/townvp1.png"),
+        "additionalScore_2" -> render.loadImage("img/installation/townvp2.png"),
         "installation_0" -> render.loadImage("img/installation/installation0.png"),
         "installation_1" -> render.loadImage("img/installation/installation1.png"),
         "installation_2" -> render.loadImage("img/installation/installation2.png"),
@@ -83,23 +93,9 @@ object ImageLoader {
         "house_2" -> render.loadImage("img/installation/house2.png"),
         "town_0" -> render.loadImage("img/installation/town0.png"),
         "town_1" -> render.loadImage("img/installation/town1.png"),
-        "town_2" -> render.loadImage("img/installation/town2.png"),
-        "city_0" -> render.loadImage("img/installation/city0.png"),
-        "city_1" -> render.loadImage("img/installation/city1.png"),
-        "city_2" -> render.loadImage("img/installation/city2.png"))
+        "town_2" -> render.loadImage("img/installation/town2.png"))
     }
     _installations
-  }
-
-  private var _statusInstallations: Map[String, Image] = null
-  def loadStatusInstallations(render: Renderer) = {
-    if (_statusInstallations == null) {
-      _statusInstallations = Map(
-        "town_0" -> render.loadImage("img/playerInfo/town0.png"),
-        "town_1" -> render.loadImage("img/playerInfo/town1.png"),
-        "town_2" -> render.loadImage("img/playerInfo/town2.png"))
-    }
-    _statusInstallations
   }
 
   private var _roundParts: Map[String, Image] = null
@@ -191,36 +187,6 @@ object ImageLoader {
           .toMap
     }
     _playerInformationBackgrounds
-  }
-
-  private var _playerHighlightFrame: Image = null
-  def loadPlayerHighlightFrame(render: Renderer) = {
-    if (_playerHighlightFrame == null) {
-      _playerHighlightFrame = render.loadImage("img/pactive.png")
-    }
-    _playerHighlightFrame
-  }
-
-  private var _resultBackground: Image = null
-  def loadResultBackground(render: Renderer) = {
-    if (_resultBackground == null) {
-      _resultBackground = render.loadImage("img/result/result_BG.png")
-    }
-    _resultBackground
-  }
-
-  private var _resultNumber: Map[Int, Map[Int, Image]] = null
-  def loadResultNumber(render: Renderer) = {
-    if (_resultNumber == null) {
-      _resultNumber = Map(
-        48 ->
-          Range(0, 10).map(num =>
-            (num, render.loadImage("img/result/48_" + num.toString + ".png"))).toMap,
-        64 ->
-          Range(0, 10).map(num =>
-            (num, render.loadImage("img/result/64_" + num.toString + ".png"))).toMap)
-    }
-    _resultNumber
   }
 
   private var _title: Image = null

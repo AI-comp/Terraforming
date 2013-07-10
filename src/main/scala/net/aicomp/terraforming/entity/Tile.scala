@@ -63,12 +63,12 @@ package net.aicomp.terraforming.entity
   def score(player: Player): Int = {
     val wasteLand = 0
     val undevelopedLand = 1
-    val developedLand = 2
+    val developedLand = 3
     val hole = 0
     if (ownedBy(player)) {
       if (isHole) hole
       else installation match {
-        case Some(ins) => ins.score
+        case Some(ins) => ins.score + additionalScore
         case None => undevelopedLand
       }
     } else wasteLand

@@ -103,7 +103,7 @@ trait GraphicalScene extends AbstractScene {
     val y = op.y + 6
 
     val instImages = ImageLoader.loadInstallations(renderer)
-    if (tile.isHole) {
+    if (tile.isHole || tile.installation.exists(_ == Installation.bridge)){
       renderer.drawImage(instImages("hole"), x - 7, y)
     }
 
@@ -111,7 +111,6 @@ trait GraphicalScene extends AbstractScene {
       case Some(owner) => {
         tile.installation.map { inst =>
           renderer.drawImage(instImages(inst.name.toString() + "_" + owner.id), x, y)
-          //renderer.drawString(inst.head.toString(), x, y)
         }
       }
       case _ =>
@@ -144,17 +143,18 @@ trait GraphicalScene extends AbstractScene {
   }
 
   def drawPlayers() {
-    val robotAmountX = statusPosition.x + 61
-    val eachInstallationAmountX = statusPosition.x + 61
-    val settlementAmountX = statusPosition.x + 127
-    val holeAmountX = statusPosition.x + 193
-    val scoreX = statusPosition.x + 259
-    val installationsAmountX = statusPosition.x + 259
+    val scoreX = statusPosition.x + 56
+    val eachInstallationAmountX = statusPosition.x + 56
+    val robotAmountX = statusPosition.x + 123
+    val ownTileAmountX = statusPosition.x + 190
+    val installationsAmountX = statusPosition.x + 257
+    val additionalScoreX = statusPosition.x + 257
     val marginY = 20
+    val imagePosX = -47
 
     val playerInfoBg = ImageLoader.loadPlayerInformationBackgrounds(renderer)
     val robotImages = ImageLoader.loadLargeRobots(renderer)
-    val instImages = ImageLoader.loadStatusInstallations(renderer)
+    val instImages = ImageLoader.loadInstallations(renderer)
 
     game.players.foreach { player =>
 
@@ -163,36 +163,40 @@ trait GraphicalScene extends AbstractScene {
 
       // player name
       val nameY = statusPosition.y + 28 + (statusSize.y + marginY) * player.id
-      renderer.drawString(player.name , statusPosition.x + 10, nameY, Color.WHITE, font)
+      renderer.drawString(player.name.take(16), statusPosition.x + 10, nameY, Color.WHITE, font)
 
       // score
-      val scoreY = statusPosition.y + 15 + (statusSize.y + marginY) * player.id
-      drawStatusNumber(game.field.calculateScore(player), scoreX, scoreY)
-
       val amountY = 43 + statusPosition.y + (statusSize.y + marginY) * player.id
+      renderer.drawImage(instImages("vp_" + player.id), scoreX + imagePosX, amountY)
+      drawStatusNumber(game.field.calculateScore(player), scoreX, amountY)
+
       val installationStatusY = 71
 
-      // robots
-      renderer.drawImage(robotImages.get(player.id).get, robotAmountX - 52, amountY)
-      drawStatusNumber(game.field.robotAmount(player), robotAmountX, amountY)
-
-      // settlements
-      drawStatusNumber(game.field.installationAmount(player), settlementAmountX, amountY)
-
-      // holes
-      drawStatusNumber(game.field.installationAmount(player), holeAmountX, amountY)
+      // own tile amount
+      renderer.drawImage(instImages("tile_" + player.id), ownTileAmountX + imagePosX, amountY)
+      drawStatusNumber(game.field.ownedTileAmount(player), ownTileAmountX, amountY)
 
       // installations
+      renderer.drawImage(instImages("installation_" + player.id), installationsAmountX + imagePosX, amountY)
       drawStatusNumber(game.field.installationAmount(player), installationsAmountX, amountY)
+
+      // additionalScore
+      val additionalScoreY = 95 + statusPosition.y + (statusSize.y + marginY) * player.id
+      renderer.drawImage(instImages("additionalScore_" + player.id), additionalScoreX + imagePosX, additionalScoreY)
+      drawStatusNumber(game.field.additionalScoreAmount(player), additionalScoreX, additionalScoreY)
+
+      // robots
+      renderer.drawImage(robotImages.get(player.id).get, robotAmountX + imagePosX, amountY)
+      drawStatusNumber(game.field.robotAmount(player), robotAmountX, amountY)
 
       // each installation
       val eachInstallationAmountY = statusPosition.y + 71 + (statusSize.y + marginY) * player.id
-      renderer.drawImage(instImages("town_" + player.id), eachInstallationAmountX - 49 + 2 * 66, eachInstallationAmountY + 1 * 24)
 
       Installation.buildables.iterator.zipWithIndex.foreach {
         case (installation, index) => {
+          renderer.drawImage(instImages(installation.name + "_" + player.id), eachInstallationAmountX + imagePosX + (index % 4) * 67, eachInstallationAmountY + (index / 4) * 24)
           drawStatusNumber(game.field.eachInstallationAmount(player, installation),
-            eachInstallationAmountX + (index % 4) * 66, eachInstallationAmountY + (index / 4) * 24)
+            eachInstallationAmountX + (index % 4) * 67, eachInstallationAmountY + (index / 4) * 24)
         }
       }
     }
