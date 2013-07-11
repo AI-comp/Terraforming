@@ -7,23 +7,28 @@ import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.awt.image.BufferedImage
 import java.util.Calendar
 import java.util.Random
 import java.util.Scanner
+
+import scala.Array.canBuildFrom
+import scala.collection.mutable.ListBuffer
 import scala.util.control.Exception.allCatch
+
 import org.apache.commons.cli.BasicParser
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.OptionBuilder
 import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
+
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTextArea
 import javax.swing.JTextField
 import javax.swing.SpringLayout
+import net.aicomp.terraforming.ai.SampleInternalManipulator
 import net.aicomp.terraforming.entity.Field
 import net.aicomp.terraforming.entity.Game
 import net.aicomp.terraforming.entity.GameEnvironment
@@ -55,10 +60,9 @@ import net.exkazuu.gameaiarena.gui.JGamePanel
 import net.exkazuu.gameaiarena.gui.builder.GameGuiBuilder
 import net.exkazuu.gameaiarena.gui.builder.WindowCreator
 import net.exkazuu.gameaiarena.key.AwtKeyMemorizer
-import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
-import net.aicomp.terraforming.ai.SampleInternalManipulator
-import scala.collection.mutable.ListBuffer
 import net.exkazuu.gameaiarena.manipulator.Manipulator
+import net.exkazuu.gameaiarena.manipulator.ThreadManipulator
+import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
 
 object Main {
 
@@ -198,7 +202,7 @@ object Main {
   def initializeManipulators(cl: CommandLine, env: GameEnvironment, userStartManipulator: StartManipulator, userGameManipulator: GameManipulator) = {
     val nums = Vector(0 to 2: _*)
     val players = nums.map(new Player(_))
-    val nUsers = allCatch opt Math.min(0, cl.getOptionValue(USER_PLAYERS).toInt) getOrElse (0)
+    val nUsers = allCatch opt math.min(0, cl.getOptionValue(USER_PLAYERS).toInt) getOrElse (0)
     val externalCmds = getOptionsValuesWithoutNull(cl, EXTERNAL_AI_PROGRAM)
     val internalNames = getOptionsValuesWithoutNull(cl, INTERNAL_AI_PROGRAM)
     val defaultNames = nums.map(_ => classOf[SampleInternalManipulator].getName())
