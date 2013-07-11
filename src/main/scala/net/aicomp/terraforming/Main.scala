@@ -79,6 +79,7 @@ object Main {
     try {
       val parser = new BasicParser()
       val cl = parser.parse(options, args)
+      throw new Exception("tetet")
       if (cl.hasOption(HELP)) {
         printHelp(options)
       } else {
@@ -89,6 +90,12 @@ object Main {
         System.err.println("Error: " + e.getMessage())
         printHelp(options)
         System.exit(-1)
+      }
+      case e: Throwable => {
+        val errStream = StreamUtils.openStreamForLogging(calendar, "err")
+        e.printStackTrace(errStream)
+        System.err.println("Saved an occuerd error in the file of 'log/err_xxxx.txt'");
+        throw e
       }
     }
   }
