@@ -176,6 +176,7 @@ object Main {
   }
 
   def initializeEnvironmentAndScenes(cl: CommandLine) = {
+    val jss = StreamUtils.openStreamForJavaScript(calendar)
     if (cl.hasOption(CUI_MODE)) {
       val env = GameEnvironment()
       val scanner = new Scanner(System.in)
@@ -185,7 +186,7 @@ object Main {
           new ConsoleUserGameManipulator(scanner))
 
       val resultScene = new ResultScene(null)
-      val mainScene = new MainScene(resultScene, gameManipulators)
+      val mainScene = new MainScene(resultScene, gameManipulators, jss)
       (env, new PlayerScene(mainScene, startManipulators))
     } else {
       val (window, env) = initializeComponents()
@@ -196,7 +197,7 @@ object Main {
 
       val waitScene = new WaitingScene(null) with GraphicalScene
       val resultScene = new ResultScene(waitScene) with GraphicalScene
-      val mainScene = new MainScene(resultScene, gameManipulators) with GraphicalScene
+      val mainScene = new MainScene(resultScene, gameManipulators, jss) with GraphicalScene
       (env, new PlayerScene(mainScene, startManipulators) with TitleScene)
     }
   }
