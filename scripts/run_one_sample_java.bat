@@ -1,0 +1,1 @@
+cd SampleAI & build.bat & cd .. & java -jar Terraforming.jar -a "java -cp SampleAI/Java Main"

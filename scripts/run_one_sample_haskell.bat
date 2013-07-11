@@ -1,0 +1,1 @@
+cd SampleAI & build.bat & cd .. & java -jar Terraforming.jar -a "SampleAI/Haskell/Main.exe"
