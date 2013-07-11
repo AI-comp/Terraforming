@@ -12,7 +12,7 @@ class PlayerScene(nextScene: Scene[GameEnvironment],
 
   override def initialize() {
     describe("Enter player names")
-    displayLine("Please enter three player names without spaces.")
+    displayLine("Please enter a name of Player 1.")
   }
 
   override def runWithCommandString(name: String) = {
@@ -27,7 +27,10 @@ class PlayerScene(nextScene: Scene[GameEnvironment],
         displayLine(game.players.size + " players have joined the game. ("
           + game.players.map(_.name).mkString(", ") + ")")
         nextScene
-      } else this
+      } else {
+        displayLine("Please enter a name of Player " + game.currentPlayerIndex + ".")
+        this
+      }
     }
   }
 }

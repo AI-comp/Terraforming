@@ -52,6 +52,8 @@ class AIPlayerStartManipulator(player: Player, com: ExternalComputerPlayer) exte
 
 class InternalAIPlayerStartManipulator(player: Player, manipulator: InternalManipulator) extends StartManipulator {
   override def runProcessing() {
-    _name = manipulator.getClass().getName()
+    val className = manipulator.getClass().getName()
+    val dotIndex = className.lastIndexOf('.')
+    _name = if (dotIndex >= 0) className.substring(dotIndex + 1) else className
   }
 }
