@@ -252,7 +252,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(0, 1).owner = Some(players(1))
       field(0, 1).robots = 10
       field.attack(players(0)) must_== ()
-      field(0, 1).robots must_== 10 - 3;
+      field(0, 1).robots must_== 10 - 2;
     }
     "reduce the number of other player's robots from 1 to 0 by attack" in new fields {
       initTile(field, Point(0, 0))
@@ -278,8 +278,8 @@ class FieldSpec extends SpecificationWithJUnit {
       field(0, 3).owner = Some(players(1))
       field(0, 3).robots = 10
       field.attack(players(0)) must_== ()
-      field(0, 1).robots must_== 10 - 3;
-      field(0, 2).robots must_== 10 - 3;
+      field(0, 1).robots must_== 10 - 2;
+      field(0, 2).robots must_== 10 - 2;
       field(0, 3).robots must_== 10;
     }
     "not reduce the number of one's robots by attack" in new fields {
