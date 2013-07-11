@@ -90,6 +90,12 @@ object Main {
         printHelp(options)
         System.exit(-1)
       }
+      case e: Throwable => {
+        val errStream = StreamUtils.openStreamForLogging(calendar, "err")
+        e.printStackTrace(errStream)
+        System.err.println("Saved an occuerd error in the file of 'log/err_xxxx.txt'");
+        throw e
+      }
     }
   }
 
