@@ -169,7 +169,9 @@ object Main {
       m.setFps(fps)
     }
 
-    env.getRenderer().waitLoadImage()
+    if (env.getRenderer() != null) {
+      env.getRenderer().waitLoadImage()
+    }
     env.start(startScene)
   }
 

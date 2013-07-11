@@ -3,14 +3,14 @@ package net.aicomp.terraforming;
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class MainTest {
-	@Before
-	public void before() throws IOException, InterruptedException {
+	@BeforeClass
+	public static void before() throws IOException, InterruptedException {
 		System.out.println("Start compiling.");
-		ProcessBuilder pb = new ProcessBuilder("SampleAI/build.bat");
+		ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "build.bat");
 		pb.directory(new File("SampleAI"));
 		Process p = pb.start();
 		p.waitFor();
