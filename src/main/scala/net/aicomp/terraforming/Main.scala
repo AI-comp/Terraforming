@@ -79,7 +79,6 @@ object Main {
     try {
       val parser = new BasicParser()
       val cl = parser.parse(options, args)
-      throw new Exception("tetet")
       if (cl.hasOption(HELP)) {
         printHelp(options)
       } else {
