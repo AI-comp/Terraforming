@@ -204,7 +204,7 @@ object Main {
   def initializeManipulators(cl: CommandLine, env: GameEnvironment, userStartManipulator: StartManipulator, userGameManipulator: GameManipulator) = {
     val nums = Vector(0 to 2: _*)
     val players = nums.map(new Player(_))
-    val nUsers = allCatch opt math.min(0, cl.getOptionValue(USER_PLAYERS).toInt) getOrElse (0)
+    val nUsers = allCatch opt math.max(0, cl.getOptionValue(USER_PLAYERS).toInt) getOrElse (0)
     val externalCmds = getOptionsValuesWithoutNull(cl, EXTERNAL_AI_PROGRAM)
     val internalNames = getOptionsValuesWithoutNull(cl, INTERNAL_AI_PROGRAM)
     val defaultNames = nums.map(_ => classOf[SampleInternalManipulator].getName())
