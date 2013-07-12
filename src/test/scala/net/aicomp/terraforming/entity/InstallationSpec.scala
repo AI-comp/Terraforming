@@ -73,22 +73,6 @@ class InstallationSpec extends SpecificationWithJUnit {
 
       field.build(players(0), origin, Installation.bridge) must throwA[CommandException]
     }
-    "allow to accept building a 'shield'" in new installations {
-      field(origin).robots = 50
-
-      field.build(players(0), origin, Installation.shelter) must_== ()
-    }
-    "decline to accept building a 'shield' in hole" in new installations {
-      field(origin).robots = 50
-      field(origin).isHole = true
-
-      field.build(players(0), origin, Installation.shelter) must throwA[CommandException]
-    }
-    "decline to accept building a 'shield' in settlment of few robots" in new installations {
-      field(origin).robots = 1
-
-      field.build(players(0), origin, Installation.shelter) must throwA[CommandException]
-    }
     "allow to accept building a 'attack'" in new installations {
       field(origin).robots = 50
 
