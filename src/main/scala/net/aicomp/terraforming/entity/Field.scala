@@ -114,7 +114,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
         tile.installation match {
           case Some(Installation.initial) =>
             tile.enter(player, 5)
-          case Some(Installation.factory) =>
+          case Some(Installation.robotmaker) =>
             tile.enter(player, 1)
           case _ =>
         }
@@ -141,15 +141,15 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   def startDefense(player: Player) = {
     for ((p, tile) <- tiles) {
       if (tile.ownedBy(player)) {
-        tile.aroundSield = 0
+        tile.aroundShelter = 0
       }
     }
 
     for ((p, tile) <- tiles) {
       if (tile.ownedBy(player)) {
         tile.installation match {
-          case Some(Installation.shield) =>
-            availableAroundTiles(p, 2).foreach { _.aroundSield += 1 }
+          case Some(Installation.shelter) =>
+            availableAroundTiles(p, 2).foreach { _.aroundShelter += 1 }
           case _ =>
         }
       }
@@ -157,7 +157,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
     for ((p, tile) <- tiles) {
       if (tile.ownedBy(player)) {
-        tile.robots *= (tile.aroundSield + 1)
+        tile.robots *= (tile.aroundShelter + 1)
       }
     }
 
@@ -166,7 +166,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   def finishDefense(player: Player) = {
     for ((p, tile) <- tiles) {
       if (tile.ownedBy(player)) {
-        tile.robots /= (tile.aroundSield + 1)
+        tile.robots /= (tile.aroundShelter + 1)
       }
     }
   }
@@ -205,7 +205,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
   def materialAmount(p: Point, player: Player) = {
     if (this(p) existBaseMaterialOf player) {
-      1 + availableAroundTiles(p).count(tile => tile.ownedBy(player) && tile.installation.exists(_ == Installation.pit))
+      1 + availableAroundTiles(p).count(tile => tile.ownedBy(player) && tile.installation.exists(_ == Installation.excavator))
     } else {
       0
     }
