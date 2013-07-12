@@ -5,7 +5,7 @@ package net.aicomp.terraforming.entity
   var robots = 0
   var movedRobots = 0
   var additionalScore = 0
-  var aroundSield = 0
+  var aroundShelter = 0
   var installation: Option[Installation] = None
   var isHole: Boolean = false
 

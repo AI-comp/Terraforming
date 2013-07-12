@@ -55,9 +55,9 @@ class GameSpec extends SpecificationWithJUnit {
       initTile(field, Point(0, 0), players(0))
       initTile(field, Point(1, 0), players(0))
       initTile(field, Point(0, 1), players(0))
-      game.acceptCommand(BuildCommand(Point(0, 0), Installation.factory)) must_== ()
+      game.acceptCommand(BuildCommand(Point(0, 0), Installation.robotmaker)) must_== ()
 
-      val firstRobots = initRobots - Installation.factory.robotCost
+      val firstRobots = initRobots - Installation.robotmaker.robotCost
 
       (0 until 4).foreach { turn =>
         field(Point(0, 0)).robots must_== turn + firstRobots
@@ -73,7 +73,7 @@ class GameSpec extends SpecificationWithJUnit {
     "decline to accept build after move" in new games {
       initTile(field, Point(0, 0), players(0))
       game.acceptCommand(MoveCommand(Point(0, 0), Direction.r, 1)) must_== ()
-      game.acceptCommand(BuildCommand(Point(0, 0), Installation.shield)) must
+      game.acceptCommand(BuildCommand(Point(0, 0), Installation.shelter)) must
         throwA[CommandException]
     }
     "decline to accept move after build" in new games {
@@ -87,7 +87,7 @@ class GameSpec extends SpecificationWithJUnit {
       game.acceptCommand(MoveCommand(Point(0, 0), Direction.r, 1)) must
         throwA[CommandException]
     }
-    "decline to accept build inisial" in new games {
+    "decline to accept build initial" in new games {
       val origin = Point(0, 0)
       initTile(field, origin, players(0))
       val aroundPoints = Direction.all.map(_.p + origin).filter(_.within(radius))

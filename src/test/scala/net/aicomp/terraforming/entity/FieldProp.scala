@@ -62,7 +62,7 @@ object FieldProp extends Properties("Field") {
   property("Build pits, houses and towns") =
     forAll { (seed: Int) =>
       val r = new Random(seed)
-      val builables = Vector(Installation.pit, Installation.house, Installation.town)
+      val builables = Vector(Installation.excavator, Installation.house, Installation.town)
       for (size <- 1 to 7) {
         val f = Field(size, players, r)
         for ((p, tile) <- field.tiles) {

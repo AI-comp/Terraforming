@@ -123,7 +123,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(0, 0).owner = Some(players(0))
       field(0, 0).robots = 10
       field(0, 0).isHole = true
-      field.build(players(0), Point(0, 0), Installation.shield) must
+      field.build(players(0), Point(0, 0), Installation.shelter) must
         throwA[CommandException]
       field.build(players(0), Point(0, 0), Installation.attack) must
         throwA[CommandException]
@@ -373,7 +373,7 @@ class FieldSpec extends SpecificationWithJUnit {
       initTile(field, pitPlace)
       field(pitPlace).owner = player
       field(pitPlace).robots = 20
-      field.build(player.get, pitPlace, Installation.pit)
+      field.build(player.get, pitPlace, Installation.excavator)
     }
     "calculate the one's materialAmount of the own settlment surrounded own settlement and pit" in new fields with originAndPit {
       for (p <- aroundPoints) {
@@ -446,7 +446,7 @@ class FieldSpec extends SpecificationWithJUnit {
       f(Point(-1, 0)).owner = Some(players(0))
       f(Point(-1, 1)).owner = Some(players(1))
       f(Point(0, 0)).owner = Some(players(0))
-      f(Point(0, 0)).installation = Some(Installation.pit)
+      f(Point(0, 0)).installation = Some(Installation.excavator)
       f.stringify must_==
         "2 7\n" +
         "-1 0 " + f(-1, 0).stringify(2) + "\n" +
