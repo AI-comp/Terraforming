@@ -137,40 +137,6 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     }
   }
 
-//  //Shield
-//  def startDefense(player: Player) = {
-//    for ((p, tile) <- tiles) {
-//      if (tile.ownedBy(player)) {
-//        tile.aroundShelter = 0
-//      }
-//    }
-//
-//    for ((p, tile) <- tiles) {
-//      if (tile.ownedBy(player)) {
-//        tile.installation match {
-//          case Some(Installation.shelter) =>
-//            availableAroundTiles(p, 2).foreach { _.aroundShelter += 1 }
-//          case _ =>
-//        }
-//      }
-//    }
-//
-//    for ((p, tile) <- tiles) {
-//      if (tile.ownedBy(player)) {
-//        tile.robots *= (tile.aroundShelter + 1)
-//      }
-//    }
-//
-//  }
-//
-//  def finishDefense(player: Player) = {
-//    for ((p, tile) <- tiles) {
-//      if (tile.ownedBy(player)) {
-//        tile.robots /= (tile.aroundShelter + 1)
-//      }
-//    }
-//  }
-
   def ownedTiles(player: Player) = {
     tiles.values.filter(_.ownedBy(player))
   }

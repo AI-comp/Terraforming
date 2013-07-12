@@ -37,7 +37,6 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
   def startTurn() = {
     field.produceRobot(currentPlayer)
     field.attack(currentPlayer)
-//    field.finishDefense(currentPlayer)
     field.clearMovedRobots()
     _isMoving = false
     _isBuilding = false
@@ -46,7 +45,6 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
   }
 
   private def finishTurn() = {
-//   field.startDefense(currentPlayer)
     changePlayerIndex()
     if (isContinued()) {
       startTurn()
