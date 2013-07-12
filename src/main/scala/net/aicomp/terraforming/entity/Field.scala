@@ -115,7 +115,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
           case Some(Installation.initial) =>
             tile.enter(player, 5)
           case Some(Installation.robotmaker) =>
-            tile.enter(player, 1)
+            tile.enter(player, 2)
           case _ =>
         }
       }
@@ -133,40 +133,6 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
             }
           case _ =>
         }
-      }
-    }
-  }
-
-  //Shield
-  def startDefense(player: Player) = {
-    for ((p, tile) <- tiles) {
-      if (tile.ownedBy(player)) {
-        tile.aroundShelter = 0
-      }
-    }
-
-    for ((p, tile) <- tiles) {
-      if (tile.ownedBy(player)) {
-        tile.installation match {
-          case Some(Installation.shelter) =>
-            availableAroundTiles(p, 2).foreach { _.aroundShelter += 1 }
-          case _ =>
-        }
-      }
-    }
-
-    for ((p, tile) <- tiles) {
-      if (tile.ownedBy(player)) {
-        tile.robots *= (tile.aroundShelter + 1)
-      }
-    }
-
-  }
-
-  def finishDefense(player: Player) = {
-    for ((p, tile) <- tiles) {
-      if (tile.ownedBy(player)) {
-        tile.robots /= (tile.aroundShelter + 1)
       }
     }
   }

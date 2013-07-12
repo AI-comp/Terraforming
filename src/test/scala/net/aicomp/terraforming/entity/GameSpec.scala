@@ -49,7 +49,7 @@ class GameSpec extends SpecificationWithJUnit {
         (0 until 3).foreach(_ => game.acceptCommand(FinishCommand()))
       }
     }
-    "robot number in factory at first 12 turn" in new games {
+    "robot number in robotmaker at first 12 turn" in new games {
       initTile(field, Point(-1, 0), players(0))
       initTile(field, Point(0, -1), players(0))
       initTile(field, Point(0, 0), players(0))
@@ -60,7 +60,7 @@ class GameSpec extends SpecificationWithJUnit {
       val firstRobots = initRobots - Installation.robotmaker.robotCost
 
       (0 until 4).foreach { turn =>
-        field(Point(0, 0)).robots must_== turn + firstRobots
+        field(Point(0, 0)).robots must_== 2 * turn + firstRobots
         (0 until 3).foreach(_ => game.acceptCommand(FinishCommand()))
       }
     }
@@ -73,7 +73,7 @@ class GameSpec extends SpecificationWithJUnit {
     "decline to accept build after move" in new games {
       initTile(field, Point(0, 0), players(0))
       game.acceptCommand(MoveCommand(Point(0, 0), Direction.r, 1)) must_== ()
-      game.acceptCommand(BuildCommand(Point(0, 0), Installation.shelter)) must
+      game.acceptCommand(BuildCommand(Point(0, 0), Installation.house)) must
         throwA[CommandException]
     }
     "decline to accept move after build" in new games {
