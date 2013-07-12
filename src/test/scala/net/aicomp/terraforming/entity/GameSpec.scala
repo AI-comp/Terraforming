@@ -87,7 +87,7 @@ class GameSpec extends SpecificationWithJUnit {
       game.acceptCommand(MoveCommand(Point(0, 0), Direction.r, 1)) must
         throwA[CommandException]
     }
-    "decline to accept build inisial" in new games {
+    "decline to accept build initial" in new games {
       val origin = Point(0, 0)
       initTile(field, origin, players(0))
       val aroundPoints = Direction.all.map(_.p + origin).filter(_.within(radius))
@@ -95,7 +95,7 @@ class GameSpec extends SpecificationWithJUnit {
         initTile(field, p, players(0))
       }
 
-      game.acceptCommand(BuildCommand(Point(0, 0), Installation.robotmaker)) must throwA[CommandException]
+      game.acceptCommand(BuildCommand(Point(0, 0), Installation.initial)) must throwA[CommandException]
     }
     "decline to accept build after build" in new games {
       initTile(field, Point(-1, 0), players(0))
