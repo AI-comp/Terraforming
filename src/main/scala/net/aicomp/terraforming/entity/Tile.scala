@@ -82,7 +82,7 @@ package net.aicomp.terraforming.entity
           case Some(ins) => "base"
           case None => "settlement"
         }
-        case None => "wasteLand"
+        case None => "wasteland"
       }
     }
   }
