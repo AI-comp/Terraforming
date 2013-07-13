@@ -7,12 +7,15 @@ import net.aicomp.terraforming.entity.GameEnvironment
 import net.aicomp.terraforming.entity.GameSetting
 import net.exkazuu.gameaiarena.gui.Scene
 import net.exkazuu.gameaiarena.manipulator.ThreadManipulator
+import java.io.PrintStream
 
 class MainScene(nextScene: Scene[GameEnvironment],
-  manipulators: Vector[ThreadManipulator[Game, Array[String], String]] = Vector())
+  manipulators: Vector[ThreadManipulator[Game, Array[String], String]] = Vector(),
+  jsonStream: PrintStream = null)
   extends ManipultorScene(manipulators) {
   override def initialize() {
     displayLine(game.startTurn())
+    writeJson()
   }
 
   override def runWithCommandString(commandString: String) = {
@@ -43,6 +46,7 @@ class MainScene(nextScene: Scene[GameEnvironment],
               if (ret.isInstanceOf[String]) {
                 displayLine(ret.toString())
               }
+              writeJson()
             } catch {
               case CommandException(msg) => {
                 displayLine(msg)
@@ -61,4 +65,7 @@ class MainScene(nextScene: Scene[GameEnvironment],
     else
       nextScene
   }
+
+  def writeJson() = if (jsonStream != null) jsonStream.println(game.toJson(game.currentPlayer))
+
 }
