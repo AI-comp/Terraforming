@@ -114,7 +114,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(1, 0).isHole = false
       field(-1, 0).owner = Some(players(0))
       field(-1, 0).isHole = false
-      field(0, 0).robots = 10
+      field(0, 0).robots = 15
       field(0, 0).isHole = true
       field.build(players(0), Point(0, 0), Installation.bridge) must_== ()
       field(0, 0).isHole must_== false
