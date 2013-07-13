@@ -262,7 +262,7 @@ class FieldSpec extends SpecificationWithJUnit {
       initTile(field, Point(0, 1))
       field(0, 1).owner = Some(players(1))
       field(0, 1).robots = 1
-      field.tower(players(0)) must_== ()
+      field.attack(players(0)) must_== ()
       field(0, 1).robots must_== 0
     }
     "reduce the number of other player's robots in distance 2 by tower" in new fields {
@@ -278,7 +278,7 @@ class FieldSpec extends SpecificationWithJUnit {
       initTile(field, Point(0, 3))
       field(0, 3).owner = Some(players(1))
       field(0, 3).robots = 10
-      field.tower(players(0)) must_== ()
+      field.attack(players(0)) must_== ()
       field(0, 1).robots must_== 10 - 2;
       field(0, 2).robots must_== 10 - 2;
       field(0, 3).robots must_== 10;
@@ -290,7 +290,7 @@ class FieldSpec extends SpecificationWithJUnit {
       initTile(field, Point(0, 1))
       field(0, 1).owner = Some(players(0))
       field(0, 1).robots = 10
-      field.tower(players(0)) must_== ()
+      field.attack(players(0)) must_== ()
       field(0, 1).robots must_== 10
     }
     "not reduce the number of other player's robots by one's tower in other player's turn" in new fields {
@@ -300,7 +300,7 @@ class FieldSpec extends SpecificationWithJUnit {
       initTile(field, Point(0, 1))
       field(0, 1).owner = Some(players(1))
       field(0, 1).robots = 10
-      field.tower(players(1)) must_== ()
+      field.attack(players(1)) must_== ()
       field(0, 1).robots must_== 10
     }
     "not reduce the number of one's robots by one's tower in other player's turn" in new fields {
@@ -310,7 +310,7 @@ class FieldSpec extends SpecificationWithJUnit {
       initTile(field, Point(0, 1))
       field(0, 1).owner = Some(players(0))
       field(0, 1).robots = 10
-      field.tower(players(1)) must_== ()
+      field.attack(players(1)) must_== ()
       field(0, 1).robots must_== 10
     }
     "calculate the one's materialAmount of the initilized field" in new fields {
