@@ -272,7 +272,6 @@ object Main {
     val ret = builder.setTitle("Terraforming")
       .setWindowSize(1024, 740)
       .setPanelSize(1024, 495)
-      .setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
       .setWindowCreator(new WindowCreator() {
         override def createWindow(gamePanel: JGamePanel) = {
           logArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12))

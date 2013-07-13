@@ -13,6 +13,7 @@ public class AppletMain extends Applet {
 		if (Strings.isNullOrEmpty(fpsString)) {
 			fpsString = "30";
 		}
-		Main.main(new String[] { "-" + Main.FPS(), fpsString });
+		// Main.main(new String[] { "-" + Main.FPS(), fpsString });
+		Main.main(new String[] { "-u", "3" });
 	}
 }
