@@ -2,7 +2,7 @@ package net.aicomp.terraforming.ai.entity;
 
 public enum Direction {
   Left(-1, 0, "l"),
-  Right(0, 1, "r"),
+  Right(1, 0, "r"),
   UpLeft(0, -1, "ul"),
   UpRight(1, -1, "ur"),
   DownLeft(-1, 1, "dl"),
