@@ -27,14 +27,20 @@ abstract class ManipultorScene(manipulators: Vector[ThreadManipulator[Game, Arra
           _result = Some(manipulators(game.currentPlayerIndex).run(game))
       }
     }
-    if (!_commandStringQueue.isEmpty) {
+    var nextScene: Scene[GameEnvironment] = this;
+    var lightMode = true;
+    while (lightMode && !_commandStringQueue.isEmpty) {
       val commandString = _commandStringQueue.dequeue()
       displayLine("> " + commandString)
-      runWithCommandString(commandString)
-    } else {
-      this
+      nextScene = runWithCommandString(commandString)
+      lightMode = ManipultorScene.lightMode
     }
+    nextScene
   }
 
   protected def runWithCommandString(commandString: String): Scene[GameEnvironment]
+}
+
+object ManipultorScene {
+  var lightMode = false
 }

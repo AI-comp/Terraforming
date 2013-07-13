@@ -1,15 +1,15 @@
 package net.aicomp.terraforming.scene.graphic
 
+import java.awt.Color
+import java.awt.Font
+
+import net.aicomp.terraforming.entity.Installation
 import net.aicomp.terraforming.entity.OrthogonalPoint
 import net.aicomp.terraforming.entity.OrthogonalPoint.pointToOrthogonalPoint
 import net.aicomp.terraforming.entity.Point
 import net.aicomp.terraforming.entity.Tile
 import net.aicomp.terraforming.scene.AbstractScene
 import net.aicomp.terraforming.util.misc.ImageLoader
-import net.aicomp.terraforming.entity.Player
-import net.aicomp.terraforming.entity.Installation
-import java.awt.Font
-import java.awt.Color
 
 trait GraphicalScene extends AbstractScene {
 
@@ -30,7 +30,9 @@ trait GraphicalScene extends AbstractScene {
   val font = new Font(Font.MONOSPACED, Font.PLAIN, 26);
 
   override def draw() = {
-    drawMap()
+    if (game.checkModified()) {
+      drawMap()
+    }
   }
 
   def drawMap() = {
@@ -103,7 +105,7 @@ trait GraphicalScene extends AbstractScene {
     val y = op.y + 6
 
     val instImages = ImageLoader.loadInstallations(renderer)
-    if (tile.isHole || tile.installation.exists(_ == Installation.bridge)){
+    if (tile.isHole || tile.installation.exists(_ == Installation.bridge)) {
       renderer.drawImage(instImages("hole"), x - 7, y)
     }
 

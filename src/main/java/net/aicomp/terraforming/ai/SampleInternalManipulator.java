@@ -17,8 +17,10 @@ import net.aicomp.terraforming.manipulator.InternalManipulator;
 
 public class SampleInternalManipulator implements InternalManipulator {
   public static void main(String[] args) {
+    long currentTimeMillis = System.currentTimeMillis();
     String name = SampleInternalManipulator.class.getName();
-    net.aicomp.terraforming.Main.main(new String[] {"-i", name});
+    net.aicomp.terraforming.Main.main(new String[] {"-l", "-n", "-i", name});
+    System.out.println((System.currentTimeMillis() - currentTimeMillis));
   }
 
   private Random rand = new Random("aicomp".hashCode());
@@ -83,19 +85,22 @@ public class SampleInternalManipulator implements InternalManipulator {
       int playerId = scanner.nextInt();
       int robot = scanner.nextInt();
       int resource = scanner.nextInt();
-      String instName = scanner.next();
-      String capitalizedInstName = instName.substring(0, 1).toUpperCase() + instName.substring(1);
       boolean isHole = false;
+
       String landformName = scanner.next();
       String capitalizedlandformName =
           landformName.substring(0, 1).toUpperCase() + landformName.substring(1);
       Landform landform = Landform.valueOf(capitalizedlandformName);
+
+      String instName = scanner.next();
+      String capitalizedInstName = instName.substring(0, 1).toUpperCase() + instName.substring(1);
       Installation inst = null;
       if (capitalizedInstName.equals("Hole")) {
         isHole = true;
       } else {
         inst = Installation.valueOf(capitalizedInstName);
       }
+
       Tile tile = new Tile(playerId, robot, resource, isHole, landform, inst);
       field.tiles.put(point, tile);
     }
