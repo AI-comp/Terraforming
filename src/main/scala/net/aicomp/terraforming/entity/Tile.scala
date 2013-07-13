@@ -73,6 +73,19 @@ package net.aicomp.terraforming.entity
       }
     } else wasteLand
   }
+  
+  def landform(): String = {
+    if(isHole) "hole"
+    else {
+      owner match {
+        case Some(player) => installation match {
+          case Some(ins) => "base"
+          case None => "settlement"
+        }
+        case None => "wasteLand"
+      }
+    }
+  }
 
   def stringify(materialAmount: Int) = {
     // "owner_id robots object"
@@ -84,7 +97,7 @@ package net.aicomp.terraforming.entity
       case Some(b) => b.toString
       case None => "none"
     }
-    owner_id + " " + robots + " " + materialAmount + " " + obj
+    owner_id + " " + robots + " " + materialAmount + " " + landform + " " + obj
   }
 
   override def clone() = super.clone().asInstanceOf[Tile]
