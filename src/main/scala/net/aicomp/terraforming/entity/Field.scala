@@ -1,7 +1,6 @@
 package net.aicomp.terraforming.entity
 
 import java.util.Random
-import scala.collection.mutable
 import scala.util.parsing.json.JSONArray
 
 /*
@@ -255,38 +254,41 @@ object Field {
   }
 
   /** Generates field at random */
-  def apply(radius: Int, players: IndexedSeq[Player], random: Random = new Random(0)): Field = {
+  def apply(radius: Int, players: IndexedSeq[Player])(implicit random: Random): Field = {
     require(players.length == 3)
 
-    // first, generate 1/3 pattern
-    val field = mutable.Map(Field(radius).tiles.toSeq: _*)
-    var holeCount = 0
-    do {
-      holeCount = 0
+    def generateOneAThirdField() = {
+      // first, generate 1/3 pattern
+      var field = Map(Field(radius).tiles.toSeq: _*)
+      var holeCount = 0
+
       // region: (x, y) such that y >= 0 && x + y >= 1
       for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
         field(Point(x, y)).owner = None
         field(Point(x, y)).installation = None
 
-        if (random.nextInt(7) == 0) {
+        if (random.nextInt(5) == 0) {
           field(Point(x, y)).isHole = true
           holeCount += 1
         } else {
           field(Point(x, y)).isHole = false
         }
       }
+
       // second, decide initial position
       val initialY = random.nextInt(radius + 1)
       val initialX = random.nextInt(radius) + 1 - initialY
-      field(Point(initialX, initialY)).owner = Some(players(0))
-      field(Point(initialX, initialY)).installation = Some(Installation.initial)
-      if (field(Point(initialX, initialY)).isHole) {
+      val initial = Point(initialX, initialY)
+      field(initial).owner = Some(players(0))
+      field(initial).installation = Some(Installation.initial)
+      if (field(initial).isHole) {
         holeCount -= 1
-        field(Point(initialX, initialY)).isHole = false;
+        field(initial).isHole = false;
       }
-    } while (holeCount > 14)
 
-    // third, expand the pattern
+      (field, holeCount, initial)
+    }
+
     def copyTile(tile: Tile, player: Player) = {
       val copiedTile = tile.clone
       if (copiedTile.owner.isDefined) {
@@ -294,12 +296,31 @@ object Field {
       }
       copiedTile
     }
-    // region: (x, y) such that y >= 0 && x + y >= 1
-    for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
-      val p = Point(x, y)
-      field(p.rotate120) = copyTile(field(p), players(1))
-      field(p.rotate240) = copyTile(field(p), players(2))
+
+    @scala.annotation.tailrec
+    def generate(field: Map[Point, Tile], holeCount: Int, initialPoint: Point): Field = {
+      val buffer = field.toBuffer
+
+      // third expanded pattern
+      for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
+        val p = Point(x, y)
+        buffer += (p.rotate120) -> copyTile(field(p), players(1))
+        buffer += (p.rotate240) -> copyTile(field(p), players(2))
+      }
+      val generatedField = new Field(radius, buffer.toMap)
+
+      // fourth validate field
+      val shortestPaths = initialPoint.shortestPathToEachPoint(generatedField, (p => !field(p).isHole))
+      if (holeCount < 15
+        && shortestPaths.size * 2 >= (generatedField.tiles.size - holeCount * players.length)
+        && shortestPaths.contains(initialPoint.rotate120)) {
+        return generatedField
+      } else {
+        val (field, holeCount, initialPoint) = generateOneAThirdField()
+        generate(field, holeCount, initialPoint)
+      }
     }
-    new Field(radius, field.toMap)
+
+    generate _ tupled (generateOneAThirdField)
   }
 }

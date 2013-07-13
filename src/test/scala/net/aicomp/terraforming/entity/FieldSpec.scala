@@ -8,6 +8,7 @@ class FieldSpec extends SpecificationWithJUnit {
   trait fields extends Scope {
     val players = Vector(new Player(0), new Player(1), new Player(2))
     val radius = 7
+    implicit val random = new Random(0)
     val field = Field(radius, players)
 
     def initTile(field: Field, p: Point) {
@@ -427,7 +428,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field.calculateScore(players(0)) must_== initialScore + developedLandScore
     }
     "create a map as each player has a same score" in new fields {
-      val f = Field(radius, players, new Random(-497319))
+      val f = Field(radius, players)(new Random(-497319))
       val p1 = Point(5, 0)
       val p2 = Point(-5, 5)
       val p3 = Point(0, -5)

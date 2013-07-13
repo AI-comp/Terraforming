@@ -8,8 +8,8 @@ import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.Calendar
-import java.util.Random
 import java.util.Scanner
+import java.util.Random
 
 import scala.Array.canBuildFrom
 import scala.collection.mutable.ListBuffer
@@ -246,8 +246,8 @@ object Main {
       iPlayers += 1
     }
 
-    val random = new Random()
-    val field = Field(6, players, random)
+    implicit val random = new Random()
+    val field = Field(6, players)
     env.game = new Game(field, players, 200)
     if (userIndices.size == 0) {
       env.getSceneManager().setFps(1000)
