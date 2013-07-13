@@ -8,8 +8,8 @@ import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.Calendar
-import java.util.Scanner
 import java.util.Random
+import java.util.Scanner
 
 import scala.Array.canBuildFrom
 import scala.collection.mutable.ListBuffer
@@ -47,6 +47,7 @@ import net.aicomp.terraforming.manipulator.InternalManipulator
 import net.aicomp.terraforming.manipulator.StartManipulator
 import net.aicomp.terraforming.scene.AbstractScene
 import net.aicomp.terraforming.scene.MainScene
+import net.aicomp.terraforming.scene.ManipultorScene
 import net.aicomp.terraforming.scene.PlayerScene
 import net.aicomp.terraforming.scene.ResultScene
 import net.aicomp.terraforming.scene.WaitingScene
@@ -61,7 +62,6 @@ import net.exkazuu.gameaiarena.gui.builder.GameGuiBuilder
 import net.exkazuu.gameaiarena.gui.builder.WindowCreator
 import net.exkazuu.gameaiarena.key.AwtKeyMemorizer
 import net.exkazuu.gameaiarena.manipulator.Manipulator
-import net.exkazuu.gameaiarena.manipulator.ThreadManipulator
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
 
 object Main {
@@ -70,6 +70,7 @@ object Main {
   val FPS = "f"
   val CUI_MODE = "c"
   val USER_PLAYERS = "u"
+  val LIGHT_GUI_MODE = "l"
   val EXTERNAL_AI_PROGRAM = "a"
   val INTERNAL_AI_PROGRAM = "i"
   val NOT_SHOWING_LOG = "n"
@@ -133,6 +134,7 @@ object Main {
       .addOption(HELP, false, "Print this help.")
       .addOption(FPS, false, "Enable CUI mode.")
       .addOption(CUI_MODE, false, "Enable CUI mode.")
+      .addOption(LIGHT_GUI_MODE, false, "Enable light and fast GUI mode by reducing rendering frequency.")
       .addOption(NOT_SHOWING_LOG, false, "Disable showing logs in the scree.")
       .addOption(userOption)
       .addOption(externalAIOption)
@@ -167,6 +169,10 @@ object Main {
       val m = env.getSceneManager()
       val fps = allCatch opt cl.getOptionValue(FPS).toDouble getOrElse (m.getFps())
       m.setFps(fps)
+    }
+
+    if (cl.hasOption(LIGHT_GUI_MODE)) {
+      ManipultorScene.lightMode = true
     }
 
     if (env.getRenderer() != null) {

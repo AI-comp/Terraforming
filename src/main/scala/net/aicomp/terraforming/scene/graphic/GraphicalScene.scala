@@ -1,15 +1,15 @@
 package net.aicomp.terraforming.scene.graphic
 
+import java.awt.Color
+import java.awt.Font
+
+import net.aicomp.terraforming.entity.Installation
 import net.aicomp.terraforming.entity.OrthogonalPoint
 import net.aicomp.terraforming.entity.OrthogonalPoint.pointToOrthogonalPoint
 import net.aicomp.terraforming.entity.Point
 import net.aicomp.terraforming.entity.Tile
 import net.aicomp.terraforming.scene.AbstractScene
 import net.aicomp.terraforming.util.misc.ImageLoader
-import net.aicomp.terraforming.entity.Player
-import net.aicomp.terraforming.entity.Installation
-import java.awt.Font
-import java.awt.Color
 
 trait GraphicalScene extends AbstractScene {
 
@@ -32,9 +32,6 @@ trait GraphicalScene extends AbstractScene {
   override def draw() = {
     if (game.checkModified()) {
       drawMap()
-    }
-    else {
-      println("skip drawMap" + env.getSceneManager().getFps());
     }
   }
 
@@ -60,7 +57,7 @@ trait GraphicalScene extends AbstractScene {
   def drawPoint(op: OrthogonalPoint, tile: Tile) = {
     val pointImages = ImageLoader.loadTiles(renderer)
     val imgKey = tile.owner.map { p => "48_" + p.id }.getOrElse("48")
-    //renderer.drawImage(pointImages.get(imgKey).get, op.x, op.y)
+    renderer.drawImage(pointImages.get(imgKey).get, op.x, op.y)
   }
 
   // draw round(current turn / max turn)

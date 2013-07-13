@@ -19,7 +19,7 @@ public class SampleInternalManipulator implements InternalManipulator {
   public static void main(String[] args) {
     long currentTimeMillis = System.currentTimeMillis();
     String name = SampleInternalManipulator.class.getName();
-    net.aicomp.terraforming.Main.main(new String[] {"-n", "-i", name});
+    net.aicomp.terraforming.Main.main(new String[] {"-l", "-n", "-i", name});
     System.out.println((System.currentTimeMillis() - currentTimeMillis));
   }
 
