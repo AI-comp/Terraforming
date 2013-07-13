@@ -69,4 +69,6 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
     currentTurn + " " + maxTurn + " " + player.id + "\n" +
     field.stringify +
     "EOS"
+
+  def toJson(player: Player): String = stringify(player) // TODO: should return json string
 }

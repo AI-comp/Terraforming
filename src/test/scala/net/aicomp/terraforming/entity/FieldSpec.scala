@@ -123,7 +123,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(0, 0).owner = Some(players(0))
       field(0, 0).robots = 10
       field(0, 0).isHole = true
-      field.build(players(0), Point(0, 0), Installation.shelter) must
+      field.build(players(0), Point(0, 0), Installation.house) must
         throwA[CommandException]
       field.build(players(0), Point(0, 0), Installation.attack) must
         throwA[CommandException]

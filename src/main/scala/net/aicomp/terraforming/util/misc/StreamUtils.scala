@@ -9,13 +9,10 @@ import java.io.ObjectOutputStream
 import java.io.PrintStream
 import java.util.Calendar
 import java.util.Random
-
 import net.exkazuu.gameaiarena.io.InputStreams
+import java.io.ByteArrayOutputStream
 
 object StreamUtils {
-  new File("replay").mkdir()
-  new File("log").mkdir()
-
   def initializeReplay(filePath: String) = {
     val stream = InputStreams.openFileOrResource(filePath);
     if (stream == null) {
@@ -38,25 +35,40 @@ object StreamUtils {
   }
 
   def openStreamForJava(calendar: Calendar, random: Random) = {
-    val dateForName = DateUtils.dateStringForFileName(calendar)
-    val fileName = "replay/" + dateForName + ".rep"
-    val fos = new FileOutputStream(fileName);
-    fos.write('V');
-    fos.write('0');
-    val oos = new ObjectOutputStream(fos);
-    oos.writeObject(random)
-    oos
+    try {
+      new File("replay").mkdir()
+      val dateForName = DateUtils.dateStringForFileName(calendar)
+      val fileName = "replay/" + dateForName + ".rep"
+      val fos = new FileOutputStream(fileName);
+      fos.write('V');
+      fos.write('0');
+      val oos = new ObjectOutputStream(fos);
+      oos.writeObject(random)
+      oos
+    } catch {
+      case _ => new ObjectOutputStream(new ByteArrayOutputStream())
+    }
   }
 
   def openStreamForJavaScript(calendar: Calendar) = {
-    val dateForName = DateUtils.dateStringForFileName(calendar)
-    val fileName = "replay/" + dateForName + ".js"
-    new PrintStream(fileName)
+    try {
+      new File("replay").mkdir()
+      val dateForName = DateUtils.dateStringForFileName(calendar)
+      val fileName = "replay/" + dateForName + ".js"
+      new PrintStream(fileName)
+    } catch {
+      case _ => new PrintStream(new ByteArrayOutputStream())
+    }
   }
 
   def openStreamForLogging(calendar: Calendar, prefix: String) = {
-    val dateForName = DateUtils.dateStringForFileName(calendar)
-    val fileName = "log/" + prefix + "_" + dateForName + ".txt"
-    new PrintStream(fileName)
+    try {
+      new File("log").mkdir()
+      val dateForName = DateUtils.dateStringForFileName(calendar)
+      val fileName = "log/" + prefix + "_" + dateForName + ".txt"
+      new PrintStream(fileName)
+    } catch {
+      case _ => new PrintStream(new ByteArrayOutputStream())
+    }
   }
 }
