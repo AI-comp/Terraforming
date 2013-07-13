@@ -67,20 +67,17 @@ case class Point(val x: Int, val y: Int) extends Ordered[Point] {
       return Map.empty
     }
 
-    val rad = field.radius
     var paths = Map[Point, List[Direction]]()
     val q = new scala.collection.mutable.Queue[Point]
     q += this
-    paths += Point(this.x + rad, this.y + rad) -> List.empty
+    paths += Point(this.x, this.y) -> List.empty
     while (!q.isEmpty) {
       val curr = q.dequeue
       for (dir <- Direction.all) {
         val next = curr + dir
-        if (canEnter(next) && !paths.contains(Point(next.x + rad, next.y + rad))) {
+        if (canEnter(next) && !paths.contains(next)) {
           q += next
-          val nextWithOffset = Point(next.x + rad, next.y + rad)
-          val currWithOffset = Point(curr.x + rad, curr.y + rad)
-          paths += nextWithOffset -> (paths(currWithOffset).toBuffer :+ dir).toList
+          paths += next -> (paths(curr).toBuffer :+ dir).toList
         }
       }
     }

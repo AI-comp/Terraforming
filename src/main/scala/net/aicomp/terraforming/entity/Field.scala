@@ -2,9 +2,6 @@ package net.aicomp.terraforming.entity
 
 import java.util.Random
 
-import scala.collection.mutable
-import scala.collection.mutable.Stack
-
 /*
  ***********************************
  *                                 *
@@ -252,66 +249,66 @@ object Field {
 
     def generateOneAThirdField() = {
       // first, generate 1/3 pattern
-      val field = mutable.Map(Field(radius).tiles.toSeq: _*)
+      var field = Map(Field(radius).tiles.toSeq: _*)
       var holeCount = 0
       var initialX = 0
       var initialY = 0
 
-      do {
-        holeCount = 0
-        // region: (x, y) such that y >= 0 && x + y >= 1
-        for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
-          field(Point(x, y)).owner = None
-          field(Point(x, y)).installation = None
+      // region: (x, y) such that y >= 0 && x + y >= 1
+      for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
+        field(Point(x, y)).owner = None
+        field(Point(x, y)).installation = None
 
-          if (random.nextInt(5) == 0) {
-            field(Point(x, y)).isHole = true
-            holeCount += 1
-          } else {
-            field(Point(x, y)).isHole = false
-          }
+        if (random.nextInt(5) == 0) {
+          field(Point(x, y)).isHole = true
+          holeCount += 1
+        } else {
+          field(Point(x, y)).isHole = false
         }
-        // second, decide initial position
-        initialY = random.nextInt(radius + 1)
-        initialX = random.nextInt(radius) + 1 - initialY
-        field(Point(initialX, initialY)).owner = Some(players(0))
-        field(Point(initialX, initialY)).installation = Some(Installation.initial)
-        if (field(Point(initialX, initialY)).isHole) {
-          holeCount -= 1
-          field(Point(initialX, initialY)).isHole = false;
-        }
-      } while (holeCount > 14)
+      }
+
+      // second, decide initial position
+      initialY = random.nextInt(radius + 1)
+      initialX = random.nextInt(radius) + 1 - initialY
+      field(Point(initialX, initialY)).owner = Some(players(0))
+      field(Point(initialX, initialY)).installation = Some(Installation.initial)
+      if (field(Point(initialX, initialY)).isHole) {
+        holeCount -= 1
+        field(Point(initialX, initialY)).isHole = false;
+      }
 
       (field, holeCount, Point(initialX, initialY))
     }
 
-    def generateFullField(): mutable.Map[Point, Tile] = {
-      def copyTile(tile: Tile, player: Player) = {
-        val copiedTile = tile.clone
-        if (copiedTile.owner.isDefined) {
-          copiedTile.owner = Some(player)
-        }
-        copiedTile
+    def copyTile(tile: Tile, player: Player) = {
+      val copiedTile = tile.clone
+      if (copiedTile.owner.isDefined) {
+        copiedTile.owner = Some(player)
       }
-
-      val (field, holeCount, initialPoint) = generateOneAThirdField()
-
-      for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
-        val p = Point(x, y)
-        field(p.rotate120) = copyTile(field(p), players(1))
-        field(p.rotate240) = copyTile(field(p), players(2))
-      }
-
-   //   val pointStack = new Stack[OrthogonalPoint]
-    //  Direction.
-
-      field
+      copiedTile
     }
 
-    val field = generateFullField()
+    @scala.annotation.tailrec
+    def generate(field: Map[Point, Tile], holeCount: Int, initialPoint: Point): Field = {
+      val buffer = field.toBuffer
+      for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
+        val p = Point(x, y)
+        buffer += (p.rotate120) -> copyTile(field(p), players(1))
+        buffer += (p.rotate240) -> copyTile(field(p), players(2))
+      }
 
-    // region: (x, y) such that y >= 0 && x + y >= 1
+      val generatedField = new Field(radius, buffer.toMap)
+      val shortestPaths = initialPoint.shortestPathToEachPoint(generatedField, (p => !field(p).isHole))
+      if (holeCount < 15
+        && shortestPaths.size * 2 >= (generatedField.tiles.size - holeCount * players.length)
+        && shortestPaths.contains(initialPoint.rotate120)) {
+        return generatedField
+      } else {
+        val (field, holeCount, initialPoint) = generateOneAThirdField()
+        generate(field, holeCount, initialPoint)
+      }
+    }
 
-    new Field(radius, field.toMap)
+    generate _ tupled (generateOneAThirdField)
   }
 }
