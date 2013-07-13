@@ -5,13 +5,16 @@ public class Tile {
   public final int robot;
   public final int resource;
   public final boolean isHole;
+  public final Landform landform;
   public final Installation installation;
 
-  public Tile(int playerId, int robot, int resource, boolean isHole, Installation installation) {
+  public Tile(int playerId, int robot, int resource, boolean isHole, Landform landform,
+      Installation installation) {
     this.playerId = playerId;
     this.robot = robot;
     this.resource = resource;
     this.isHole = isHole;
+    this.landform = landform;
     this.installation = installation;
   }
 
