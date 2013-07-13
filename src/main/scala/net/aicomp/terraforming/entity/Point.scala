@@ -5,6 +5,7 @@ import scala.collection.mutable.ListBuffer
 import scala.math.abs
 import scala.math.max
 import scala.math.min
+import scala.util.Random
 
 case class Direction private (val p: Point) {
   def +(r: Point): Point = p + r
@@ -53,35 +54,35 @@ case class Point(val x: Int, val y: Int) extends Ordered[Point] {
   def shortestPathTo(goal: Point, field: Field, player: Player): Option[List[Direction]] = {
     shortestPathTo(goal, field, p => field(p).isMovable(player))
   }
+
   def shortestPathTo(goal: Point, field: Field, isMovable: Point => Boolean): Option[List[Direction]] = {
+    shortestPathToEachPoint(field, isMovable) get (goal)
+  }
+
+  def shortestPathToEachPoint(field: Field, isMovable: Point => Boolean): Map[Point, List[Direction]] = {
     def canEnter(p: Point) = p.within(field.radius) && isMovable(p)
     if (canEnter(this) == false) {
       // invalid starting point
-      return None
+      return Map.empty
     }
 
-    val rad = field.radius
-    val paths = Array.ofDim[List[Direction]](rad * 2 + 1, rad * 2 + 1)
+    var paths = Map[Point, List[Direction]]()
     val q = new scala.collection.mutable.Queue[Point]
     q += this
-    paths(this.x + rad)(this.y + rad) = List.empty
+    paths += Point(this.x, this.y) -> List.empty
     while (!q.isEmpty) {
       val curr = q.dequeue
-      if (curr == goal) {
-        // found
-        return Some(paths(curr.x + rad)(curr.y + rad).reverse)
-      }
       for (dir <- Direction.all) {
         val next = curr + dir
-        if (canEnter(next) && paths(next.x + rad)(next.y + rad) == null) {
+        if (canEnter(next) && !paths.contains(next)) {
           q += next
-          paths(next.x + rad)(next.y + rad) = dir :: paths(curr.x + rad)(curr.y + rad)
+          paths += next -> (paths(curr).toBuffer :+ dir).toList
         }
       }
     }
-    // not found
-    return None
+    return paths
   }
+
   def aroundPoints(length: Int = 1) = {
     def aroundPoints(p: Point) = {
       Direction.all.map(_.p + p)
