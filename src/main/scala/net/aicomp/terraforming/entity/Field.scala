@@ -1,6 +1,6 @@
 package net.aicomp.terraforming.entity
 
-import java.util.Random
+import scala.util.Random
 
 /*
  ***********************************
@@ -244,15 +244,13 @@ object Field {
   }
 
   /** Generates field at random */
-  def apply(radius: Int, players: IndexedSeq[Player], random: Random = new Random(0)): Field = {
+  def apply(radius: Int, players: IndexedSeq[Player])(implicit random: Random): Field = {
     require(players.length == 3)
 
     def generateOneAThirdField() = {
       // first, generate 1/3 pattern
       var field = Map(Field(radius).tiles.toSeq: _*)
       var holeCount = 0
-      var initialX = 0
-      var initialY = 0
 
       // region: (x, y) such that y >= 0 && x + y >= 1
       for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
@@ -268,16 +266,18 @@ object Field {
       }
 
       // second, decide initial position
-      initialY = random.nextInt(radius + 1)
-      initialX = random.nextInt(radius) + 1 - initialY
-      field(Point(initialX, initialY)).owner = Some(players(0))
-      field(Point(initialX, initialY)).installation = Some(Installation.initial)
-      if (field(Point(initialX, initialY)).isHole) {
+      val initialY = random.nextInt(radius + 1)
+      val initialX = random.nextInt(radius) + 1 - initialY
+      
+      val initial = Point(initialX, initialY)
+      field(initial).owner = Some(players(0))
+      field(initial).installation = Some(Installation.initial)
+      if (field(initial).isHole) {
         holeCount -= 1
-        field(Point(initialX, initialY)).isHole = false;
+        field(initial).isHole = false;
       }
 
-      (field, holeCount, Point(initialX, initialY))
+      (field, holeCount, initial)
     }
 
     def copyTile(tile: Tile, player: Player) = {
@@ -291,13 +291,16 @@ object Field {
     @scala.annotation.tailrec
     def generate(field: Map[Point, Tile], holeCount: Int, initialPoint: Point): Field = {
       val buffer = field.toBuffer
+
+      // third expanded pattern
       for (y <- 0 to radius; x <- -y + 1 to -y + radius) {
         val p = Point(x, y)
         buffer += (p.rotate120) -> copyTile(field(p), players(1))
         buffer += (p.rotate240) -> copyTile(field(p), players(2))
       }
-
       val generatedField = new Field(radius, buffer.toMap)
+
+      // fourth validate field
       val shortestPaths = initialPoint.shortestPathToEachPoint(generatedField, (p => !field(p).isHole))
       if (holeCount < 15
         && shortestPaths.size * 2 >= (generatedField.tiles.size - holeCount * players.length)

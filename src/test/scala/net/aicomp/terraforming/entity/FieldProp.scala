@@ -5,7 +5,7 @@ import org.scalacheck.Gen.choose
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Prop.propBoolean
 import org.scalacheck.Properties
-import java.util.Random
+import scala.util.Random
 
 object FieldProp extends Properties("Field") {
   val fieldSize = 7
@@ -14,7 +14,8 @@ object FieldProp extends Properties("Field") {
 
   property("CalculateScore for Filed whose size is 7") =
     forAll { (seed: Int) =>
-      val f = Field(fieldSize, players, new Random(seed))
+      implicit val random = new Random(seed)
+      val f = Field(fieldSize, players)
       f.calculateScore(players(0)) == f.calculateScore(players(1)) &&
         f.calculateScore(players(1)) == f.calculateScore(players(2))
     }
@@ -40,15 +41,16 @@ object FieldProp extends Properties("Field") {
 
   property("Build installations") =
     forAll { (seed: Int) =>
-      val r = new Random(seed)
+      implicit val random = new Random(seed)
+
       for (size <- 1 to 7) {
-        val f = Field(size, players, r)
+        val f = Field(size, players)
         for ((p, tile) <- field.tiles) {
-          tile.owner = Some(players(r.nextInt(3)))
+          tile.owner = Some(players(random.nextInt(3)))
           tile.robots = 1000
         }
         for ((p, tile) <- field.tiles) {
-          val inst = Installation.buildables(r.nextInt(Installation.buildables.size))
+          val inst = Installation.buildables(random.nextInt(Installation.buildables.size))
           try {
             f.build(tile.owner.get, p, inst)
           } catch {
@@ -61,10 +63,10 @@ object FieldProp extends Properties("Field") {
 
   property("Build pits, houses and towns") =
     forAll { (seed: Int) =>
-      val r = new Random(seed)
+      implicit val r = new Random(seed)
       val builables = Vector(Installation.excavator, Installation.house, Installation.town)
       for (size <- 1 to 7) {
-        val f = Field(size, players, r)
+        val f = Field(size, players)
         for ((p, tile) <- field.tiles) {
           tile.owner = Some(players(r.nextInt(3)))
           tile.robots = 1000

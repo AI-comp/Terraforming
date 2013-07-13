@@ -2,12 +2,14 @@ package net.aicomp.terraforming.entity
 
 import org.specs2.mutable.SpecificationWithJUnit
 import org.specs2.specification.Scope
+import scala.util.Random
 
 class InstallationSpec extends SpecificationWithJUnit {
   trait installations extends Scope {
     val players = Vector(new Player(1), new Player(2), new Player(3))
     val origin = Point(0, 0)
     val radius = 7
+    implicit val random = new Random(0)
     val field = Field(radius, players)
     val tiles = field.tiles
     def apply(x: Int, y: Int): Tile = tiles(new Point(x, y))
