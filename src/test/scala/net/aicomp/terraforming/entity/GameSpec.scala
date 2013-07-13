@@ -63,7 +63,7 @@ class GameSpec extends SpecificationWithJUnit {
       val firstRobots = initRobots - Installation.robotmaker.robotCost
 
       (0 until 4).foreach { turn =>
-        field(Point(0, 0)).robots must_== 2 * turn + firstRobots
+        field(Point(0, 0)).robots must_== 1 * turn + firstRobots
         (0 until 3).foreach(_ => game.acceptCommand(FinishCommand()))
       }
     }
