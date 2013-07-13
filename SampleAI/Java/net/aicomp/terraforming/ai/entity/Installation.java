@@ -1,4 +1,4 @@
-package aicomp.net.terraforming.sample;
+package net.aicomp.terraforming.ai.entity;
 
 public enum Installation {
   Initial(0, 0, 2),
@@ -9,7 +9,8 @@ public enum Installation {
   Pit(20, 4, 2),
   House(1, 4, 3),
   Town(1, 9, 3),
-  City(1, 19, 10);
+  City(1, 19, 10),
+  None(0, 0, 0);
 
   public final int robotCost;
   public final int materialCost;

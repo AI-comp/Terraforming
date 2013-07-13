@@ -1,4 +1,4 @@
-package aicomp.net.terraforming.sample;
+package net.aicomp.terraforming.ai.entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;

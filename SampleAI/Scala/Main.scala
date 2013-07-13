@@ -2,7 +2,7 @@ import util.parsing.combinator._
 
 case class GameInformation(currentTurn: Int, maxTurn: Int, playerId: Int)
 case class FieldInformation(radius: Int, tileSize: Int)
-case class TileInformation(x: Int, y: Int, ownerId: Int, robots: Int, resource: Int, obj: String)
+case class TileInformation(x: Int, y: Int, ownerId: Int, robots: Int, resource: Int, landform: String, obj: String)
 
 case class Informations(gameInformation: GameInformation,
                         fieldInformation: FieldInformation,
@@ -13,9 +13,9 @@ object StringifyParser extends RegexParsers {
   val str = "[a-zA-Z]+".r
   val eol = "\n"
 
-  val tileStringify = num ~ num ~ num ~ num ~ num ~ str ^^ {
-    case x ~ y ~ ownerId ~ robots ~ resource ~ obj =>
-      new TileInformation(x, y, ownerId, robots, resource, obj)
+  val tileStringify = num ~ num ~ num ~ num ~ num ~ str ~ str ^^ {
+    case x ~ y ~ ownerId ~ robots ~ resource ~ landform ~ obj =>
+      new TileInformation(x, y, ownerId, robots, resource, landform, obj)
   }
 
   val gameStringify = num ~ num ~ num ^^ {

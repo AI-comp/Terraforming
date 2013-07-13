@@ -25,15 +25,17 @@ class Tile {
     int _playerId;
     int _robots;
     int _resource;
+    std::string _landform;
     std::string _building;
 
 public:
     Tile() {}
-    Tile(int playerId, int robots, int resource, const std::string& building)
-        : _playerId(playerId), _robots(robots), _resource(resource), _building(building) {}
+    Tile(int playerId, int robots, int resource, const std::string& landform, const std::string& building)
+        : _playerId(playerId), _robots(robots), _resource(resource), _landform(landform), _building(building) {}
     int playerId() const { return _playerId; };
     int robots() const { return _robots; };
     int resource() const { return _resource; };
+    std::string landform() const { return _landform; };
     std::string building() const { return _building; };
 };
 
@@ -78,9 +80,9 @@ Game *readGame() {
     std::map<Point, Tile> tiles;
     for (int i = 0; i < n; i++) {
         int x, y, id, robots, resource;
-        std::string building;
-        std::cin >> x >> y >> id >> robots >> resource >> building;
-        tiles[Point(x, y)] = Tile(id, robots, resource, building);
+        std::string landform, building;
+        std::cin >> x >> y >> id >> robots >> resource >> landform >> building;
+        tiles[Point(x, y)] = Tile(id, robots, resource, landform, building);
     }
     std::cin >> eos;
     assert(eos == "EOS");
