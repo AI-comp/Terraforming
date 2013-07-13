@@ -55,9 +55,7 @@ case class Point(val x: Int, val y: Int) extends Ordered[Point] {
   }
 
   def shortestPathTo(goal: Point, field: Field, isMovable: Point => Boolean): Option[List[Direction]] = {
-    val rad = field.radius
-    val paths = shortestPathToEachPoint(field, isMovable)
-    paths.get(Point(goal.x + rad, goal.y + rad))
+    shortestPathToEachPoint(field, isMovable) get (goal)
   }
 
   def shortestPathToEachPoint(field: Field, isMovable: Point => Boolean): Map[Point, List[Direction]] = {
