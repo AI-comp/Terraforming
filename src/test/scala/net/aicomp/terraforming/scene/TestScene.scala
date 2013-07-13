@@ -6,7 +6,7 @@ import net.aicomp.terraforming.entity.Field
 import net.aicomp.terraforming.entity.Game
 import net.aicomp.terraforming.entity.GameEnvironment
 import net.aicomp.terraforming.entity.Player
-import scala.util.Random
+import java.util.Random
 
 trait TestScene extends ManipultorScene {
   val output = Queue[String]()

@@ -2,7 +2,7 @@ package net.aicomp.terraforming.entity
 
 import org.specs2.mutable.SpecificationWithJUnit
 import org.specs2.specification.Scope
-import scala.util.Random
+import java.util.Random
 
 class InstallationSpec extends SpecificationWithJUnit {
   trait installations extends Scope {

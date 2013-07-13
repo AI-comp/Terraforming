@@ -9,8 +9,8 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.Calendar
 import java.util.Scanner
+import java.util.Random
 
-import scala.util.Random
 import scala.Array.canBuildFrom
 import scala.collection.mutable.ListBuffer
 import scala.util.control.Exception.allCatch
@@ -255,7 +255,7 @@ object Main {
       env.getSceneManager().setFps(30)
     }
 
-    val oos = StreamUtils.openStreamForJava(calendar, new java.util.Random())
+    val oos = StreamUtils.openStreamForJava(calendar, random)
     (Vector(startMans.map(_.recordingStream(oos)).map(_.threading()): _*),
       Vector(gameMans.map(_.recordingStream(oos)).map(_.threading()): _*))
   }

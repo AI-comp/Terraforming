@@ -5,7 +5,7 @@ import org.scalacheck.Gen.choose
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Prop.propBoolean
 import org.scalacheck.Properties
-import scala.util.Random
+import java.util.Random
 
 object FieldProp extends Properties("Field") {
   val fieldSize = 7

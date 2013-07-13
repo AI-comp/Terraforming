@@ -1,6 +1,6 @@
 package net.aicomp.terraforming.entity
 
-import scala.util.Random
+import java.util.Random
 
 /*
  ***********************************
@@ -268,7 +268,6 @@ object Field {
       // second, decide initial position
       val initialY = random.nextInt(radius + 1)
       val initialX = random.nextInt(radius) + 1 - initialY
-      
       val initial = Point(initialX, initialY)
       field(initial).owner = Some(players(0))
       field(initial).installation = Some(Installation.initial)

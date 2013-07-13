@@ -2,7 +2,7 @@ package net.aicomp.terraforming.entity
 
 import org.specs2.mutable.SpecificationWithJUnit
 import org.specs2.specification.Scope
-import scala.util.Random
+import java.util.Random
 
 class GameSpec extends SpecificationWithJUnit {
   class games(val turn: Int = 12) extends Scope {
