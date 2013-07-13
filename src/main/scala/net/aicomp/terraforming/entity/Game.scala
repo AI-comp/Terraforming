@@ -1,5 +1,9 @@
 package net.aicomp.terraforming.entity
 
+import org.json4s.native.Serialization
+import org.json4s.native.Serialization.{read, write}
+import org.json4s.NoTypeHints
+
 class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTurn: Int) {
   private var _currentPlayerIndex = 0
   private var _currentTurn = 0
@@ -70,5 +74,12 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
     field.stringify +
     "EOS"
 
-  def toJson(player: Player): String = stringify(player) // TODO: should return json string
+  def toJson(player: Player) = {
+    implicit val formats = Serialization.formats(NoTypeHints)
+    write(Map(
+      "currentTurn" -> currentTurn,
+      "maxTurn" -> maxTurn,
+      "playerId" -> player.id,
+      "tiles" -> field.toPartialJson))
+  }
 }

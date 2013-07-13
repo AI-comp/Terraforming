@@ -1,8 +1,8 @@
 package net.aicomp.terraforming.entity
 
 import java.util.Random
-
 import scala.collection.mutable
+import scala.util.parsing.json.JSONArray
 
 /*
  ***********************************
@@ -190,6 +190,15 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
       val material = tiles(p).owner match { case Some(owner) => materialAmount(p, owner) case _ => 0 }
       p.stringify + " " + tiles(p).stringify(material) + "\n"
     }.mkString
+
+  def toPartialJson = {
+    points.toList.sorted.map { p =>
+      val material = tiles(p).owner match { case Some(owner) => materialAmount(p, owner) case _ => 0 }
+      Map(
+        "x" -> p.x,
+        "y" -> p.y) ++ tiles(p).toJsonMap(material)
+    }.toList
+  }
 
   override def toString: String = {
     val height = radius * 6 + 5
