@@ -19,6 +19,6 @@ Terraforming for CEDEC 2013
         java -jar Terraforming.jar -a "java -cp SampleAI/Java Main" "SampleAI/Haskell/Main.exe" "scala.bat -cp SampleAI/Scala Main"
         java -jar Terraforming.jar -a "java -cp SampleAI/Java Main" "SampleAI/Cpp/a.exe"
         
-    - 作成したAIを動かす場合、 -a オプションを付け、その後ろに動かしたいAIの実行ファイルをダブルクォーテーション(")で囲って引数として指定する。
+    - 作成したAIプログラムを動かす場合、 -a オプションを付け、動かしたいAIプログラムの実行コマンドをダブルクォーテーション(")で囲った引数で指定する。
 
-    - -a オプションに引数として与えるAIは必ずしも3つである必要はなく、下のコマンドのように2つしか与えられなければ、自動的に内蔵AIが補完する。
+    - -a オプションに引数として与えるAIは必ずしも3つである必要はなく、下のコマンド例のように2つしか与えなければ、デフォルトのサンプルAIプログラムが利用される。
