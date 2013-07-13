@@ -91,6 +91,7 @@ https://github.com/AI-comp/JavaChallenge2012/blob/master/src/main/scala/net/java
   - Junichi Kobayashi (Waseda University)
   - Seiji Sato (Waseda University)
   - Kosuke Yatoh (University of Tokyo)
+  - Fumiya Kato (Waseda University)
   - Naoki Yaguchi (Waseda University)
 - __Graphic Designers__
   - Masahiko Wada

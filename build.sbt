@@ -1,6 +1,6 @@
 name := "Terraforming"
 
-version := "0.8.1"
+version := "1.0.0"
 
 scalaVersion := "2.9.2"
 
