@@ -114,7 +114,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
           case Some(Installation.initial) =>
             tile.enter(player, 5)
           case Some(Installation.robotmaker) =>
-            tile.enter(player, 2)
+            tile.enter(player, 1)
           case _ =>
         }
       }
