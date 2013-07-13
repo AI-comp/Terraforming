@@ -53,35 +53,40 @@ case class Point(val x: Int, val y: Int) extends Ordered[Point] {
   def shortestPathTo(goal: Point, field: Field, player: Player): Option[List[Direction]] = {
     shortestPathTo(goal, field, p => field(p).isMovable(player))
   }
+
   def shortestPathTo(goal: Point, field: Field, isMovable: Point => Boolean): Option[List[Direction]] = {
+    val rad = field.radius
+    val paths = shortestPathToEachPoint(field, isMovable)
+    paths.get(Point(goal.x + rad, goal.y + rad))
+  }
+
+  def shortestPathToEachPoint(field: Field, isMovable: Point => Boolean): Map[Point, List[Direction]] = {
     def canEnter(p: Point) = p.within(field.radius) && isMovable(p)
     if (canEnter(this) == false) {
       // invalid starting point
-      return None
+      return Map.empty
     }
 
     val rad = field.radius
-    val paths = Array.ofDim[List[Direction]](rad * 2 + 1, rad * 2 + 1)
+    var paths = Map[Point, List[Direction]]()
     val q = new scala.collection.mutable.Queue[Point]
     q += this
-    paths(this.x + rad)(this.y + rad) = List.empty
+    paths += Point(this.x + rad, this.y + rad) -> List.empty
     while (!q.isEmpty) {
       val curr = q.dequeue
-      if (curr == goal) {
-        // found
-        return Some(paths(curr.x + rad)(curr.y + rad).reverse)
-      }
       for (dir <- Direction.all) {
         val next = curr + dir
-        if (canEnter(next) && paths(next.x + rad)(next.y + rad) == null) {
+        if (canEnter(next) && !paths.contains(Point(next.x + rad, next.y + rad))) {
           q += next
-          paths(next.x + rad)(next.y + rad) = dir :: paths(curr.x + rad)(curr.y + rad)
+          val nextWithOffset = Point(next.x + rad, next.y + rad)
+          val currWithOffset = Point(curr.x + rad, curr.y + rad)
+          paths += nextWithOffset -> (paths(currWithOffset).toBuffer :+ dir).toList
         }
       }
     }
-    // not found
-    return None
+    return paths
   }
+
   def aroundPoints(length: Int = 1) = {
     def aroundPoints(p: Point) = {
       Direction.all.map(_.p + p)
