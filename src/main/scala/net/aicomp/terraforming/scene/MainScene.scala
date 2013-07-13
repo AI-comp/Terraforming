@@ -28,7 +28,7 @@ class MainScene(nextScene: Scene[GameEnvironment],
     def help = {
       displayLine("Commands:")
       displayLine("  move x y (r|ur|dr|l|ul|dl) robot_amount")
-      displayLine("  build x y (br|sh|at|mt|pk|sq|pl)")
+      displayLine("  build x y (robotmaker|excavator|attack|bridge|house|town)")
       displayLine("  finish")
     }
 
