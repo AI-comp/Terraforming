@@ -73,9 +73,9 @@ package net.aicomp.terraforming.entity
       }
     } else wasteLand
   }
-  
+
   def landform(): String = {
-    if(isHole) "hole"
+    if (isHole) "hole"
     else {
       owner match {
         case Some(player) => installation match {
@@ -85,6 +85,24 @@ package net.aicomp.terraforming.entity
         case None => "wasteland"
       }
     }
+  }
+
+  def toJsonMap(materialAmount: Int) = {
+    val owner_id = owner match {
+      case Some(player) => player.id
+      case None => -1
+    }
+    Map(
+      "ownerId" -> owner_id,
+      "robots" -> robots,
+      "materialAmount" -> materialAmount,
+      "landform" -> landform,
+      "obj" -> {
+        if (isHole) "hole" else installation match {
+          case Some(b) => b.toString
+          case None => "none"
+        }
+      })
   }
 
   def stringify(materialAmount: Int) = {
