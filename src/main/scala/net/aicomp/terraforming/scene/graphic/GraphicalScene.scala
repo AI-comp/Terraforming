@@ -30,7 +30,12 @@ trait GraphicalScene extends AbstractScene {
   val font = new Font(Font.MONOSPACED, Font.PLAIN, 26);
 
   override def draw() = {
-    drawMap()
+    if (game.checkModified()) {
+      drawMap()
+    }
+    else {
+      println("skip drawMap" + env.getSceneManager().getFps());
+    }
   }
 
   def drawMap() = {
@@ -55,7 +60,7 @@ trait GraphicalScene extends AbstractScene {
   def drawPoint(op: OrthogonalPoint, tile: Tile) = {
     val pointImages = ImageLoader.loadTiles(renderer)
     val imgKey = tile.owner.map { p => "48_" + p.id }.getOrElse("48")
-    renderer.drawImage(pointImages.get(imgKey).get, op.x, op.y)
+    //renderer.drawImage(pointImages.get(imgKey).get, op.x, op.y)
   }
 
   // draw round(current turn / max turn)
@@ -103,7 +108,7 @@ trait GraphicalScene extends AbstractScene {
     val y = op.y + 6
 
     val instImages = ImageLoader.loadInstallations(renderer)
-    if (tile.isHole || tile.installation.exists(_ == Installation.bridge)){
+    if (tile.isHole || tile.installation.exists(_ == Installation.bridge)) {
       renderer.drawImage(instImages("hole"), x - 7, y)
     }
 

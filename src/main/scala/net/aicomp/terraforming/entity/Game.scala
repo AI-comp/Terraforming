@@ -1,8 +1,8 @@
 package net.aicomp.terraforming.entity
 
-import org.json4s.native.Serialization
-import org.json4s.native.Serialization.{read, write}
 import org.json4s.NoTypeHints
+import org.json4s.native.Serialization
+import org.json4s.native.Serialization.write
 
 class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTurn: Int) {
   private var _currentPlayerIndex = 0
@@ -10,6 +10,7 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
   private var _isMoving = false
   private var _isBuilding = false
   private var _isFinished = false
+  private var _modified = false
 
   def currentTurn = (_currentTurn + 2) / players.size
   def maxTurn = _maxTurn
@@ -17,19 +18,30 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
   def currentPlayer = players(_currentPlayerIndex)
   def isFinished = _isFinished
 
+  def checkModified() = {
+    val modified = _modified
+    _modified = false
+    modified
+  }
+
   def acceptCommand(command: Command) = {
     command match {
       case MoveCommand(p, dir, amount) => {
         checkCanMove
         _isMoving = true
+        _modified = true
         field.moveSquad(currentPlayer, p, dir, amount)
       }
       case BuildCommand(p, t) => {
         checkCanBuild
         _isBuilding = true
+        _modified = true
         field.build(currentPlayer, p, t)
       }
-      case FinishCommand() => finishTurn
+      case FinishCommand() => {
+        _modified = true
+        finishTurn()
+      }
     }
   }
 
