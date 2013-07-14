@@ -6,15 +6,27 @@ import System.IO
 
 -- entity definitions
 type Point = (Int, Int) -- x * y
-data Tile = Tile Int Int Int String -- player_id * num_robots * num_resources * building
-data Field = Field Int [(Point, Tile)] -- radius * tiles
-data Game = Game Int Int Int Field -- turn * maxTurn * myId * field
+data Tile = Tile { playerId :: Int
+                 , robotsNumber :: Int
+                 , resourcesNumber :: Int
+                 , landForm :: String
+                 , building :: String
+                 } deriving (Show)
 
+data Field = Field { radius :: Int
+                   , tiles :: [(Point, Tile)]
+                   } deriving (Show)
+
+data Game = Game { turn :: Int
+                 , maxTurn :: Int
+                 , ownId :: Int
+                 , field :: Field
+                 } deriving (Show)
 
 -- runtime
 parsePointAndTile :: String -> (Point, Tile)
-parsePointAndTile s = ((x, y), Tile n i r b)
-  where ([x, y, n, i, r], [b]) = map read `first` splitAt 5 (words s)
+parsePointAndTile s = ((x, y), Tile n i r l b)
+  where ([x, y, n, i, r], [l, b]) = map read `first` splitAt 5 (words s)
 
 parseField :: [String] -> (Field, [String])
 parseField (h:ls) = (Field r ts, rs)
