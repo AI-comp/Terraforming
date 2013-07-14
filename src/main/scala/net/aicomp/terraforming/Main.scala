@@ -151,7 +151,9 @@ object Main {
   }
 
   def startGame(cl: CommandLine) {
+    println("startGame")
     val (env, startScene) = initializeEnvironmentAndScenes(cl)
+    println("initializeEnvironmentAndScenes")
 
     val logStream = StreamUtils.openStreamForLogging(calendar, "log")
     if (cl.hasOption(NOT_SHOWING_LOG)) {
@@ -164,20 +166,24 @@ object Main {
         display(text)
       }
     }
+    println("openStreamForLogging")
 
     if (cl.hasOption(FPS)) {
       val m = env.getSceneManager()
       val fps = allCatch opt cl.getOptionValue(FPS).toDouble getOrElse (m.getFps())
       m.setFps(fps)
     }
+    println("hasOption")
 
     if (cl.hasOption(LIGHT_GUI_MODE)) {
       ManipultorScene.lightMode = true
     }
+    println("hasOption")
 
     if (env.getRenderer() != null) {
       env.getRenderer().waitLoadImage()
     }
+    println("waitLoadImage")
     env.start(startScene)
   }
 
@@ -196,10 +202,11 @@ object Main {
       (env, new PlayerScene(mainScene, startManipulators))
     } else {
       val (window, env) = initializeComponents()
-      ImageLoader.prefetch(env.getRenderer())
+      println("before initializeManipulators")
       val (startManipulators, gameManipulators) =
         initializeManipulators(cl, env, new GraphicalUserStartManipulator(),
           new GraphicalUserGameManipulator())
+      println("after initializeManipulators")
 
       val waitScene = new WaitingScene(null) with GraphicalScene
       val resultScene = new ResultScene(waitScene) with GraphicalScene
@@ -242,6 +249,7 @@ object Main {
         .limittingSumTime(1000, 5000)
       iPlayers += 1
     }
+    println("before internal")
     for (name <- (internalNames ++ defaultNames).take(3 - iPlayers)) {
       val clazz = Class.forName(name)
       val man = clazz.newInstance().asInstanceOf[InternalManipulator]
@@ -251,6 +259,7 @@ object Main {
         .limittingSumTime(1000, 5000)
       iPlayers += 1
     }
+    println("after internal")
 
     implicit val random = new Random()
     val field = Field(6, players)
@@ -322,9 +331,13 @@ object Main {
 
     val env = ret.getEnvironment()
     val gamePanel = ret.getPanel()
-    ImageLoader.prefetch(env.getRenderer)
+    println("before prefetch")
+    //ImageLoader.prefetch(env.getRenderer)
+    println("after prefetch")
     initializeListener(gamePanel, env, commandField, logArea)
+    println("after initializeListener")
     commandField.requestFocus()
+    println("after requestFocus")
 
     (window, env)
   }
