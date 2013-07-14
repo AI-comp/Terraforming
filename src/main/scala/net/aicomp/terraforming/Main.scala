@@ -196,7 +196,6 @@ object Main {
       (env, new PlayerScene(mainScene, startManipulators))
     } else {
       val (window, env) = initializeComponents()
-      ImageLoader.prefetch(env.getRenderer())
       val (startManipulators, gameManipulators) =
         initializeManipulators(cl, env, new GraphicalUserStartManipulator(),
           new GraphicalUserGameManipulator())
