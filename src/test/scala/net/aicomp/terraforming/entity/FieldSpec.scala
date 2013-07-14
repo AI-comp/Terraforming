@@ -114,7 +114,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(1, 0).isHole = false
       field(-1, 0).owner = Some(players(0))
       field(-1, 0).isHole = false
-      field(0, 0).robots = 10
+      field(0, 0).robots = 15
       field(0, 0).isHole = true
       field.build(players(0), Point(0, 0), Installation.bridge) must_== ()
       field(0, 0).isHole must_== false
@@ -126,7 +126,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field(0, 0).isHole = true
       field.build(players(0), Point(0, 0), Installation.house) must
         throwA[CommandException]
-      field.build(players(0), Point(0, 0), Installation.attack) must
+      field.build(players(0), Point(0, 0), Installation.tower) must
         throwA[CommandException]
     }
     "decline to moveSquad from unoccupied tile" in new fields {
@@ -245,30 +245,30 @@ class FieldSpec extends SpecificationWithJUnit {
       field.moveSquad(players(0), p, Direction.r, 10) must
         throwA[CommandException]
     }
-    "reduce the number of other player's robots by attack" in new fields {
+    "reduce the number of other player's robots by tower" in new fields {
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
-      field(0, 0).installation = Some(Installation.attack)
+      field(0, 0).installation = Some(Installation.tower)
       initTile(field, Point(0, 1))
       field(0, 1).owner = Some(players(1))
       field(0, 1).robots = 10
       field.attack(players(0)) must_== ()
       field(0, 1).robots must_== 10 - 2;
     }
-    "reduce the number of other player's robots from 1 to 0 by attack" in new fields {
+    "reduce the number of other player's robots from 1 to 0 by tower" in new fields {
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
-      field(0, 0).installation = Some(Installation.attack)
+      field(0, 0).installation = Some(Installation.tower)
       initTile(field, Point(0, 1))
       field(0, 1).owner = Some(players(1))
       field(0, 1).robots = 1
       field.attack(players(0)) must_== ()
       field(0, 1).robots must_== 0
     }
-    "reduce the number of other player's robots in distance 2 by attack" in new fields {
+    "reduce the number of other player's robots in distance 2 by tower" in new fields {
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
-      field(0, 0).installation = Some(Installation.attack)
+      field(0, 0).installation = Some(Installation.tower)
       initTile(field, Point(0, 1))
       field(0, 1).owner = Some(players(1))
       field(0, 1).robots = 10
@@ -283,30 +283,30 @@ class FieldSpec extends SpecificationWithJUnit {
       field(0, 2).robots must_== 10 - 2;
       field(0, 3).robots must_== 10;
     }
-    "not reduce the number of one's robots by attack" in new fields {
+    "not reduce the number of one's robots by tower" in new fields {
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
-      field(0, 0).installation = Some(Installation.attack)
+      field(0, 0).installation = Some(Installation.tower)
       initTile(field, Point(0, 1))
       field(0, 1).owner = Some(players(0))
       field(0, 1).robots = 10
       field.attack(players(0)) must_== ()
       field(0, 1).robots must_== 10
     }
-    "not reduce the number of other player's robots by one's attack in other player's turn" in new fields {
+    "not reduce the number of other player's robots by one's tower in other player's turn" in new fields {
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
-      field(0, 0).installation = Some(Installation.attack)
+      field(0, 0).installation = Some(Installation.tower)
       initTile(field, Point(0, 1))
       field(0, 1).owner = Some(players(1))
       field(0, 1).robots = 10
       field.attack(players(1)) must_== ()
       field(0, 1).robots must_== 10
     }
-    "not reduce the number of one's robots by one's attack in other player's turn" in new fields {
+    "not reduce the number of one's robots by one's tower in other player's turn" in new fields {
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
-      field(0, 0).installation = Some(Installation.attack)
+      field(0, 0).installation = Some(Installation.tower)
       initTile(field, Point(0, 1))
       field(0, 1).owner = Some(players(0))
       field(0, 1).robots = 10
@@ -424,7 +424,7 @@ class FieldSpec extends SpecificationWithJUnit {
       field.calculateScore(players(0)) must_== initialScore + undevelopedLandScore
       initTile(field, Point(0, 0))
       field(0, 0).owner = Some(players(0))
-      field(0, 0).installation = Some(Installation.attack)
+      field(0, 0).installation = Some(Installation.tower)
       field.calculateScore(players(0)) must_== initialScore + developedLandScore
     }
     "create a map as each player has a same score" in new fields {
