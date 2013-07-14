@@ -12,7 +12,7 @@ class PlayerScene(nextScene: Scene[GameEnvironment],
 
   override def initialize() {
     describe("Enter player names")
-    displayLine("Please enter a name of Player 1.")
+    displayPromptForPlayer()
   }
 
   override def runWithCommandString(name: String) = {
@@ -28,9 +28,13 @@ class PlayerScene(nextScene: Scene[GameEnvironment],
           + game.players.map(_.name).mkString(", ") + ")")
         nextScene
       } else {
-        displayLine("Please enter a name of Player " + game.currentPlayerIndex + ".")
+        displayPromptForPlayer()
         this
       }
     }
+  }
+
+  private def displayPromptForPlayer() {
+    displayLine("Please enter a name of Player " + game.currentPlayerIndex + ".")
   }
 }
