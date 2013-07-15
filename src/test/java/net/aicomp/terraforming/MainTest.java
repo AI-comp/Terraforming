@@ -10,7 +10,7 @@ public class MainTest {
 	@BeforeClass
 	public static void before() throws IOException, InterruptedException {
 		System.out.println("Start compiling.");
-		ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "build.bat");
+		ProcessBuilder pb = isWindows() ? new ProcessBuilder("cmd", "/c", "build.bat") : new ProcessBuilder("./build.sh");
 		pb.directory(new File("SampleAI"));
 		Process p = pb.start();
 		p.waitFor();
@@ -37,7 +37,7 @@ public class MainTest {
 
 	@Test
 	public void runThreeSampleScalaAIPrograms() {
-		String command = "scala.bat -cp SampleAI/Scala Main";
+		String command = isWindows() ? "scala.bat -cp SampleAI/Scala Main" : "scala -cp SampleAI/Scala Main";
 		Main.main(new String[] { "-c", "-a", command, command, command });
 	}
 
@@ -51,5 +51,9 @@ public class MainTest {
 	public void runThreeHeavyAIPrograms() {
 		String command = "java -cp SampleAI/HeavyJava Main";
 		Main.main(new String[] { "-c", "-a", command, command, command });
+	}
+
+	private static boolean isWindows() {
+		return System.getProperty("os.name").contains("Windows");
 	}
 }
