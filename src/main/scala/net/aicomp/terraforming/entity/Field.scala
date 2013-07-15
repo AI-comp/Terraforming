@@ -114,7 +114,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
           case Some(Installation.initial) =>
             tile.enter(player, 5)
           case Some(Installation.robotmaker) =>
-            tile.enter(player, 2)
+            tile.enter(player, 1)
           case _ =>
         }
       }
@@ -126,7 +126,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     for ((p, tile) <- tiles) {
       if (tile.ownedBy(player)) {
         tile.installation match {
-          case Some(Installation.attack) =>
+          case Some(Installation.tower) =>
             availableLineTiles(p, 2).filter(!_.ownedBy(player)).foreach { t =>
               t.robots = math.max(t.robots - 2, 0)
             }

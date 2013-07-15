@@ -40,10 +40,6 @@ object ImageLoader {
   def loadTiles(render: Renderer) = {
     if (_tiles == null) {
       _tiles = Map(
-        "32" -> render.loadImage("img/hex/hex32.png"),
-        "32_0" -> render.loadImage("img/hex/hex32_0.png"),
-        "32_1" -> render.loadImage("img/hex/hex32_1.png"),
-        "32_2" -> render.loadImage("img/hex/hex32_2.png"),
         "48" -> render.loadImage("img/hex/hex48.png"),
         "48_0" -> render.loadImage("img/hex/hex48_0.png"),
         "48_1" -> render.loadImage("img/hex/hex48_1.png"),
@@ -79,12 +75,9 @@ object ImageLoader {
         "excavator_0" -> render.loadImage("img/installation/excavator0.png"),
         "excavator_1" -> render.loadImage("img/installation/excavator1.png"),
         "excavator_2" -> render.loadImage("img/installation/excavator2.png"),
-        "attack_0" -> render.loadImage("img/installation/attack0.png"),
-        "attack_1" -> render.loadImage("img/installation/attack1.png"),
-        "attack_2" -> render.loadImage("img/installation/attack2.png"),
-        "shelter_0" -> render.loadImage("img/installation/shelter0.png"),
-        "shelter_1" -> render.loadImage("img/installation/shelter1.png"),
-        "shelter_2" -> render.loadImage("img/installation/shelter2.png"),
+        "tower_0" -> render.loadImage("img/installation/attack0.png"),
+        "tower_1" -> render.loadImage("img/installation/attack1.png"),
+        "tower_2" -> render.loadImage("img/installation/attack2.png"),
         "bridge_0" -> render.loadImage("img/installation/bridge0.png"),
         "bridge_1" -> render.loadImage("img/installation/bridge1.png"),
         "bridge_2" -> render.loadImage("img/installation/bridge2.png"),

@@ -41,7 +41,7 @@ class TileSpec extends SpecificationWithJUnit {
       val player = new Player(1)
       val tile = new Tile
       tile.owner = Some(player)
-      tile.installation = Some(Installation.attack)
+      tile.installation = Some(Installation.tower)
       tile.score(player) must_== developedLandScore
     }
     "stringify wasteland" in {
