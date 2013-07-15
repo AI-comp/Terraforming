@@ -10,7 +10,7 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
   private var _isMoving = false
   private var _isBuilding = false
   private var _isFinished = false
-  private var _modified = false
+  private var _modified = true
 
   def currentTurn = (_currentTurn + 2) / players.size
   def maxTurn = _maxTurn
@@ -50,14 +50,14 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
     _currentPlayerIndex
   }
 
-  def startTurn() = {
+  def startTurn(): String = {
     field.produceRobot(currentPlayer)
     field.attack(currentPlayer)
     field.clearMovedRobots()
     _isMoving = false
     _isBuilding = false
     _currentTurn += 1
-    "----------------- Start " + currentPlayer.name + "'s turn -----------------"
+    "----------------- Start " + currentPlayer.name + "'s turn #" + currentTurn + " -----------------"
   }
 
   private def finishTurn() = {

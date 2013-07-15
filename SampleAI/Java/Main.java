@@ -2,12 +2,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-import aicomp.net.terraforming.sample.Direction;
-import aicomp.net.terraforming.sample.Field;
-import aicomp.net.terraforming.sample.Game;
-import aicomp.net.terraforming.sample.Installation;
-import aicomp.net.terraforming.sample.Point;
-import aicomp.net.terraforming.sample.Tile;
+import net.aicomp.terraforming.ai.entity.Direction;
+import net.aicomp.terraforming.ai.entity.Field;
+import net.aicomp.terraforming.ai.entity.Game;
+import net.aicomp.terraforming.ai.entity.Installation;
+import net.aicomp.terraforming.ai.entity.Landform;
+import net.aicomp.terraforming.ai.entity.Point;
+import net.aicomp.terraforming.ai.entity.Tile;
 
 public class Main {
   public static void main(String[] args) {
@@ -72,16 +73,23 @@ public class Main {
       int playerId = scanner.nextInt();
       int robot = scanner.nextInt();
       int resource = scanner.nextInt();
-      String instName = scanner.next();
-      String capitalizedName = instName.substring(0, 1).toUpperCase() + instName.substring(1);
       boolean isHole = false;
+
+      String landformName = scanner.next();
+      String capitalizedlandformName =
+          landformName.substring(0, 1).toUpperCase() + landformName.substring(1);
+      Landform landform = Landform.valueOf(capitalizedlandformName);
+
+      String instName = scanner.next();
+      String capitalizedInstName = instName.substring(0, 1).toUpperCase() + instName.substring(1);
       Installation inst = null;
-      if (capitalizedName.equals("Hole")) {
+      if (capitalizedInstName.equals("Hole")) {
         isHole = true;
-      } else if (!capitalizedName.equals("None")) {
-        inst = Installation.valueOf(capitalizedName);
-      } 
-      Tile tile = new Tile(playerId, robot, resource, isHole, inst);
+      } else {
+        inst = Installation.valueOf(capitalizedInstName);
+      }
+
+      Tile tile = new Tile(playerId, robot, resource, isHole, landform, inst);
       field.tiles.put(point, tile);
     }
     if (!scanner.next().equals("EOS")) {

@@ -196,7 +196,6 @@ object Main {
       (env, new PlayerScene(mainScene, startManipulators))
     } else {
       val (window, env) = initializeComponents()
-      ImageLoader.prefetch(env.getRenderer())
       val (startManipulators, gameManipulators) =
         initializeManipulators(cl, env, new GraphicalUserStartManipulator(),
           new GraphicalUserGameManipulator())
@@ -243,8 +242,12 @@ object Main {
       iPlayers += 1
     }
     for (name <- (internalNames ++ defaultNames).take(3 - iPlayers)) {
-      val clazz = Class.forName(name)
-      val man = clazz.newInstance().asInstanceOf[InternalManipulator]
+      val man = try {
+        val clazz = Class.forName(name)
+        clazz.newInstance().asInstanceOf[InternalManipulator]
+      } catch {
+        case _ => new SampleInternalManipulator()
+      }
       startMans += (new InternalAIPlayerStartManipulator(players(iPlayers), man)
         .limittingTime(10000))
       gameMans += new InternalAIPlayerGameManipulator(players(iPlayers), man)
