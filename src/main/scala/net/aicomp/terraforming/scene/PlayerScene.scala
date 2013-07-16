@@ -35,6 +35,6 @@ class PlayerScene(nextScene: Scene[GameEnvironment],
   }
 
   private def displayPromptForPlayer() {
-    displayLine("Please enter a name of Player " + game.currentPlayerIndex + ".")
+    displayLine("Please enter a name of Player " + game.currentPlayer.id + ".")
   }
 }
