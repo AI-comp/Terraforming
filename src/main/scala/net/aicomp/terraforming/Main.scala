@@ -208,7 +208,7 @@ object Main {
   }
 
   def initializeManipulators(cl: CommandLine, env: GameEnvironment, userStartManipulator: StartManipulator, userGameManipulator: GameManipulator) = {
-    val nums = Vector(1 to 3: _*)
+    val nums = Vector(0 to 2: _*)
     val players = nums.map(new Player(_))
     val nUsers = allCatch opt math.max(0, cl.getOptionValue(USER_PLAYERS).toInt) getOrElse (0)
     val externalCmds = getOptionsValuesWithoutNull(cl, EXTERNAL_AI_PROGRAM)
@@ -278,7 +278,7 @@ object Main {
     val logScrollPane = new JScrollPane(logArea)
     val commandField = new JTextField()
 
-    val ret = builder.setTitle("Terraforming version 1.0.1")
+    val ret = builder.setTitle("Terraforming version 1.0.2")
       .setWindowSize(1024, 740)
       .setPanelSize(1024, 495)
       .setWindowCreator(new WindowCreator() {
