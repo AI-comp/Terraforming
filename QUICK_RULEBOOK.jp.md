@@ -1,4 +1,5 @@
-![Title_Logo](rulebook/titleLogo.jpg) developed by AI-COMP (ai-comp@googlegroups.com)
+![Title_Logo](rulebook/titleLogo.jpg)
+developed by AI-COMP (ai-comp@googlegroups.com)
 
 # クイックルール（ルール概要）
 
