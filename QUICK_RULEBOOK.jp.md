@@ -1,4 +1,4 @@
-![Title_Logo](rulebook/titleLogo.jpg)
+![Title_Logo](rulebook/titleLogo.jpg) developed by AI-COMP (ai-comp@googlegroups.com)
 
 # クイックルール（ルール概要）
 
