@@ -69,6 +69,7 @@ object Main {
   val HELP = "h"
   val FPS = "f"
   val CUI_MODE = "c"
+  val RESULT_MODE = "r"
   val USER_PLAYERS = "u"
   val LIGHT_GUI_MODE = "l"
   val EXTERNAL_AI_PROGRAM = "a"
@@ -134,6 +135,7 @@ object Main {
       .addOption(HELP, false, "Print this help.")
       .addOption(FPS, false, "Enable CUI mode.")
       .addOption(CUI_MODE, false, "Enable CUI mode.")
+      .addOption(RESULT_MODE, false, "Enable result mode which show only a screen of a result.")
       .addOption(LIGHT_GUI_MODE, false, "Enable light and fast GUI mode by reducing rendering frequency.")
       .addOption(NOT_SHOWING_LOG, false, "Disable showing logs in the scree.")
       .addOption(userOption)
@@ -202,8 +204,13 @@ object Main {
 
       val waitScene = new WaitingScene(null) with GraphicalScene
       val resultScene = new ResultScene(waitScene) with GraphicalScene
-      val mainScene = new MainScene(resultScene, gameManipulators, jss) with GraphicalScene
-      (env, new PlayerScene(mainScene, startManipulators) with TitleScene)
+      if (cl.hasOption(RESULT_MODE)) {
+        val mainScene = new MainScene(resultScene, gameManipulators, jss)
+        (env, new PlayerScene(mainScene, startManipulators) with GraphicalScene)
+      } else {
+        val mainScene = new MainScene(resultScene, gameManipulators, jss) with GraphicalScene
+        (env, new PlayerScene(mainScene, startManipulators) with TitleScene)
+      }
     }
   }
 
