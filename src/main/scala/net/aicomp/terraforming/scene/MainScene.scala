@@ -33,7 +33,7 @@ class MainScene(nextScene: Scene[GameEnvironment],
       displayLine("Commands:")
       displayLine("  move x y (r|ur|dr|l|ul|dl) robot_amount")
       displayLine("      Move robots on the (x, y) tile with the specified direction")
-      displayLine("  build x y (robotmaker|excavator|attack|bridge|house|town)")
+      displayLine("  build x y (robotmaker|excavator|tower|bridge|house|town)")
       displayLine("      Build the specified installation on the (x, y) tile")
       displayLine("  reset")
       displayLine("      Reset the initial state of the current turn.")
