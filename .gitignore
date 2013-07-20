@@ -47,6 +47,7 @@ download
 .settings
 .cache
 .classpath
+/.metadata
 
 # emacs
 *~
@@ -63,4 +64,4 @@ replay/
 *.exe
 *.o
 *.hi
-/.metadata
+result.txt

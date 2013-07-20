@@ -45,19 +45,17 @@ class MainSceneSpec extends SpecificationWithJUnit {
     }
     "generate a result text (1 2 3)" in new TestSceneInitializer {
       playerScene.acceptAll(env, "abc" :: "def" :: "ghi" :: Nil)
-      mainScene.accept(env, "move " + initialPoints(0).x + " " + initialPoints(0).y + " l 4")
-      mainScene.accept(env, "move " + initialPoints(1).x + " " + initialPoints(1).y + " l 4")
+      mainScene.accept(env, "move " + initialPoints(2).x + " " + initialPoints(2).y + " l 1")
       mainScene.accept(env, "finish")
-      mainScene.accept(env, "move " + initialPoints(0).x + " " + initialPoints(0).y + " r 1")
-      mainScene.acceptAll(env, "finish" :: "finish" :: Nil)
-      mainScene.acceptAll(env, "finish" :: "finish" :: "finish" :: Nil)
-      mainScene.acceptAll(env, "finish" :: "finish" :: "finish" :: Nil)
-      mainScene.acceptAll(env, "finish" :: "finish" :: "finish" :: Nil)
+      mainScene.accept(env, "move " + initialPoints(1).x + " " + initialPoints(1).y + " l 1")
+      mainScene.accept(env, "finish")
+      mainScene.accept(env, "finish")
+      mainScene.accept(env, "move " + initialPoints(2).x + " " + initialPoints(2).y + " r 1")
       mainScene.acceptAll(env, "finish" :: "finish" :: "finish" :: Nil)
       val fileName = "result.txt"
       val file = new File(fileName);
-      val line = Source.fromFile(file).getLines()
-      line.toString must_== "1 2 3 "
+      val line = Source.fromFile(file).getLines().toSeq.head
+      line.toString must_== "3 2 1"
     }
   }
 }
