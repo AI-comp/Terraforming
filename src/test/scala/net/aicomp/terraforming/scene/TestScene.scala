@@ -7,6 +7,7 @@ import net.aicomp.terraforming.entity.Game
 import net.aicomp.terraforming.entity.GameEnvironment
 import net.aicomp.terraforming.entity.Player
 import java.util.Random
+import net.aicomp.terraforming.entity.Installation
 
 trait TestScene extends ManipultorScene {
   val output = Queue[String]()
@@ -32,13 +33,18 @@ trait TestScene extends ManipultorScene {
 
 trait TestSceneInitializer extends Scope {
   val env = GameEnvironment()
-  val players = Vector(new Player(0), new Player(1), new Player(2))
-  implicit val random = new Random(0)
-  val field = Field(7, players)
+  val players = Vector(Player(0), Player(1), Player(2))
+  val field = Field(7, players, new Random(0))
   env.game = new Game(field, players, 2 * 3)
   env.getSceneManager().setFps(1000)
   val mainScene = new MainScene(null) with TestScene
   val playerScene = new PlayerScene(mainScene) with TestScene
   def g = env.game
   env.getSceneManager().initialize(env, playerScene)
+
+  def initialPoints(id: Int) = {
+    field.tiles.keys.find(p => {
+      field.tiles(p).installation.exists(_ == Installation.initial) && field.tiles(p).owner.get.id == id
+    }).get
+  }
 }

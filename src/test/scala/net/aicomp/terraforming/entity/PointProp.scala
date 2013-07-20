@@ -7,7 +7,7 @@ import org.scalacheck.Properties
 
 object PointProp extends Properties("Point") {
   val field = Field(7)
-  val player = new Player(0)
+  val player = Player(0)
 
   property("shortestPathTo") = forAll(pointWithin, pointWithin) { (p1: Point, p2: Point) =>
     p1.shortestPathTo(p2, field, player).get.size == p1.distance(p2)

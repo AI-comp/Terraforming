@@ -11,12 +11,17 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
   private var _isBuilding = false
   private var _isFinished = false
   private var _modified = true
+  private var _initGame: Game = null
 
   def currentTurn = (_currentTurn + 2) / players.size
   def maxTurn = _maxTurn
   def currentPlayerIndex = _currentPlayerIndex
   def currentPlayer = players(_currentPlayerIndex)
   def isFinished = _isFinished
+
+  def copy() = {
+    new Game(field.copy(), players, _maxTurn)
+  }
 
   def checkModified() = {
     val modified = _modified
@@ -38,9 +43,17 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
         _modified = true
         field.build(currentPlayer, p, t)
       }
-      case FinishCommand() => {
+      case ResetCommand() => {
+        _isMoving = false
+        _isBuilding = false
         _modified = true
-        finishTurn()
+        _initGame
+      }
+      case FinishCommand() => {
+        finishTurn()        
+        _isMoving = false
+        _isBuilding = false
+        _modified = true
       }
     }
   }
@@ -54,8 +67,7 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
     field.produceRobot(currentPlayer)
     field.attack(currentPlayer)
     field.clearMovedRobots()
-    _isMoving = false
-    _isBuilding = false
+    _initGame = copy()
     _currentTurn += 1
     "----------------- Start " + currentPlayer.name + "'s turn #" + currentTurn + " -----------------"
   }

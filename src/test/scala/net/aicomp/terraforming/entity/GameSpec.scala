@@ -6,11 +6,11 @@ import java.util.Random
 
 class GameSpec extends SpecificationWithJUnit {
   class games(val turn: Int = 12) extends Scope {
-    val players = Vector(new Player(0), new Player(1), new Player(2))
+    val players = Vector(Player(0), Player(1), Player(2))
     val radius = 7
     
-    implicit val random = new Random(0)
-    val field = Field(radius, players)
+    val random = new Random(0)
+    val field = Field(radius, players, random)
     val game = new Game(field, players, turn)
     val initRobots = 50
     game.startTurn()

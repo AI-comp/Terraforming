@@ -2,7 +2,7 @@ name := "Terraforming"
 
 version := "1.0.2"
 
-scalaVersion := "2.9.2"
+scalaVersion := "2.10.2"
 
 resolvers ++= Seq(
   "Sonatype Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
@@ -16,7 +16,7 @@ libraryDependencies ++= Seq(
   "org.json4s" %% "json4s-native" % "3.2.4",
   "junit" % "junit" % "4.10" % "test",
   "org.hamcrest" % "hamcrest-all" % "1.1" % "test",
-  "org.specs2" %% "specs2" % "1.12.4.1" % "test",
+  "org.specs2" %% "specs2" % "2.1" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.1" % "test"
 )
 

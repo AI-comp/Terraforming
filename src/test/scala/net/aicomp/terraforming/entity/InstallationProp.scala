@@ -10,9 +10,6 @@ import java.util.Random
 object InstallationProp extends Properties("Installation") {
   val fieldSize = 7
   val field = Field(fieldSize)
-  val players = Vector(new Player(0), new Player(1), new Player(2))
-
-  
-  
+  val players = Vector(Player(0), Player(1), Player(2))
 }
 

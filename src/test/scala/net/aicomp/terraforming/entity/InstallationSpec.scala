@@ -6,11 +6,10 @@ import java.util.Random
 
 class InstallationSpec extends SpecificationWithJUnit {
   trait installations extends Scope {
-    val players = Vector(new Player(1), new Player(2), new Player(3))
+    val players = Vector(Player(1), Player(2), Player(3))
     val origin = Point(0, 0)
     val radius = 7
-    implicit val random = new Random(0)
-    val field = Field(radius, players)
+    val field = Field(radius, players, new Random(0))
     val tiles = field.tiles
     def apply(x: Int, y: Int): Tile = tiles(new Point(x, y))
     def apply(p: Point): Tile = tiles(p)

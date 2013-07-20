@@ -21,24 +21,24 @@ class TileSpec extends SpecificationWithJUnit {
       new Tile().equals(new Object()) must_== false
     }
     "score a waste land" in {
-      val player = new Player(1)
+      val player = Player(1)
       new Tile().score(player) must_== wasteLandScore
     }
     "score a hole" in {
-      val player = new Player(1)
+      val player = Player(1)
       val tile = new Tile
       tile.owner = Some(player)
       tile.isHole = true
       tile.score(player) must_== holeScore
     }
     "score a undeveloped land" in {
-      val player = new Player(1)
+      val player = Player(1)
       val tile = new Tile
       tile.owner = Some(player)
       tile.score(player) must_== undevelopedLandScore
     }
     "score a developed land" in {
-      val player = new Player(1)
+      val player = Player(1)
       val tile = new Tile
       tile.owner = Some(player)
       tile.installation = Some(Installation.tower)
@@ -50,14 +50,14 @@ class TileSpec extends SpecificationWithJUnit {
       tile.stringify(0) must_== "-1 1 0 wasteland none"
     }
     "stringify settlement" in {
-      val player = new Player(1)
+      val player = Player(1)
       val tile = new Tile
       tile.owner = Some(player)
       tile.robots = 2
       tile.stringify(0) must_== "1 2 0 settlement none"
     }
     "stringify base" in {
-      val player = new Player(2)
+      val player = Player(2)
       val tile = new Tile
       tile.owner = Some(player)
       tile.robots = 3
@@ -71,7 +71,7 @@ class TileSpec extends SpecificationWithJUnit {
       tile.stringify(0) must_== "-1 1 0 hole hole"
     }
     "stringify occupied hole" in {
-      val player = new Player(2)
+      val player = Player(2)
       val tile = new Tile
       tile.owner = Some(player)
       tile.robots = 3

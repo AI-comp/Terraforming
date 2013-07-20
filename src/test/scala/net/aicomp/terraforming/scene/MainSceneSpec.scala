@@ -28,5 +28,18 @@ class MainSceneSpec extends SpecificationWithJUnit {
       g.field.robotAmount(g.players(1)) must_== 5
       g.field.robotAmount(g.players(2)) must_== 5
     }
+    "reset a current turn" in new TestSceneInitializer {
+      g.field.robotAmount(g.players(0)) must_== 0
+      g.field.robotAmount(g.players(1)) must_== 0
+      g.field.robotAmount(g.players(2)) must_== 0
+      playerScene.acceptAll(env, "abc" :: "def" :: "ghi" :: Nil)
+      g.field.robotAmount(g.players(0)) must_== 5
+      g.field.robotAmount(g.players(1)) must_== 0
+      g.field.robotAmount(g.players(2)) must_== 0
+      mainScene.accept(env, "move " + initialPoints(0).x + " " + initialPoints(0).y + " l 4")
+      g.field(initialPoints(0)).robots must_== 1
+      mainScene.accept(env, "reset")
+      g.field(initialPoints(0)).robots must_== 5
+    }
   }
 }

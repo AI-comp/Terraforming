@@ -17,7 +17,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <encoding>UTF-8</encoding>
-    <scala.version>2.9.2</scala.version>
+    <scala.version>2.10.2</scala.version>
   </properties>
   
   <repositories>
@@ -69,7 +69,7 @@
     </dependency>
     <dependency>
       <groupId>org.json4s</groupId>
-      <artifactId>json4s-native_${scala.version}</artifactId>
+      <artifactId>json4s-native_2.10</artifactId>
       <version>3.2.4</version>
     </dependency>
 
@@ -88,13 +88,13 @@
     </dependency>
     <dependency>
       <groupId>org.specs2</groupId>
-      <artifactId>specs2_${scala.version}</artifactId> 
-      <version>1.12.4.1</version> 
+      <artifactId>specs2_2.10</artifactId>
+      <version>2.1</version> 
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.scalacheck</groupId>
-      <artifactId>scalacheck_${scala.version}</artifactId>
+      <artifactId>scalacheck_2.10</artifactId>
       <version>1.10.1</version>
     </dependency>
   </dependencies>

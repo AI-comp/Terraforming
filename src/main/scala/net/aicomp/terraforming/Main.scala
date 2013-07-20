@@ -113,7 +113,7 @@ object Main {
 
   def buildOptions() = {
     OptionBuilder.hasArg()
-    OptionBuilder.withDescription("Set 0-3 user players. When specifying no player option (-u, -a, -i), a game is provided for 1 user player and 2 default internal AI plyaers")
+    OptionBuilder.withDescription("Set 0-3 user players. When specifying no player option (-u, -a, -i), a game is provided for 1 user player and 2 default internal AI players")
     val userOption = OptionBuilder.create(USER_PLAYERS)
 
     OptionBuilder.hasArgs()
@@ -209,7 +209,7 @@ object Main {
 
   def initializeManipulators(cl: CommandLine, env: GameEnvironment, userStartManipulator: StartManipulator, userGameManipulator: GameManipulator) = {
     val nums = Vector(0 to 2: _*)
-    val players = nums.map(new Player(_))
+    val players = nums.map(Player(_))
     val nUsers = allCatch opt math.max(0, cl.getOptionValue(USER_PLAYERS).toInt) getOrElse (0)
     val externalCmds = getOptionsValuesWithoutNull(cl, EXTERNAL_AI_PROGRAM)
     val internalNames = getOptionsValuesWithoutNull(cl, INTERNAL_AI_PROGRAM)
@@ -246,7 +246,7 @@ object Main {
         val clazz = Class.forName(name)
         clazz.newInstance().asInstanceOf[InternalManipulator]
       } catch {
-        case _ => new SampleInternalManipulator()
+        case _: Throwable => new SampleInternalManipulator()
       }
       startMans += (new InternalAIPlayerStartManipulator(players(iPlayers), man)
         .limittingTime(10000))
@@ -255,8 +255,8 @@ object Main {
       iPlayers += 1
     }
 
-    implicit val random = new Random()
-    val field = Field(6, players)
+    val random = new Random()
+    val field = Field(6, players, random)
     env.game = new Game(field, players, 200)
     if (userIndices.size == 0) {
       env.getSceneManager().setFps(1000)

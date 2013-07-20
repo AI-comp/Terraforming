@@ -9,6 +9,8 @@ package net.aicomp.terraforming.entity
   var installation: Option[Installation] = None
   var isHole: Boolean = false
 
+  def copy() = clone()
+
   def availableRobots = robots - movedRobots
 
   def ownedBy(p: Player) = owner.exists(_ == p)

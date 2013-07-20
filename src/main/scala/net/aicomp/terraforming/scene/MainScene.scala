@@ -13,6 +13,7 @@ class MainScene(nextScene: Scene[GameEnvironment],
   manipulators: Vector[ThreadManipulator[Game, Array[String], String]] = Vector(),
   jsonStream: PrintStream = null)
   extends ManipultorScene(manipulators) {
+
   override def initialize() {
     displayLine(game.startTurn())
     writeJson()
@@ -24,11 +25,13 @@ class MainScene(nextScene: Scene[GameEnvironment],
     val commands = Map(
       "move" -> Command.moveCommand,
       "build" -> Command.buildCommand,
+      "reset" -> Command.resetCommand,
       "finish" -> Command.finishCommand)
     def help = {
       displayLine("Commands:")
       displayLine("  move x y (r|ur|dr|l|ul|dl) robot_amount")
       displayLine("  build x y (robotmaker|excavator|attack|bridge|house|town)")
+      displayLine("  reset")
       displayLine("  finish")
     }
 
@@ -42,9 +45,14 @@ class MainScene(nextScene: Scene[GameEnvironment],
         commands.get(cmd) match {
           case Some(c) => {
             try {
-              val ret = game.acceptCommand(c(args))
-              if (ret.isInstanceOf[String]) {
-                displayLine(ret.toString())
+              game.acceptCommand(c(args)) match {
+                case ret: String => {
+                  displayLine(ret.toString())
+                }
+                case game: Game => {
+                  env.game = game
+                }
+                case _ => ()
               }
               writeJson()
             } catch {

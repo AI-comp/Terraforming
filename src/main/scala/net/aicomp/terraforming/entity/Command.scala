@@ -7,6 +7,8 @@ case class MoveCommand(val from: Point, val direction: Direction, val amount: In
 
 case class BuildCommand(val at: Point, val instllation: Installation) extends Command
 
+case class ResetCommand() extends Command
+
 case class FinishCommand() extends Command
 
 /**
@@ -31,6 +33,12 @@ object Command extends FormatValidation {
       y <- c.validateInt(c.args(1))
       t <- c.validateInstallation(c.args(2))
     } yield BuildCommand(new Point(x, y), t)
+  }
+
+  def resetCommand = mkCommand("reset") { c =>
+    for {
+      _ <- c.validateLength(c.args, 0)
+    } yield ResetCommand()
   }
 
   def finishCommand = mkCommand("finish") { c =>

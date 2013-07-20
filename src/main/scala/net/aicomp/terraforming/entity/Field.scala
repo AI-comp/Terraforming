@@ -35,6 +35,10 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
   def apply(x: Int, y: Int): Tile = tiles(new Point(x, y))
   def apply(p: Point): Tile = tiles(p)
 
+  def copy() = {
+    new Field(radius, tiles.map { case (p, t) => (p, t.copy()) })
+  }
+
   def clearMovedRobots() {
     tiles.values.foreach(t => t.movedRobots = 0)
   }
@@ -254,7 +258,7 @@ object Field {
   }
 
   /** Generates field at random */
-  def apply(radius: Int, players: IndexedSeq[Player])(implicit random: Random): Field = {
+  def apply(radius: Int, players: IndexedSeq[Player], random: Random): Field = {
     require(players.length == 3)
 
     def generateOneAThirdField() = {

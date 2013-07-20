@@ -46,7 +46,7 @@ object StreamUtils {
       oos.writeObject(random)
       oos
     } catch {
-      case _ => new ObjectOutputStream(new ByteArrayOutputStream())
+      case _: Throwable => new ObjectOutputStream(new ByteArrayOutputStream())
     }
   }
 
@@ -57,7 +57,7 @@ object StreamUtils {
       val fileName = "replay/" + dateForName + ".js"
       new PrintStream(fileName)
     } catch {
-      case _ => new PrintStream(new ByteArrayOutputStream())
+      case _: Throwable => new PrintStream(new ByteArrayOutputStream())
     }
   }
 
@@ -68,7 +68,7 @@ object StreamUtils {
       val fileName = "log/" + prefix + "_" + dateForName + ".txt"
       new PrintStream(fileName)
     } catch {
-      case _ => new PrintStream(new ByteArrayOutputStream())
+      case _: Throwable => new PrintStream(new ByteArrayOutputStream())
     }
   }
 }

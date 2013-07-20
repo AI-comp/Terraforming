@@ -10,12 +10,12 @@ import java.util.Random
 object FieldProp extends Properties("Field") {
   val fieldSize = 7
   val field = Field(fieldSize)
-  val players = Vector(new Player(0), new Player(1), new Player(2))
+  val players = Vector(Player(0), Player(1), Player(2))
 
   property("CalculateScore for Filed whose size is 7") =
     forAll { (seed: Int) =>
-      implicit val random = new Random(seed)
-      val f = Field(fieldSize, players)
+      val random = new Random(seed)
+      val f = Field(fieldSize, players, random)
       f.calculateScore(players(0)) == f.calculateScore(players(1)) &&
         f.calculateScore(players(1)) == f.calculateScore(players(2))
     }
@@ -41,10 +41,10 @@ object FieldProp extends Properties("Field") {
 
   property("Build installations") =
     forAll { (seed: Int) =>
-      implicit val random = new Random(seed)
+      val random = new Random(seed)
 
       for (size <- 1 to 7) {
-        val f = Field(size, players)
+        val f = Field(size, players, random)
         for ((p, tile) <- field.tiles) {
           tile.owner = Some(players(random.nextInt(3)))
           tile.robots = 1000
@@ -63,10 +63,10 @@ object FieldProp extends Properties("Field") {
 
   property("Build pits, houses and towns") =
     forAll { (seed: Int) =>
-      implicit val r = new Random(seed)
+      val r = new Random(seed)
       val builables = Vector(Installation.excavator, Installation.house, Installation.town)
       for (size <- 1 to 7) {
-        val f = Field(size, players)
+        val f = Field(size, players, r)
         for ((p, tile) <- field.tiles) {
           tile.owner = Some(players(r.nextInt(3)))
           tile.robots = 1000
