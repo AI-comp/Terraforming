@@ -1,4 +1,5 @@
-![Title_Logo](rulebook/titleLogo.jpg)
+![Title_Logo](rulebook/titleLogo.jpg)  
+developed by AI-COMP (ai-comp@googlegroups.com)
 
 # クイックルール（ルール概要）
 
@@ -244,3 +245,6 @@ SampleAIというプレイヤー名を出力したい場合は、標準出力へ
 各プレイヤーは1ターンにつき1000msの間に全てのコマンドを入力しなければならない。
 1000ms以内に入力が終了しなかった(finishコマンドが入力されなかった)場合、1ゲーム以内で合計5000msまでの時間超過が認められる。
 超過時間が合計で5000msを超えた場合、以降の入力は全てfinishコマンドのみと見なされ、一切コマンド入力ができなくなる。
+
+## 連絡先
+ご意見ご要望がございましたら ai-comp@googlegroups.com までご連絡ください．

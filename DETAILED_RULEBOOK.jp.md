@@ -1,4 +1,5 @@
-![Title_Logo](rulebook/titleLogo.jpg)
+![Title_Logo](rulebook/titleLogo.jpg)  
+developed by AI-COMP (ai-comp@googlegroups.com)
 
 # 詳細ルール
 
@@ -252,3 +253,6 @@
 	ロボットたちが開発を繰り広げるエリア。
 	フィールドは六角形のマスで構成されている。
 
+
+## 連絡先
+ご意見ご要望がございましたら ai-comp@googlegroups.com までご連絡ください．
