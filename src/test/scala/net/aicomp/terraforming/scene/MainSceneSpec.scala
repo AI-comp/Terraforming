@@ -3,6 +3,7 @@ package net.aicomp.terraforming.scene
 import org.specs2.mutable.SpecificationWithJUnit
 import org.specs2.specification.Scope
 import net.aicomp.terraforming.entity.Installation
+import scala.io.Source
 
 class MainSceneSpec extends SpecificationWithJUnit {
   "MainScene" should {
@@ -40,6 +41,22 @@ class MainSceneSpec extends SpecificationWithJUnit {
       g.field(initialPoints(0)).robots must_== 1
       mainScene.accept(env, "reset")
       g.field(initialPoints(0)).robots must_== 5
+    }
+    "generate a result text (1 2 3)" in new TestSceneInitializer {
+      playerScene.acceptAll(env, "abc" :: "def" :: "ghi" :: Nil)
+      mainScene.accept(env, "move " + initialPoints(0).x + " " + initialPoints(0).y + " l 4")
+      mainScene.accept(env, "move " + initialPoints(1).x + " " + initialPoints(1).y + " l 4")
+      mainScene.accept(env, "finish")
+      mainScene.accept(env, "move " + initialPoints(0).x + " " + initialPoints(0).y + " r 1")
+      mainScene.acceptAll(env, "finish" :: "finish" :: Nil)
+      mainScene.acceptAll(env, "finish" :: "finish" :: "finish" :: Nil)
+      mainScene.acceptAll(env, "finish" :: "finish" :: "finish" :: Nil)
+      mainScene.acceptAll(env, "finish" :: "finish" :: "finish" :: Nil)
+      mainScene.acceptAll(env, "finish" :: "finish" :: "finish" :: Nil)
+      val fileName = "result.txt"
+      val file = new File(fileName);
+      val line = Source.fromFile(file).getLines();
+      line must_=="1 2 3 "
     }
   }
 }

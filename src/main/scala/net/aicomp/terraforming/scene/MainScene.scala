@@ -90,14 +90,19 @@ class MainScene(nextScene: Scene[GameEnvironment],
     for((sortedScores, rank) <- sortedScores.zipWithIndex) {
       ranking.updated(sortedScores._1, rank)
     }
+    var stream: PrintStream = null
     try {
       val fileName = "result.txt"
-      val printStream = new PrintStream(fileName)
+      stream = new PrintStream(fileName)
       game.players.foreach { player => 
-        printStream.print(ranking.apply(player.id))
+        stream.print(ranking.apply(player.id))
       }
     } catch {
       case _ => new PrintStream(new ByteArrayOutputStream())
+    } finally {
+      if(stream != null) {
+        stream.close()
+      }
     }
   }
 }
