@@ -63,3 +63,4 @@ replay/
 *.exe
 *.o
 *.hi
+/.metadata

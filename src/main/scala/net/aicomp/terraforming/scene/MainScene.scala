@@ -8,6 +8,8 @@ import net.aicomp.terraforming.entity.GameSetting
 import net.exkazuu.gameaiarena.gui.Scene
 import net.exkazuu.gameaiarena.manipulator.ThreadManipulator
 import java.io.PrintStream
+import scala.util.Sorting
+import java.io.ByteArrayOutputStream
 
 class MainScene(nextScene: Scene[GameEnvironment],
   manipulators: Vector[ThreadManipulator[Game, Array[String], String]] = Vector(),
@@ -80,4 +82,27 @@ class MainScene(nextScene: Scene[GameEnvironment],
 
   def writeJson() = if (jsonStream != null) jsonStream.println(game.toJson(game.currentPlayer))
 
+  
+ override def release() {
+    val scores = game.players.map(player => (player.id, game.field.calculateScore(player)))
+    val sortedScores = Sorting.stableSort(scores, (a:(Int,Int), b:(Int,Int)) => a._2 > b._2 || (a._2 == b._2 && a._1 > b._1))
+    val ranking = Map.empty[Int,Int]
+    for((sortedScores, rank) <- sortedScores.zipWithIndex) {
+      ranking.updated(sortedScores._1, rank)
+    }
+    var stream: PrintStream = null
+    try {
+      val fileName = "result.txt"
+      stream = new PrintStream(fileName)
+      game.players.foreach { player => 
+        stream.print(ranking.apply(player.id))
+      }
+    } catch {
+      case _ => new PrintStream(new ByteArrayOutputStream())
+    } finally {
+      if(stream != null) {
+        stream.close()
+      }
+    }
+  }
 }
