@@ -4,6 +4,7 @@ import org.specs2.mutable.SpecificationWithJUnit
 import org.specs2.specification.Scope
 import net.aicomp.terraforming.entity.Installation
 import scala.io.Source
+import java.io.File
 
 class MainSceneSpec extends SpecificationWithJUnit {
   "MainScene" should {
@@ -55,8 +56,8 @@ class MainSceneSpec extends SpecificationWithJUnit {
       mainScene.acceptAll(env, "finish" :: "finish" :: "finish" :: Nil)
       val fileName = "result.txt"
       val file = new File(fileName);
-      val line = Source.fromFile(file).getLines();
-      line must_=="1 2 3 "
+      val line = Source.fromFile(file).getLines()
+      line.toString must_== "1 2 3 "
     }
   }
 }
