@@ -20,7 +20,7 @@ public class MainTest {
 	@Test
 	public void runThreeSampleJavaAIPrograms() {
 		String command = "java -cp SampleAI/Java Main";
-		Main.main(new String[] { "-r", "-a", command, command, command });
+		Main.main(new String[] { "-c", "-a", command, command, command });
 	}
 
 	@Test

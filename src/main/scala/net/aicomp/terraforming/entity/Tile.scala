@@ -1,6 +1,6 @@
 package net.aicomp.terraforming.entity
 
-@cloneable class Tile {
+class Tile extends Cloneable {
   var owner: Option[Player] = None
   var robots = 0
   var movedRobots = 0

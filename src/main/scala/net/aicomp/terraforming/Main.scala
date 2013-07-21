@@ -70,15 +70,13 @@ object Main {
   val FPS = "f"
   val CUI_MODE = "c"
   val RESULT_MODE = "r"
+  val SILENT = "s"
   val USER_PLAYERS = "u"
   val LIGHT_GUI_MODE = "l"
   val EXTERNAL_AI_PROGRAM = "a"
   val INTERNAL_AI_PROGRAM = "i"
   val NOT_SHOWING_LOG = "n"
   val calendar = Calendar.getInstance
-  var logFunction: String => Unit = null
-
-  def log(text: String) = logFunction(text)
 
   def main(args: Array[String]) {
     val options = buildOptions()
@@ -88,19 +86,24 @@ object Main {
       if (cl.hasOption(HELP)) {
         printHelp(options)
       } else {
-        startGame(cl)
+        try {
+          startGame(cl)
+        } catch {
+          case e: Throwable => {
+            if (!cl.hasOption(SILENT)) {
+              val errStream = StreamUtils.openStreamForLogging(calendar, "err")
+              e.printStackTrace(errStream)
+              System.err.println("Saved an occuerd error in the file of 'log/err_xxxx.txt'");
+            }
+            throw e
+          }
+        }
       }
     } catch {
       case e: ParseException => {
         System.err.println("Error: " + e.getMessage())
         printHelp(options)
         System.exit(-1)
-      }
-      case e: Throwable => {
-        val errStream = StreamUtils.openStreamForLogging(calendar, "err")
-        e.printStackTrace(errStream)
-        System.err.println("Saved an occuerd error in the file of 'log/err_xxxx.txt'");
-        throw e
       }
     }
   }
@@ -138,6 +141,7 @@ object Main {
       .addOption(RESULT_MODE, false, "Enable result mode which show only a screen of a result.")
       .addOption(LIGHT_GUI_MODE, false, "Enable light and fast GUI mode by reducing rendering frequency.")
       .addOption(NOT_SHOWING_LOG, false, "Disable showing logs in the scree.")
+      .addOption(SILENT, false, "Disable writing log files in the log directory.")
       .addOption(userOption)
       .addOption(externalAIOption)
       .addOption(internalAIOption)
@@ -155,15 +159,17 @@ object Main {
   def startGame(cl: CommandLine) {
     val (env, startScene) = initializeEnvironmentAndScenes(cl)
 
-    val logStream = StreamUtils.openStreamForLogging(calendar, "log")
-    if (cl.hasOption(NOT_SHOWING_LOG)) {
-      AbstractScene.display = logStream.print
-    } else {
-      val display = AbstractScene.display
-      AbstractScene.display = { text =>
-        logStream.print(text)
-        logStream.flush()
-        display(text)
+    if (!cl.hasOption(SILENT)) {
+      val logStream = StreamUtils.openStreamForLogging(calendar, "log")
+      if (cl.hasOption(NOT_SHOWING_LOG)) {
+        AbstractScene.display = logStream.print
+      } else {
+        val display = AbstractScene.display
+        AbstractScene.display = { text =>
+          logStream.print(text)
+          logStream.flush()
+          display(text)
+        }
       }
     }
 
@@ -238,10 +244,12 @@ object Main {
     }
     for (cmd <- externalCmds.take(3 - iPlayers)) {
       val com = new ExternalComputerPlayer(cmd.split(" "))
-      val out = StreamUtils.openStreamForLogging(calendar, "stdout_player" + iPlayers)
-      val err = StreamUtils.openStreamForLogging(calendar, "stderr_player" + iPlayers)
-      com.addOuputLogStream(out)
-      com.addErrorLogStream(err)
+      if (!cl.hasOption(SILENT)) {
+        val out = StreamUtils.openStreamForLogging(calendar, "stdout_player" + iPlayers)
+        val err = StreamUtils.openStreamForLogging(calendar, "stderr_player" + iPlayers)
+        com.addOuputLogStream(out)
+        com.addErrorLogStream(err)
+      }
       com.addErrorLogStream(System.err)
       startMans += (new AIPlayerStartManipulator(players(iPlayers), com)).limittingTime(10000)
       gameMans += new AIPlayerGameManipulator(players(iPlayers), com)
@@ -285,7 +293,7 @@ object Main {
     val logScrollPane = new JScrollPane(logArea)
     val commandField = new JTextField()
 
-    val ret = builder.setTitle("Terraforming version 1.0.2")
+    val ret = builder.setTitle("Terraforming version 1.0.3")
       .setWindowSize(1024, 740)
       .setPanelSize(1024, 495)
       .setWindowCreator(new WindowCreator() {
