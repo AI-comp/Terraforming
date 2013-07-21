@@ -51,6 +51,16 @@ Conduct testing.
 1. mvn test  
 Conduct testing.
 
+## How to release
+1. Write code
+1. Change window title
+1. Fix pom.xml and build.sbt
+1. mvn clean compile
+1. mvn package
+1. Fix CHANGES.jp.md
+1. Zip packages and upload it
+1. Tag it with version on GitHub
+
 ## Documents
 - Rule book  
 https://docs.google.com/document/d/1bcgHpgDxDQbm94-BdOw0gEG08Wfums8nlGv-kNHlxmE/edit?usp=sharing
