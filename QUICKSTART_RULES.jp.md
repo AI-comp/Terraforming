@@ -119,18 +119,19 @@
 
 ゲームに登場する基地は以下の通りである。
 基地の隣の数字はその基地に必要な資源数とロボット数である。
+括弧の中に英語表記を記載するが、スラッシュ('/')の右側にAIプログラムのマップ入力とコマンド出力で使用する表現を示す。
 
 #### ロボット系
 
-* ![Material](rulebook/largerobotmaker0.png) __ロボット製造機 (Initial)__ (建造不可)
+* ![Material](rulebook/largerobotmaker0.png) __ロボット製造機 (Initial / initial)__ (建造不可)
 
   自分のターンの開始時にロボットを5体生成する。
 
-* ![Material](rulebook/robotmaker0.png) __小型ロボット製造機 (Robot Maker)__ 資源 4 / ロボット 50
+* ![Material](rulebook/robotmaker0.png) __小型ロボット製造機 (Robot Maker / robotmaker)__ 資源 4 / ロボット 50
 
   自分のターンの開始時に、ロボット1体を生成する。
 
-* ![Material](rulebook/attack0.png) __攻撃塔 (Attack Tower)__ 資源 5 / ロボット 25
+* ![Material](rulebook/attack0.png) __攻撃塔 (Attack Tower / tower)__ 資源 5 / ロボット 25
 
 ![Material](rulebook/tower.png)  
 
@@ -140,23 +141,23 @@
   
 #### 資源系
 
-* ![Material](rulebook/excavator0.png) __掘削機 (Excavator)__ 資源 4 / ロボット 25
+* ![Material](rulebook/excavator0.png) __掘削機 (Excavator / excavator)__ 資源 4 / ロボット 25
 
   隣接マスの自分の開拓地の資源が1個増える。
 
 #### 移動系
 
-* ![Material](rulebook/bridge0.png) __橋 (Bridge)__ 資源 4 / ロボット 15
+* ![Material](rulebook/bridge0.png) __橋 (Bridge / bridge)__ 資源 4 / ロボット 15
 
   穴に橋を建造すると、ロボットは穴から別のマスへ移動できるようになる。
 
 #### 勝利点系
 
-* ![Material](rulebook/house0.png) __家 (House)__ 資源 4 / ロボット 10
+* ![Material](rulebook/house0.png) __家 (House / house)__ 資源 4 / ロボット 10
 
   特に効果を持たない
 
-* ![Material](rulebook/town0.png) __街 (Town)__ 資源 9+ / ロボット 10
+* ![Material](rulebook/town0.png) __街 (Town / town)__ 資源 9+ / ロボット 10
 
   周囲1マスの自分の開拓地を _家_ に変更する。
   
