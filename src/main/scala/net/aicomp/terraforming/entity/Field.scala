@@ -103,7 +103,7 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
     tile.installation = Some(ins)
     ins match {
       case Installation.town =>
-        availableAroundTiles(p).filter(_.ownedBy(player)).filter(_.installation.isEmpty)
+        availableAroundTiles(p).filter(_.ownedBy(player)).filter(_.installation.isEmpty).filter(!_.isHole)
           .foreach { _.installation = Some(Installation.house) }
         tile.additionalScore = aroundMaterial - 9
       case _ =>
