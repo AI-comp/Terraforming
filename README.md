@@ -5,15 +5,15 @@ Terraforming for CEDEC 2013 [![Build Status](https://api.travis-ci.org/AI-comp/T
 
 ### Prepare Eclipse Environment with Maven
 1. Install Eclipse
-  * Eclipse IDE for Java Developers Juno (4.2)  
+  * Eclipse IDE for Java Developers Kepler (4.3)  
 http://www.eclipse.org/downloads/
 1. Run Eclipse
-1. Install Scala IDE 3.0 (For Scala 2.9.x) on Eclipse Juno (4.2)  
+1. Install Scala IDE 3.0.1 (For Scala 2.10.x) on your Eclipse Kepler (4.3)  
   1. See the following web page: http://scala-ide.org/download/current.html
-  1. Copy a URL of suitable version (the __4th__ URL) on the above site  
+  1. Copy a URL of suitable version (the __2nd__ URL) on the above site  
   1. Menu > Help > Install new software
   1. Enter the copied URL on the textbox of "Enter with" then push enter key
-1. Install m2e-scala connector on Eclipse Juno (4.2)  
+1. Install m2e-scala connector on your Eclipse   
   1. Copy the following URL: http://alchim31.free.fr/m2e-scala/update-site/
   1. Menu > Help > Install new software
   1. Enter the copied URL on the textbox of "Enter with" then push enter key
