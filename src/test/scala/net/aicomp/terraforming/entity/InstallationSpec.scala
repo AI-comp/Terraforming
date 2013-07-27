@@ -161,7 +161,7 @@ class InstallationSpec extends SpecificationWithJUnit {
       initTile(field, pitPlace, players(0))
       field.availableAroundPoints(pitPlace).foreach(initTile(field, _, players(0)))
       field(origin).robots = 10
-      field(pitPlace).robots = 20
+      field(pitPlace).robots = 25
     }
 
     "allow to accept building a 'town'" in new originAndPit {
@@ -206,7 +206,7 @@ class InstallationSpec extends SpecificationWithJUnit {
       })
 
       field(origin).robots = 10
-      pitPlaces.foreach(_p => field(_p).robots = 20)
+      pitPlaces.foreach(_p => field(_p).robots = 25)
     }
 
     "allow to accept building a 'town'" in new originAndPits {
