@@ -372,7 +372,7 @@ class FieldSpec extends SpecificationWithJUnit {
       }
       initTile(field, pitPlace)
       field(pitPlace).owner = player
-      field(pitPlace).robots = 20
+      field(pitPlace).robots = 25
       field.build(player.get, pitPlace, Installation.excavator)
     }
     "calculate the one's materialAmount of the own settlment surrounded own settlement and pit" in new fields with originAndPit {
