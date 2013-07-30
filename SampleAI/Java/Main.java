@@ -54,11 +54,21 @@ public class Main {
     System.out.println("build " + point.x + " " + point.y + " " + inst.name().toLowerCase());
   }
 
+  /*
+  // START
+  // ターン番号 最大ターン番号 プレイヤーのID
+  // フィールドの幅 タイルの数
+  // タイル1のx座標 y座標 所有者のID ロボットの数 資源数 地形情報 基地
+  // タイル2のx座標 y座標 所有者のID ロボットの数 資源数 地形情報 基地
+  // ...
+  // タイルnのx座標 y座標 所有者のID ロボットの数 資源数 地形情報 基地
+  // EOS
+  */
   private static Game parseGame(Scanner scanner) {
     if (!scanner.next().equals("START")) {
       throw new RuntimeException("START should be retrieved.");
-    }
-
+    }    
+    
     int turn = scanner.nextInt();
     int maxTurn = scanner.nextInt();
     int myId = scanner.nextInt();
