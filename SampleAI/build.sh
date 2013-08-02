@@ -1,7 +1,7 @@
 #!/bin/sh -v
 
 cd Java
-javac *.java
+javac -encoding UTF8 *.java
 
 cd ../Scala
 scalac *.scala
