@@ -63,6 +63,31 @@ Default locale: en_US, platform encoding: UTF-8
 OS name: "linux", version: "3.2.0-38-generic-pae-ccs", arch: "i386", family: "unix"
 ```
 
+## C#
+```
+$ mono -V
+Mono JIT compiler version 2.10.8.1 (Debian 2.10.8.1-1ubuntu2.2)
+Copyright (C) 2002-2011 Novell, Inc, Xamarin, Inc and Contributors. www.mono-project.com
+        TLS:           __thread
+        SIGSEGV:       altstack
+        Notifications: epoll
+        Architecture:  x86
+        Disabled:      none
+        Misc:          softdebug 
+        LLVM:          supported, not enabled.
+        GC:            Included Boehm (with typed GC and Parallel Mark)
+```
+```
+$ dmcs --version
+Mono C# compiler version 2.10.8.1
+```
+```
+$ xbuild --verision
+XBuild Engine Version 2.10.8.1
+Mono, Version 2.10.8.1
+Copyright (C) Marek Sieradzki 2005-2008, Novell 2008-2011.
+```
+
 ## Scala
 ```
 $ scala -version
