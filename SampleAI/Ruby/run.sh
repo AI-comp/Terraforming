@@ -1,1 +1,1 @@
-scala Main
+ruby main.rb
