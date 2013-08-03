@@ -67,7 +67,7 @@ Default locale: en_US, platform encoding: UTF-8
 OS name: "linux", version: "3.2.0-38-generic-pae-ccs", arch: "i386", family: "unix"
 ```
 
-## C#
+## C Sharp
 ```
 $ mono -V
 Mono JIT compiler version 2.10.8.1 (Debian 2.10.8.1-1ubuntu2.2)
