@@ -293,7 +293,7 @@ object Main {
     val logScrollPane = new JScrollPane(logArea)
     val commandField = new JTextField()
 
-    val ret = builder.setTitle("Terraforming version 1.0.4")
+    val ret = builder.setTitle("Terraforming version 1.0.5")
       .setWindowSize(1024, 740)
       .setPanelSize(1024, 495)
       .setWindowCreator(new WindowCreator() {
