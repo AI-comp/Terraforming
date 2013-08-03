@@ -5,6 +5,10 @@ Terraforming for CEDEC 2013
 - JRE/JDK 1.6以上
 
 ### 遊び方
+- ヘルプの表示
+
+        java -jar Terraforming.jar -h
+
 - ユーザープレイモード
 
         java -jar Terraforming.jar
