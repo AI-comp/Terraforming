@@ -1,55 +1,82 @@
 ## C
-- Environment
+```
+$ gcc -v
+Using built-in specs.
+COLLECT_GCC=gcc
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/i686-linux-gnu/4.6/lto-wrapper
+Target: i686-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu/Linaro 4.6.3-1ubuntu5' --with-bugurl=file:///usr/share/doc/gcc-4.6/README.Bugs --enable-languages=c,c++,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-4.6 --enable-shared --enable-linker-build-id --with-system-zlib --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --with-gxx-include-dir=/usr/include/c++/4.6 --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --enable-gnu-unique-object --enable-plugin --enable-objc-gc --enable-targets=all --disable-werror --with-arch-32=i686 --with-tune=generic --enable-checking=release --build=i686-linux-gnu --host=i686-linux-gnu --target=i686-linux-gnu
+Thread model: posix
+gcc version 4.6.3 (Ubuntu/Linaro 4.6.3-1ubuntu5) 
+```
 
-        gcc version 4.6.3 (Ubuntu/Linaro 4.6.3-1ubuntu5)
-
-- Requirements
-  - main.cにmain関数が記述されている
-- Running Process
-  1. Fnid a directory which contains main.c
-  2. gcc *.c
-  3. java -jar Terraforming.jar -a "./a.out"
+## C++
+```
+$ g++ -v
+Using built-in specs.
+COLLECT_GCC=g++
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/i686-linux-gnu/4.6/lto-wrapper
+Target: i686-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu/Linaro 4.6.3-1ubuntu5' --with-bugurl=file:///usr/share/doc/gcc-4.6/README.Bugs --enable-languages=c,c++,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-4.6 --enable-shared --enable-linker-build-id --with-system-zlib --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --with-gxx-include-dir=/usr/include/c++/4.6 --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --enable-gnu-unique-object --enable-plugin --enable-objc-gc --enable-targets=all --disable-werror --with-arch-32=i686 --with-tune=generic --enable-checking=release --build=i686-linux-gnu --host=i686-linux-gnu --target=i686-linux-gnu
+Thread model: posix
+gcc version 4.6.3 (Ubuntu/Linaro 4.6.3-1ubuntu5)
+```
+```
+$ clang -v
+Ubuntu clang version 3.0-6ubuntu3 (tags/RELEASE_30/final) (based on LLVM 3.0)
+Target: i386-pc-linux-gnu
+Thread model: posix
+```
 
 ## Makefile
-- Environment
+```
+$ make -v
+GNU Make 3.81
+Copyright (C) 2006  Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.
+There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.
 
-        GNU Make 3.81
-
-- Requirements
-  - Makefileが存在していてmakeでビルドできる
-- Running Process
-  1. Fnid a directory which contains Makefile
-  2. make
-  3. java -jar Terraforming.jar -a "./a.out"
+This program built for i686-pc-linux-gnu
+```
 
 ## Java
-- Environment
-
-        java version "1.7.0_25"
-        Java(TM) SE Runtime Environment (build 1.7.0_25-b15)
-        Java HotSpot(TM) Server VM (build 23.25-b01, mixed mode)
-
-- Requirements
-  - Main.javaにmainメソッドが記述されていて，デフォルトパッケージ（パッケージ宣言なし）を使っている
-- Running Process
-  1. Fnid a directory which contains Main.java
-  2. javac Main.java
-  3. java -jar Terraforming.jar -a "java Main"
+```
+$ java --version
+Unrecognized option: --version
+Error: Could not create the Java Virtual Machine.
+Error: A fatal exception has occurred. Program will exit.
+dockme@ai-comp:~$ java -version
+java version "1.7.0_25"
+Java(TM) SE Runtime Environment (build 1.7.0_25-b15)
+Java HotSpot(TM) Server VM (build 23.25-b01, mixed mode)
+```
 
 ## Maven
-- Environment
-
-        Apache Maven 3.0.4
-
-- Requirements
-  - pom.xmlが存在していてMaven3でビルドできる
-  - Main.javaにmainメソッドが記述されていて，デフォルトパッケージ（パッケージ宣言なし）を使っている
-1. Fnid a directory which contains pom.xml
-2. mvn package; mv target/*.jar ai.jar
-3. java -jar Terraforming.jar -a "java -jar ai.jar Main"
+```
+$ mvn -v
+Apache Maven 3.0.4
+Maven home: /usr/share/maven
+Java version: 1.7.0_25, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-7-oracle/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "3.2.0-38-generic-pae-ccs", arch: "i386", family: "unix"
+```
 
 ## Scala
+```
+$ scala -version
+Scala code runner version 2.9.1 -- Copyright 2002-2011, LAMP/EPFL
+```
 
 ## Ruby
+```
+$ ruby -v
+ruby 2.0.0p247 (2013-06-27 revision 41674) [i686-linux]
+```
 
 ## Haskell
+```
+$ ghc --version
+The Glorious Glasgow Haskell Compilation System, version 7.4.1
+```
