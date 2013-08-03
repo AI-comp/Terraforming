@@ -1,6 +1,4 @@
-puts("SampleRuby")
-while line = STDIN.get
-  if line == "EOS"
-    puts("finish")
-  end
+puts "SampleRuby"
+while gets
+  puts "finish" if $_.strip == "EOS"
 end
