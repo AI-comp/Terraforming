@@ -27,6 +27,10 @@ Ubuntu clang version 3.0-6ubuntu3 (tags/RELEASE_30/final) (based on LLVM 3.0)
 Target: i386-pc-linux-gnu
 Thread model: posix
 ```
+```
+./a.out 
+Boost version: 0.198.99
+```
 
 ## Makefile
 ```
