@@ -1,6 +1,10 @@
 import sys
-print 'SamplePython'
-for line in sys.stdin:
-  if line == 'EOS':
-    print 'finish'
 
+print 'SamplePython'
+while True:
+    line = sys.stdin.readline()
+    if not line:
+        break
+    if line.strip() == 'EOS':
+        print 'finish'
+        sys.stdout.flush()

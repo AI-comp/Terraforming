@@ -1,4 +1,7 @@
 puts "SampleRuby"
 while gets
-  puts "finish" if $_.strip == "EOS"
+  if $_.strip == "EOS"
+    puts "finish"
+    STDOUT.flush
+  end
 end
