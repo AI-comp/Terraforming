@@ -127,3 +127,15 @@ Zend Engine v2.3.0, Copyright (c) 1998-2012 Zend Technologies
 $ ghc --version
 The Glorious Glasgow Haskell Compilation System, version 7.4.1
 ```
+
+## OCaml
+```
+$ ocaml -version
+The Objective Caml toplevel, version 3.12.1
+```
+
+## Node.js
+```
+$ node -v
+v0.10.15
+```
