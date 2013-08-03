@@ -100,6 +100,16 @@ $ ruby -v
 ruby 2.0.0p247 (2013-06-27 revision 41674) [i686-linux]
 ```
 
+## Python
+```
+$ python -V
+Python 2.7.3
+```
+```
+$ python3 -V
+Python 3.2.3
+```
+
 ## Haskell
 ```
 $ ghc --version
