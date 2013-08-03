@@ -110,6 +110,14 @@ $ python3 -V
 Python 3.2.3
 ```
 
+## PHP
+```
+$ php5 -version
+PHP 5.3.10-1ubuntu3.7 with Suhosin-Patch (cli) (built: Jul 15 2013 18:10:56) 
+Copyright (c) 1997-2012 The PHP Group
+Zend Engine v2.3.0, Copyright (c) 1998-2012 Zend Technologies
+```
+
 ## Haskell
 ```
 $ ghc --version
