@@ -139,3 +139,21 @@ The Objective Caml toplevel, version 3.12.1
 $ node -v
 v0.10.15
 ```
+
+## D
+```
+$ dmd
+DMD32 D Compiler v2.063.2
+Copyright (c) 1999-2013 by Digital Mars written by Walter Bright
+Documentation: http://dlang.org/
+```
+```
+$ gdc -v
+Using built-in specs.
+COLLECT_GCC=gdc
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/i686-linux-gnu/4.6/lto-wrapper
+Target: i686-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu/Linaro 4.6.3-1ubuntu1' --with-bugurl=file:///usr/share/doc/gdc-4.6/README.Bugs --enable-languages=c,c++,d --prefix=/usr --program-suffix=-4.6 --enable-shared --enable-linker-build-id --with-system-zlib --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --with-gxx-include-dir=/usr/include/c++/4.6 --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-time=yes --enable-gnu-unique-object --disable-libmudflap --enable-plugin --disable-werror --with-arch-32=i686 --with-tune=generic --disable-libquadmath --enable-checking=release --build=i686-linux-gnu --host=i686-linux-gnu --target=i686-linux-gnu
+Thread model: posix
+gcc version 4.6.3 (Ubuntu/Linaro 4.6.3-1ubuntu1) 
+```
