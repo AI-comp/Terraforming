@@ -97,6 +97,10 @@ Copyright (C) Marek Sieradzki 2005-2008, Novell 2008-2011.
 $ scala -version
 Scala code runner version 2.9.1 -- Copyright 2002-2011, LAMP/EPFL
 ```
+```
+$ sbt --version
+sbt launcher version 0.12.4
+```
 
 ## Ruby
 ```
