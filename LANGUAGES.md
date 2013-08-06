@@ -45,6 +45,15 @@ This program built for i686-pc-linux-gnu
 ```
 
 ## Java
+
+Install Java 7 to Ubuntu 12.04
+```
+# aptitude install python-software-properties
+# add-apt-repository ppa:webupd8team/java
+# apt-get update
+# apt-get install oracle-java7-installer
+```
+
 ```
 $ java --version
 Unrecognized option: --version
