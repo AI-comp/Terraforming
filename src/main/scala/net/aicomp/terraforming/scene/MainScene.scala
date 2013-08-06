@@ -19,7 +19,7 @@ class MainScene(nextScene: Scene[GameEnvironment],
 
   override def initialize() {
     displayLine(game.startTurn())
-    writeJson()
+    writeJson("[")
   }
 
   override def runWithCommandString(commandString: String) = {
@@ -87,10 +87,14 @@ class MainScene(nextScene: Scene[GameEnvironment],
     else
       nextScene
   }
-
-  def writeJson() = if (jsonStream != null) jsonStream.println(game.toJson(game.currentPlayer))
+  
+  def writeJson(head: String = ",") = if (jsonStream != null) {
+    jsonStream.print(head)
+    jsonStream.println(game.toJson(game.currentPlayer))
+  }
 
   override def release() {
+    jsonStream.print("]")
     val scores = game.players.map(player => (player.id, game.field.calculateScore(player)))
     val sortedScores = Sorting.stableSort(scores,
       (a: (Int, Int), b: (Int, Int)) => a._2 > b._2 || (a._2 == b._2 && a._1 > b._1))
