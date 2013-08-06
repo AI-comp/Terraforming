@@ -10,6 +10,7 @@ import net.exkazuu.gameaiarena.manipulator.ThreadManipulator
 import java.io.PrintStream
 import scala.util.Sorting
 import java.io.ByteArrayOutputStream
+import net.aicomp.terraforming.entity.FinishCommand
 
 class MainScene(nextScene: Scene[GameEnvironment],
   manipulators: Vector[ThreadManipulator[Game, Array[String], String]] = Vector(),
@@ -51,7 +52,8 @@ class MainScene(nextScene: Scene[GameEnvironment],
         commands.get(cmd) match {
           case Some(c) => {
             try {
-              game.acceptCommand(c(args)) match {
+              val command = c(args)
+              game.acceptCommand(command) match {
                 case ret: String => {
                   displayLine(ret.toString())
                 }
@@ -60,7 +62,13 @@ class MainScene(nextScene: Scene[GameEnvironment],
                 }
                 case _ => ()
               }
-              writeJson()
+
+              command match {
+                case FinishCommand() => {
+                  writeJson()
+                }
+                case _ =>
+              }
             } catch {
               case CommandException(msg) => {
                 displayLine(msg)
