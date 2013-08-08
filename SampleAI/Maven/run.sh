@@ -1,0 +1,1 @@
+java -cp target/SampleMavenAI-1.0.0-jar-with-dependencies.jar net.aicomp.sample.maven.Main
