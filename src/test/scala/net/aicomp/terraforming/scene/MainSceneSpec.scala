@@ -52,6 +52,7 @@ class MainSceneSpec extends SpecificationWithJUnit {
       mainScene.accept(env, "finish")
       mainScene.accept(env, "move " + initialPoints(2).x + " " + initialPoints(2).y + " r 1")
       mainScene.acceptAll(env, "finish" :: "finish" :: "finish" :: Nil)
+      resultScene.run()
       resultScene.rankString must_== "3 2 1"
     }
   }

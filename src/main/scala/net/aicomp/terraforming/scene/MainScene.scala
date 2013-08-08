@@ -94,6 +94,8 @@ class MainScene(nextScene: Scene[GameEnvironment],
   }
 
   override def release() {
-    jsonStream.print("]")
+    if (jsonStream != null) {
+      jsonStream.print("]")
+    }
   }
 }
