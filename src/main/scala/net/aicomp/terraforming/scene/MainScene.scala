@@ -81,22 +81,8 @@ class MainScene(nextScene: Scene[GameEnvironment],
   }
 
   def writeJson() = if (jsonStream != null) jsonStream.println(game.toJson(game.currentPlayer))
-
+  
   override def release() {
-    val scores = game.players.map(player => (player.id, game.field.calculateScore(player)))
-    val sortedScores = Sorting.stableSort(scores,
-      (a: (Int, Int), b: (Int, Int)) => a._2 > b._2 || (a._2 == b._2 && a._1 > b._1))
-    val id2Rank = sortedScores.zipWithIndex.map { case ((id, score), rank) => (id, rank + 1) }.toMap
-    var stream: PrintStream = null
-    try {
-      stream = new PrintStream("result.txt")
-      stream.println(game.players.map(p => id2Rank(p.id)).mkString(" "))
-    } catch {
-      case _: Throwable => ()
-    } finally {
-      if (stream != null) {
-        stream.close()
-      }
-    }
+    
   }
 }
