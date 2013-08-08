@@ -37,7 +37,8 @@ trait TestSceneInitializer extends Scope {
   val field = Field(7, players, new Random(0))
   env.game = new Game(field, players, 2)
   env.getSceneManager().setFps(1000)
-  val mainScene = new MainScene(null) with TestScene
+  val resultScene = new ResultScene(null)
+  val mainScene = new MainScene(resultScene) with TestScene
   val playerScene = new PlayerScene(mainScene) with TestScene
   def g = env.game
   env.getSceneManager().initialize(env, playerScene)
