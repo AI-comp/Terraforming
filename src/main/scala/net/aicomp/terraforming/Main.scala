@@ -145,7 +145,7 @@ object Main {
       .addOption(CUI_MODE, false, "Enable CUI mode.")
       .addOption(RESULT_MODE, false, "Enable result mode which show only a screen of a result.")
       .addOption(LIGHT_GUI_MODE, false, "Enable light and fast GUI mode by reducing rendering frequency.")
-      .addOption(NOT_SHOWING_LOG, false, "Disable showing logs in the scree.")
+      .addOption(NOT_SHOWING_LOG, false, "Disable showing logs in the screen.")
       .addOption(SILENT, false, "Disable writing log files in the log directory.")
       .addOption(userOption)
       .addOption(externalAIOption)
