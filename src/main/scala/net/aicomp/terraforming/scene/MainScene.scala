@@ -10,6 +10,7 @@ import net.exkazuu.gameaiarena.manipulator.ThreadManipulator
 import java.io.PrintStream
 import scala.util.Sorting
 import java.io.ByteArrayOutputStream
+import net.aicomp.terraforming.entity.FinishCommand
 
 class MainScene(nextScene: Scene[GameEnvironment],
   manipulators: Vector[ThreadManipulator[Game, Array[String], String]] = Vector(),
@@ -18,7 +19,7 @@ class MainScene(nextScene: Scene[GameEnvironment],
 
   override def initialize() {
     displayLine(game.startTurn())
-    writeJson()
+    writeJson("[")
   }
 
   override def runWithCommandString(commandString: String) = {
@@ -51,7 +52,8 @@ class MainScene(nextScene: Scene[GameEnvironment],
         commands.get(cmd) match {
           case Some(c) => {
             try {
-              game.acceptCommand(c(args)) match {
+              val command = c(args)
+              game.acceptCommand(command) match {
                 case ret: String => {
                   displayLine(ret.toString())
                 }
@@ -60,7 +62,13 @@ class MainScene(nextScene: Scene[GameEnvironment],
                 }
                 case _ => ()
               }
-              writeJson()
+
+              command match {
+                case FinishCommand() => {
+                  writeJson()
+                }
+                case _ =>
+              }
             } catch {
               case CommandException(msg) => {
                 displayLine(msg)
@@ -80,23 +88,14 @@ class MainScene(nextScene: Scene[GameEnvironment],
       nextScene
   }
 
-  def writeJson() = if (jsonStream != null) jsonStream.println(game.toJson(game.currentPlayer))
+  def writeJson(head: String = ",") = if (jsonStream != null) {
+    jsonStream.print(head)
+    jsonStream.println(game.toJson(game.currentPlayer))
+  }
 
   override def release() {
-    val scores = game.players.map(player => (player.id, game.field.calculateScore(player)))
-    val sortedScores = Sorting.stableSort(scores,
-      (a: (Int, Int), b: (Int, Int)) => a._2 > b._2 || (a._2 == b._2 && a._1 > b._1))
-    val id2Rank = sortedScores.zipWithIndex.map { case ((id, score), rank) => (id, rank + 1) }.toMap
-    var stream: PrintStream = null
-    try {
-      stream = new PrintStream("result.txt")
-      stream.println(game.players.map(p => id2Rank(p.id)).mkString(" "))
-    } catch {
-      case _: Throwable => ()
-    } finally {
-      if (stream != null) {
-        stream.close()
-      }
+    if (jsonStream != null) {
+      jsonStream.print("]")
     }
   }
 }

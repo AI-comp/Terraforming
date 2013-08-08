@@ -90,20 +90,16 @@ class Tile extends Cloneable {
   }
 
   def toJsonMap(materialAmount: Int) = {
-    val owner_id = owner match {
-      case Some(player) => player.id
-      case None => -1
-    }
-    Map(
-      "ownerId" -> owner_id,
-      "robots" -> robots,
-      "materialAmount" -> materialAmount,
-      "landform" -> landform,
-      "obj" -> {
-        if (isHole) "hole" else installation match {
-          case Some(b) => b.toString
-          case None => "none"
-        }
+    (owner match {
+      case Some(player) => Map("id" -> player.id)
+      case None => Map()
+    }) ++
+      Map("l" -> landform.substring(0, 1)) ++
+      (if (robots > 0) { Map("r" -> robots) } else { Map() }) ++
+      (if (materialAmount > 0) { Map("m" -> materialAmount) } else { Map() }) ++
+      (installation match {
+        case Some(buildings) => Map("i" -> buildings.toString.substring(0, 2))
+        case None => Map()
       })
   }
 

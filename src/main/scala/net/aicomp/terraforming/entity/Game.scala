@@ -101,9 +101,9 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
   def toJson(player: Player) = {
     implicit val formats = Serialization.formats(NoTypeHints)
     write(Map(
-      "currentTurn" -> currentTurn,
-      "maxTurn" -> maxTurn,
-      "playerId" -> player.id,
+      "cTurn" -> currentTurn,
+      "mTurn" -> maxTurn,
+      "pid" -> player.id,
       "tiles" -> field.toPartialJson))
   }
 }
