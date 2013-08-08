@@ -7,15 +7,19 @@ import scala.util.Sorting
 import java.io.PrintStream
 
 class ResultScene(nextScene: Scene[GameEnvironment]) extends AbstractScene {
+  var rankString = ""
+
   final override def run() = {
     val s1 = "Player 1 (" + game.players(0).name + ") Score: " + game.field.calculateScore(game.players(0))
     val s2 = "Player 2 (" + game.players(1).name + ") Score: " + game.field.calculateScore(game.players(1))
     val s3 = "Player 3 (" + game.players(2).name + ") Score: " + game.field.calculateScore(game.players(2))
+    rankString = calculateRank()
+    
     displayLine(s1)
     displayLine(s2)
     displayLine(s3)
     println("------------------ Result Summary ------------------")
-    println(calculateRank())
+    println(rankString)
     println(s1)
     println(s2)
     println(s3)

@@ -52,10 +52,7 @@ class MainSceneSpec extends SpecificationWithJUnit {
       mainScene.accept(env, "finish")
       mainScene.accept(env, "move " + initialPoints(2).x + " " + initialPoints(2).y + " r 1")
       mainScene.acceptAll(env, "finish" :: "finish" :: "finish" :: Nil)
-      val fileName = "result.txt"
-      val file = new File(fileName);
-      val line = Source.fromFile(file).getLines().toSeq.head
-      line.toString must_== "3 2 1"
+      resultScene.rankString must_== "3 2 1"
     }
   }
 }
