@@ -44,6 +44,7 @@ download
 *.swp
 
 # eclipse
+.metadata
 .settings
 .cache
 .classpath
