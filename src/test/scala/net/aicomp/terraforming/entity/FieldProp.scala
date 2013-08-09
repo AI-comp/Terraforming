@@ -12,6 +12,11 @@ object FieldProp extends Properties("Field") {
   val field = Field(fieldSize)
   val players = Vector(Player(0), Player(1), Player(2))
 
+  def pointWithin = (for {
+    x <- Gen.choose(-field.radius, field.radius)
+    y <- Gen.choose(-field.radius, field.radius)
+  } yield Point(x, y)).filter(p => p.within(field.radius))
+
   property("CalculateScore for Filed whose size is 7") =
     forAll { (seed: Int) =>
       val random = new Random(seed)
