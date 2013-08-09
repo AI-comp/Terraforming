@@ -1,0 +1,1 @@
+scalac -encoding UTF8 Main.scala

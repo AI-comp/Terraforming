@@ -74,6 +74,7 @@ object Main {
   val USER_PLAYERS = "u"
   val LIGHT_GUI_MODE = "l"
   val EXTERNAL_AI_PROGRAM = "a"
+  val WORK_DIR_AI_PROGRAM = "w"
   val INTERNAL_AI_PROGRAM = "i"
   val NOT_SHOWING_LOG = "n"
   val calendar = Calendar.getInstance
@@ -125,6 +126,10 @@ object Main {
     val externalAIOption = OptionBuilder.create(EXTERNAL_AI_PROGRAM)
 
     OptionBuilder.hasArgs()
+    OptionBuilder.withDescription("Set working directories for external programs.")
+    val workDirOption = OptionBuilder.create(WORK_DIR_AI_PROGRAM)
+
+    OptionBuilder.hasArgs()
     OptionBuilder.withDescription("Set 1-3 AI players with internal classes for debugging puropose.")
     val internalAIOption = OptionBuilder.create(INTERNAL_AI_PROGRAM)
 
@@ -140,10 +145,11 @@ object Main {
       .addOption(CUI_MODE, false, "Enable CUI mode.")
       .addOption(RESULT_MODE, false, "Enable result mode which show only a screen of a result.")
       .addOption(LIGHT_GUI_MODE, false, "Enable light and fast GUI mode by reducing rendering frequency.")
-      .addOption(NOT_SHOWING_LOG, false, "Disable showing logs in the scree.")
+      .addOption(NOT_SHOWING_LOG, false, "Disable showing logs in the screen.")
       .addOption(SILENT, false, "Disable writing log files in the log directory.")
       .addOption(userOption)
       .addOption(externalAIOption)
+      .addOption(workDirOption)
       .addOption(internalAIOption)
       .addOption(fpsOption)
     options
@@ -225,6 +231,13 @@ object Main {
     val players = nums.map(Player(_))
     val nUsers = allCatch opt math.max(0, cl.getOptionValue(USER_PLAYERS).toInt) getOrElse (0)
     val externalCmds = getOptionsValuesWithoutNull(cl, EXTERNAL_AI_PROGRAM)
+    var workingDirs = getOptionsValuesWithoutNull(cl, WORK_DIR_AI_PROGRAM)
+    if (workingDirs.isEmpty) {
+      workingDirs = externalCmds.map(_ => null)
+    }
+    if (externalCmds.length != workingDirs.length) {
+      throw new ParseException("The numbers of arguments of -a and -w should be equal.")
+    }
     val internalNames = getOptionsValuesWithoutNull(cl, INTERNAL_AI_PROGRAM)
     val defaultNames = nums.map(_ => classOf[SampleInternalManipulator].getName())
     val userIndices = if (nUsers + externalCmds.size + internalNames.size == 0) {
@@ -242,8 +255,8 @@ object Main {
       gameMans += userGameManipulator
       iPlayers += 1
     }
-    for (cmd <- externalCmds.take(3 - iPlayers)) {
-      val com = new ExternalComputerPlayer(cmd.split(" "))
+    for ((cmd, workDir) <- externalCmds.take(3 - iPlayers).zip(workingDirs)) {
+      val com = new ExternalComputerPlayer(cmd.split(" "), workDir)
       if (!cl.hasOption(SILENT)) {
         val out = StreamUtils.openStreamForLogging(calendar, "stdout_player" + iPlayers)
         val err = StreamUtils.openStreamForLogging(calendar, "stderr_player" + iPlayers)
@@ -293,7 +306,7 @@ object Main {
     val logScrollPane = new JScrollPane(logArea)
     val commandField = new JTextField()
 
-    val ret = builder.setTitle("Terraforming version 1.0.5")
+    val ret = builder.setTitle("Terraforming version 1.0.8")
       .setWindowSize(1024, 740)
       .setPanelSize(1024, 495)
       .setWindowCreator(new WindowCreator() {
