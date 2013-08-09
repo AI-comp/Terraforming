@@ -1,4 +1,4 @@
-name := "SampleSbt"
+name := "SampleSbtAI"
 
 version := "1.0.0"
 

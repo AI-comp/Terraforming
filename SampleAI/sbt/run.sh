@@ -1,0 +1,1 @@
+scala -cp target/scala-2.10/samplesbtai_2.10-1.0.0.jar net.aicomp.sample.sbt.Main

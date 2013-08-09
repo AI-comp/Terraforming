@@ -1,4 +1,4 @@
-package net.aicomp.sample.scala
+package net.aicomp.sample.sbt
 
 object Main {
   def main(args: Array[String]) {
