@@ -50,7 +50,7 @@ class Game(val field: Field, val players: IndexedSeq[Player], private val _maxTu
         _initGame
       }
       case FinishCommand() => {
-        finishTurn()        
+        finishTurn()
         _isMoving = false
         _isBuilding = false
         _modified = true

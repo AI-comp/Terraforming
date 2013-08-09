@@ -457,5 +457,21 @@ class FieldSpec extends SpecificationWithJUnit {
         "1 -1 " + f(1, -1).stringify(0) + "\n" +
         "1 0 " + f(1, 0).stringify(0) + "\n"
     }
+
+    "move robots" in new fields {
+      for ((p, tile) <- field.tiles) {
+        tile.owner = Some(players(0))
+        tile.robots = 60
+        tile.isHole = false
+      }
+      for ((p, tile) <- field.tiles) {
+        for (d <- Direction.all) {
+          if (field.tiles.contains(p + d)) {
+            field.moveSquad(players(0), p, d, 10)
+          }
+        }
+      }
+    }
+    
   }
 }
