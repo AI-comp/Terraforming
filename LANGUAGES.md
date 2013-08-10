@@ -141,19 +141,19 @@ $ ghc --version
 The Glorious Glasgow Haskell Compilation System, version 7.4.1
 ```
 
-## OCaml
+## OCaml (現在非対応，要望があれば対応)
 ```
 $ ocaml -version
 The Objective Caml toplevel, version 3.12.1
 ```
 
-## Node.js
+## Node.js (現在非対応，要望があれば対応)
 ```
 $ node -v
 v0.10.15
 ```
 
-## D
+## D (現在非対応，要望があれば対応)
 ```
 $ dmd
 DMD32 D Compiler v2.063.2
