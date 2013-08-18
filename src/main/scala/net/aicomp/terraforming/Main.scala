@@ -70,6 +70,7 @@ object Main {
   val FPS = "f"
   val CUI_MODE = "c"
   val RESULT_MODE = "r"
+  val REPLAY_MODE = "p"
   val SILENT = "s"
   val USER_PLAYERS = "u"
   val LIGHT_GUI_MODE = "l"
@@ -144,6 +145,7 @@ object Main {
       .addOption(FPS, false, "Enable CUI mode.")
       .addOption(CUI_MODE, false, "Enable CUI mode.")
       .addOption(RESULT_MODE, false, "Enable result mode which show only a screen of a result.")
+      .addOption(REPLAY_MODE, true, "Replay the specified .rep file.")
       .addOption(LIGHT_GUI_MODE, false, "Enable light and fast GUI mode by reducing rendering frequency.")
       .addOption(NOT_SHOWING_LOG, false, "Disable showing logs in the screen.")
       .addOption(SILENT, false, "Disable writing log files in the log directory.")
@@ -229,72 +231,81 @@ object Main {
   def initializeManipulators(cl: CommandLine, env: GameEnvironment, userStartManipulator: StartManipulator, userGameManipulator: GameManipulator) = {
     val nums = Vector(0 to 2: _*)
     val players = nums.map(Player(_))
-    val nUsers = allCatch opt math.max(0, cl.getOptionValue(USER_PLAYERS).toInt) getOrElse (0)
-    val externalCmds = getOptionsValuesWithoutNull(cl, EXTERNAL_AI_PROGRAM)
-    var workingDirs = getOptionsValuesWithoutNull(cl, WORK_DIR_AI_PROGRAM)
-    if (workingDirs.isEmpty) {
-      workingDirs = externalCmds.map(_ => null)
-    }
-    if (externalCmds.length != workingDirs.length) {
-      throw new ParseException("The numbers of arguments of -a and -w should be equal.")
-    }
-    val internalNames = getOptionsValuesWithoutNull(cl, INTERNAL_AI_PROGRAM)
-    val defaultNames = nums.map(_ => classOf[SampleInternalManipulator].getName())
-    val userIndices = if (nUsers + externalCmds.size + internalNames.size == 0) {
-      Vector(0)
-    } else {
-      Vector(0 until nUsers: _*)
-    }
-
-    var iPlayers = 0
     val startMans = ListBuffer[Manipulator[Game, Array[String], String]]()
     val gameMans = ListBuffer[Manipulator[Game, Array[String], String]]()
 
-    for (n <- userIndices.take(3 - iPlayers)) {
-      startMans += userStartManipulator
-      gameMans += userGameManipulator
-      iPlayers += 1
-    }
-    for ((cmd, workDir) <- externalCmds.take(3 - iPlayers).zip(workingDirs)) {
-      val com = new ExternalComputerPlayer(cmd.split(" "), workDir)
-      if (!cl.hasOption(SILENT)) {
-        val out = StreamUtils.openStreamForLogging(calendar, "stdout_player" + iPlayers)
-        val err = StreamUtils.openStreamForLogging(calendar, "stderr_player" + iPlayers)
-        com.addOuputLogStream(out)
-        com.addErrorLogStream(err)
-      }
-      com.addErrorLogStream(System.err)
-      startMans += (new AIPlayerStartManipulator(players(iPlayers), com)).limittingTime(10000)
-      gameMans += new AIPlayerGameManipulator(players(iPlayers), com)
-        .limittingSumTime(1000, 5000)
-      iPlayers += 1
-    }
-    for (name <- (internalNames ++ defaultNames).take(3 - iPlayers)) {
-      val man = try {
-        val clazz = Class.forName(name)
-        clazz.newInstance().asInstanceOf[InternalManipulator]
-      } catch {
-        case _: Throwable => new SampleInternalManipulator()
-      }
-      startMans += (new InternalAIPlayerStartManipulator(players(iPlayers), man)
-        .limittingTime(10000))
-      gameMans += new InternalAIPlayerGameManipulator(players(iPlayers), man)
-        .limittingSumTime(1000, 5000)
-      iPlayers += 1
-    }
-
-    val random = new Random()
-    val field = Field(6, players, random)
-    env.game = new Game(field, players, 200)
-    if (userIndices.size == 0) {
-      env.getSceneManager().setFps(1000)
+    if (cl.hasOption(REPLAY_MODE)) {
+      val (ois, random) = StreamUtils.initializeReplay(cl.getOptionValue(REPLAY_MODE))
+      val field = Field(6, players, random)
+      env.game = new Game(field, players, 200)
+      (Vector(nums.map(_ => userStartManipulator.replayingStream(ois)).map(_.threading()): _*),
+        Vector(nums.map(_ => userGameManipulator.replayingStream(ois)).map(_.threading()): _*))
     } else {
-      env.getSceneManager().setFps(30)
-    }
+      val nUsers = allCatch opt math.max(0, cl.getOptionValue(USER_PLAYERS).toInt) getOrElse (0)
+      val externalCmds = getOptionsValuesWithoutNull(cl, EXTERNAL_AI_PROGRAM)
+      var workingDirs = getOptionsValuesWithoutNull(cl, WORK_DIR_AI_PROGRAM)
+      if (workingDirs.isEmpty) {
+        workingDirs = externalCmds.map(_ => null)
+      }
+      if (externalCmds.length != workingDirs.length) {
+        throw new ParseException("The numbers of arguments of -a and -w should be equal.")
+      }
+      val internalNames = getOptionsValuesWithoutNull(cl, INTERNAL_AI_PROGRAM)
+      val defaultNames = nums.map(_ => classOf[SampleInternalManipulator].getName())
+      val userIndices = if (nUsers + externalCmds.size + internalNames.size == 0) {
+        Vector(0)
+      } else {
+        Vector(0 until nUsers: _*)
+      }
 
-    val oos = StreamUtils.openStreamForJava(calendar, random)
-    (Vector(startMans.map(_.recordingStream(oos)).map(_.threading()): _*),
-      Vector(gameMans.map(_.recordingStream(oos)).map(_.threading()): _*))
+      var iPlayers = 0
+
+      for (n <- userIndices.take(3 - iPlayers)) {
+        startMans += userStartManipulator
+        gameMans += userGameManipulator
+        iPlayers += 1
+      }
+      for ((cmd, workDir) <- externalCmds.take(3 - iPlayers).zip(workingDirs)) {
+        val com = new ExternalComputerPlayer(cmd.split(" "), workDir)
+        if (!cl.hasOption(SILENT)) {
+          val out = StreamUtils.openStreamForLogging(calendar, "stdout_player" + iPlayers)
+          val err = StreamUtils.openStreamForLogging(calendar, "stderr_player" + iPlayers)
+          com.addOuputLogStream(out)
+          com.addErrorLogStream(err)
+        }
+        com.addErrorLogStream(System.err)
+        startMans += (new AIPlayerStartManipulator(players(iPlayers), com)).limittingTime(10000)
+        gameMans += new AIPlayerGameManipulator(players(iPlayers), com)
+          .limittingSumTime(1000, 5000)
+        iPlayers += 1
+      }
+      for (name <- (internalNames ++ defaultNames).take(3 - iPlayers)) {
+        val man = try {
+          val clazz = Class.forName(name)
+          clazz.newInstance().asInstanceOf[InternalManipulator]
+        } catch {
+          case _: Throwable => new SampleInternalManipulator()
+        }
+        startMans += (new InternalAIPlayerStartManipulator(players(iPlayers), man)
+          .limittingTime(10000))
+        gameMans += new InternalAIPlayerGameManipulator(players(iPlayers), man)
+          .limittingSumTime(1000, 5000)
+        iPlayers += 1
+      }
+
+      val random = new Random()
+      val field = Field(6, players, random)
+      env.game = new Game(field, players, 200)
+      if (userIndices.size == 0) {
+        env.getSceneManager().setFps(1000)
+      } else {
+        env.getSceneManager().setFps(30)
+      }
+
+      val oos = StreamUtils.openStreamForJava(calendar, random)
+      (Vector(startMans.map(_.recordingStream(oos)).map(_.threading()): _*),
+        Vector(gameMans.map(_.recordingStream(oos)).map(_.threading()): _*))
+    }
   }
 
   def initializeComponents() = {
@@ -306,7 +317,7 @@ object Main {
     val logScrollPane = new JScrollPane(logArea)
     val commandField = new JTextField()
 
-    val ret = builder.setTitle("Terraforming version 1.0.8")
+    val ret = builder.setTitle("Terraforming version 1.0.9")
       .setWindowSize(1024, 740)
       .setPanelSize(1024, 495)
       .setWindowCreator(new WindowCreator() {
