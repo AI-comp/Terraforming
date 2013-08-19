@@ -22,6 +22,10 @@ abstract class StartManipulator extends Manipulator[Game, Array[String], String]
   }
 }
 
+class NopStartManipulator extends StartManipulator {
+  override def runProcessing() {}
+}
+
 class ConsoleUserStartManipulator(scanner: Scanner) extends StartManipulator {
   override def runProcessing() {
     _name = scanner.nextLine()
