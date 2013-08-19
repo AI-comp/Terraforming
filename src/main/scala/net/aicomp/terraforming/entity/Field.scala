@@ -45,6 +45,9 @@ class Field(val radius: Int, val tiles: Map[Point, Tile]) {
 
   //Commands
   def moveSquad(player: Player, p: Point, d: Direction, amount: Int) = {
+    if (amount <= 0){
+      throw new CommandException("You must set robot amount more than zero.")
+    }
     if (!points.contains(p)) {
       throw new CommandException("You cannot choose an outer tile of the field")
     }
