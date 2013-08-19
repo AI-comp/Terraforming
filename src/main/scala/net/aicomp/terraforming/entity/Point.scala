@@ -5,7 +5,6 @@ import scala.collection.mutable.ListBuffer
 import scala.math.abs
 import scala.math.max
 import scala.math.min
-import scala.util.Random
 
 case class Direction private (val p: Point) {
   def +(r: Point): Point = p + r

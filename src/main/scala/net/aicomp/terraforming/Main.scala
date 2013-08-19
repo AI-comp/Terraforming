@@ -10,18 +10,15 @@ import java.awt.event.MouseEvent
 import java.util.Calendar
 import java.util.Random
 import java.util.Scanner
-
 import scala.Array.canBuildFrom
 import scala.collection.mutable.ListBuffer
 import scala.util.control.Exception.allCatch
-
 import org.apache.commons.cli.BasicParser
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.OptionBuilder
 import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
-
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.JScrollPane
@@ -63,6 +60,8 @@ import net.exkazuu.gameaiarena.gui.builder.WindowCreator
 import net.exkazuu.gameaiarena.key.AwtKeyMemorizer
 import net.exkazuu.gameaiarena.manipulator.Manipulator
 import net.exkazuu.gameaiarena.player.ExternalComputerPlayer
+import net.aicomp.terraforming.manipulator.NopStartManipulator
+import net.aicomp.terraforming.manipulator.NopGameManipulator
 
 object Main {
 
@@ -238,8 +237,8 @@ object Main {
       val (ois, random) = StreamUtils.initializeReplay(cl.getOptionValue(REPLAY_MODE))
       val field = Field(6, players, random)
       env.game = new Game(field, players, 200)
-      (Vector(nums.map(_ => userStartManipulator.replayingStream(ois)).map(_.threading()): _*),
-        Vector(nums.map(_ => userGameManipulator.replayingStream(ois)).map(_.threading()): _*))
+      (Vector(nums.map(_ => new NopStartManipulator().replayingStream(ois)).map(_.threading()): _*),
+        Vector(nums.map(_ => new NopGameManipulator().replayingStream(ois)).map(_.threading()): _*))
     } else {
       val nUsers = allCatch opt math.max(0, cl.getOptionValue(USER_PLAYERS).toInt) getOrElse (0)
       val externalCmds = getOptionsValuesWithoutNull(cl, EXTERNAL_AI_PROGRAM)
@@ -294,6 +293,8 @@ object Main {
       }
 
       val random = new Random()
+      val oos = StreamUtils.openStreamForJava(calendar, random)
+      
       val field = Field(6, players, random)
       env.game = new Game(field, players, 200)
       if (userIndices.size == 0) {
@@ -302,7 +303,6 @@ object Main {
         env.getSceneManager().setFps(30)
       }
 
-      val oos = StreamUtils.openStreamForJava(calendar, random)
       (Vector(startMans.map(_.recordingStream(oos)).map(_.threading()): _*),
         Vector(gameMans.map(_.recordingStream(oos)).map(_.threading()): _*))
     }

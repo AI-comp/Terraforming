@@ -14,6 +14,12 @@ abstract class GameManipulator extends Manipulator[Game, Array[String], String] 
   override def getComputerPlayer = null
 }
 
+class NopGameManipulator extends GameManipulator {
+  override def runPreProcessing(game: Game) {}
+  override def runProcessing() {}
+  override def runPostProcessing() = Array()
+}
+
 class ConsoleUserGameManipulator(scanner: Scanner) extends GameManipulator {
   private var _commandString: String = null
 
