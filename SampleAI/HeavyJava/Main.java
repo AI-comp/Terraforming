@@ -10,7 +10,7 @@ public class Main {
 			}
 			System.out.println("finish");
 			try {
-				Thread.sleep(4000);
+				Thread.sleep(4000000);
 			} catch (InterruptedException e) {
 			}
 		}

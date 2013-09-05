@@ -10,6 +10,7 @@ object DateUtils {
     val hour = calendar.get(Calendar.HOUR_OF_DAY)
     val minute = calendar.get(Calendar.MINUTE)
     val second = calendar.get(Calendar.SECOND)
-    List(year, month, day, hour, minute, second).mkString("_")
+    val f = "%02d"
+    List(year, f.format(month), f.format(day), f.format(hour), f.format(minute), f.format(second)).mkString("_")
   }
 }

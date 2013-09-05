@@ -198,6 +198,7 @@ object Main {
 
   def initializeEnvironmentAndScenes(cl: CommandLine) = {
     val jss = StreamUtils.openStreamForJavaScript(calendar)
+    val jsons = StreamUtils.openStreamForJson(calendar)
     if (cl.hasOption(CUI_MODE)) {
       val env = GameEnvironment()
       val scanner = new Scanner(System.in)
@@ -206,7 +207,7 @@ object Main {
         initializeManipulators(cl, env, new ConsoleUserStartManipulator(scanner),
           new ConsoleUserGameManipulator(scanner))
 
-      val resultScene = new ResultScene(null)
+      val resultScene = new ResultScene(null, jsons)
       val mainScene = new MainScene(resultScene, gameManipulators, jss)
       (env, new PlayerScene(mainScene, startManipulators))
     } else {
@@ -216,7 +217,7 @@ object Main {
           new GraphicalUserGameManipulator())
 
       val waitScene = new WaitingScene(null) with GraphicalScene
-      val resultScene = new ResultScene(waitScene) with GraphicalScene
+      val resultScene = new ResultScene(waitScene, jsons) with GraphicalScene
       if (cl.hasOption(RESULT_MODE)) {
         val mainScene = new MainScene(resultScene, gameManipulators, jss)
         (env, new PlayerScene(mainScene, startManipulators) with GraphicalScene)
@@ -294,7 +295,7 @@ object Main {
 
       val random = new Random()
       val oos = StreamUtils.openStreamForJava(calendar, random)
-      
+
       val field = Field(6, players, random)
       env.game = new Game(field, players, 200)
       if (userIndices.size == 0) {

@@ -71,4 +71,17 @@ object StreamUtils {
       case _: Throwable => new PrintStream(new ByteArrayOutputStream())
     }
   }
+
+  def openStreamForJson(calendar: Calendar) = {
+    try {
+      new File("replay").mkdir()
+      val dateForName = DateUtils.dateStringForFileName(calendar)
+      val fileName = "replay/" + dateForName + ".json"
+      val ps = new PrintStream(fileName)
+      ps.print("{\"file\":\"replay/" + dateForName + ".rep\",")
+      ps
+    } catch {
+      case _: Throwable => new PrintStream(new ByteArrayOutputStream())
+    }
+  }
 }
