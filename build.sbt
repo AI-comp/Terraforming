@@ -16,7 +16,7 @@ libraryDependencies ++= Seq(
   "org.json4s" %% "json4s-native" % "3.2.4",
   "junit" % "junit" % "4.10" % "test",
   "org.hamcrest" % "hamcrest-all" % "1.1" % "test",
-  "org.specs2" %% "specs2" % "2.1" % "test",
+  "org.specs2" % "specs2_2.10" % "2.1" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.1" % "test"
 )
 
