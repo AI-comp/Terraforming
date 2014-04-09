@@ -1,5 +1,5 @@
 language: scala
-script: "sbt coveralls test"
+#script: "sbt coveralls test"
 scala:
    - 2.9.2
 jdk:
